@@ -120,13 +120,11 @@ class LiveQuery {
         this.cbs.push(cb);
     }
     matches(doc) {
-        console.log('comparing desc',this.desc,'to doc', doc);
         if(doc.type == this.desc.type) return true;
         return false;
     }
     update(data) {
         var d2 = data.filter((d)=>d.type == this.desc.type);
-        console.log(d2);
         this.cbs.forEach((cb)=>cb(d2));
     }
     execute() {
@@ -144,7 +142,6 @@ class LiveDatabase {
         return q;
     }
     insert(doc) {
-        console.log('inserting',doc);
         this.docs.push(doc);
         this.queries.forEach((q)=> {
             if(q.matches(doc)) {
@@ -194,17 +191,9 @@ var HBox = ((props)=>{
     </div>
 });
 
-var CheckButton = ((props) => {
-    return <input type="checkbox" value={props.value}/>
-});
-
-let PushButton = ((props) => {
-    return <button onClick={props.onClick}>{props.children}</button>
-});
-
-let Scroll = ((props) => {
-    return <div style={{overflow:"scroll"}}>{props.children}</div>
-});
+var CheckButton = ((props) => <input type="checkbox" value={props.value}/>);
+let PushButton = ((props) => <button onClick={props.onClick}>{props.children}</button>);
+let Scroll = ((props) => <div style={{overflow:"scroll"}}>{props.children}</div>);
 
 class ListView extends Component {
     render() {
@@ -222,22 +211,28 @@ var DB = new LiveDatabase();
         enabled:false,
         name:'wake up',
         repeat:['none']
+    },
+    {
+        type:'email',
+        from:'Nigerian Prince',
+        subject:'A fortune you have inherited',
+        content: {
+            mimeType:'text/plain',
+            text:"Dear sirs"
+        }
     }
 ].forEach((doc)=>DB.insert(doc));
 
-class AlarmTemplate extends Component {
-    repeatToString(repeat) {
-        return repeat.join("");
-    }
-    render() {
-        return <HBox>
-            <CheckButton/>
-            <label>{this.props.item.title}</label>
-            <label>{Math.floor(this.props.item.time/60)+ ':' + this.props.item.time % 60}</label>
-            <label>{this.repeatToString(this.props.item.repeat)}</label>
-        </HBox>
-    }
-}
+let AlarmTemplate = ((props) => {
+    var item = props.item;
+    return <HBox>
+        <CheckButton/>
+        <label>{item.title}</label>
+        <label>{Math.floor(item.time/60)+ ':' + item.time % 60}</label>
+        <label>{item.repeat.join("")}</label>
+    </HBox>
+});
+
 class Alarms extends Component {
     constructor(props) {
         super(props);
@@ -274,9 +269,10 @@ class Alarms extends Component {
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <VBox>
           <Alarms/>
-      </div>
+          <Alarms/>
+      </VBox>
     );
   }
 }
