@@ -84,16 +84,15 @@ import './App.css';
  mp3_albums_view  .model <= mp3_albums_list
  mp3_songs_list   <= query all docs where type == song, album == mp3_albums_view.selected.id
 
- hbox
- hbox
- prev
- play:  playing <= mp3_songs_list.selected, player.play(playing)
- next
- vbox
- label: playing.song
- label: (query all artist where (id == playing.artist_id)).name
- label: (query all album where (id == playing.album_id)).name
-
+hbox
+    hbox
+        prev
+        play:  playing <= mp3_songs_list.selected, player.play(playing)
+        next
+    vbox
+        label: playing.song
+        label: (query all artist where (id == playing.artist_id)).name
+        label: (query all album where (id == playing.album_id)).name
 */
 /*
  # Todo List
@@ -115,20 +114,31 @@ class LiveQuery {
         this.db = db;
         this.desc = desc;
         this.cbs = [];
+        this.filter = (d) => {
+            var keys = Object.keys(this.desc);
+            for(let i=0; i<keys.length; i++) {
+                var key = keys[i];
+                if(this.desc[key] != d[key]) return false;
+            }
+            return true;
+        }
+    }
+    updateQuery(desc) {
+        this.desc = desc;
+        this.update(this.db.docs);
     }
     on(type,cb) {
         this.cbs.push(cb);
     }
     matches(doc) {
-        if(doc.type == this.desc.type) return true;
-        return false;
+        return this.filter(doc);
     }
     update(data) {
-        var d2 = data.filter((d)=>d.type == this.desc.type);
+        var d2 = data.filter(this.filter);
         this.cbs.forEach((cb)=>cb(d2));
     }
     execute() {
-        return this.db.docs.filter((d)=>d.type == this.desc.type);
+        return this.db.docs.filter(this.filter);
     }
 }
 class LiveDatabase {
@@ -198,7 +208,19 @@ let Scroll = ((props) => <div style={{overflow:"scroll"}}>{props.children}</div>
 class ListView extends Component {
     render() {
         let Template = this.props.template;
-        return <div>{this.props.model.map((item, i)=> <Template key={i} item={item}/>)}</div>
+        return <div
+            style={{
+            border:'1px solid gray',
+            minWidth:'100px',
+            minHeight:'100px'
+            }}
+        >{this.props.model.map((item, i)=> {
+                return <Template key={i} item={item}
+                                 onSelect={this.props.onSelect}
+                                 selected={this.props.selected}
+                />
+            }
+        )}</div>
     }
 }
 
@@ -220,7 +242,53 @@ var DB = new LiveDatabase();
             mimeType:'text/plain',
             text:"Dear sirs"
         }
+    },
+    {
+        type:'artist',
+        name:'Erasure'
+    },
+    {
+        type:'artist',
+        name:'Depeche Mode'
+    },
+    {
+        type:'artist',
+        name:'Cars'
+    },
+
+    {
+        type:'album',
+        name:'Chorus',
+        artist:'Erasure'
+    },
+    {
+        type:'album',
+        name:'Wild!',
+        artist:'Erasure'
+    },
+    {
+        type:'album',
+        name:'Some Great Reward',
+        artist:'Depeche Mode'
+    },
+
+    {
+        type:'song',
+        name:'Joan',
+        album:'Chorus'
+    },
+    {
+        type:'song',
+        name:'Perfect Stranger',
+        album:'Chorus'
+    },
+    {
+        type:'song',
+        name:'Blue Savannah',
+        album:'Wild!'
     }
+
+
 ].forEach((doc)=>DB.insert(doc));
 
 let AlarmTemplate = ((props) => {
@@ -236,12 +304,11 @@ let AlarmTemplate = ((props) => {
 class Alarms extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            alarms:[]
-        };
         this.query = DB.makeLiveQuery({type:'alarm'}, {order:{time:true}});
         this.query.on('update',(data)=>this.setState({alarms:data}));
-        this.state.alarms = this.query.execute();
+        this.state = {
+            alarms: this.query.execute()
+        };
         this.createAlarm = () => {
             var alarm = {
                 type:'alarm',
@@ -266,12 +333,169 @@ class Alarms extends Component {
 }
 
 
+/*
+ mp3_artist_names <= query all docs
+        type === song,
+        unique by artist_id
+        pick artist_id
+ mp3_artist_list  <= query all docs
+    type === song_artist
+    where id in mp3_artist_names
+ mp3_artist_view  <= listview, model <= mp3_artist_list
+ mp3_albums_list  <= query all docs
+    song_album where id in (all where type === song, unique by album_id)
+    where artist == mp3_artist_view.selected.id
+ mp3_albums_view  .model <= mp3_albums_list
+ mp3_songs_list   <= query all docs where type == song, album == mp3_albums_view.selected.id
+
+ hbox
+ hbox
+ prev
+ play:  playing <= mp3_songs_list.selected, player.play(playing)
+ next
+ vbox
+ label: playing.song
+ label: (query all artist where (id == playing.artist_id)).name
+ label: (query all album where (id == playing.album_id)).name
+
+ */
+let ArtistTemplate = ((props) => {
+    var artist = props.item;
+    var onSelect = props.onSelect;
+    var selected = props.selected;
+    var sel = (artist === selected);
+    return <HBox
+    ><label onClick={()=>onSelect(artist)}
+            style={{
+                        backgroundColor:sel?'lightGray':'white'
+                        }}
+    >{artist.name}</label></HBox>
+});
+let AlbumTemplate = ((props) => {
+    var album = props.item;
+    var onSelect = props.onSelect;
+    var selected = props.selected;
+    var sel = (album === selected);
+    return <HBox
+    ><label onClick={()=>onSelect(album)}
+            style={{
+                        backgroundColor:sel?'lightGray':'white'
+                        }}
+    >{album.name}</label></HBox>
+});
+let SongTemplate = ((props) => {
+    var song = props.item;
+    var onSelect = props.onSelect;
+    var selected = props.selected;
+    var sel = (song === selected);
+    return <HBox
+    ><label onClick={()=>onSelect(song)}
+            style={{
+                        backgroundColor:sel?'lightGray':'white'
+                        }}
+    >song {song.name}</label></HBox>
+});
+
+class MusicPlayer extends Component {
+    constructor(props) {
+        super(props);
+        this.artists = DB.makeLiveQuery(
+            {type:'artist'},
+            {order:{name:true}}
+        );
+        this.artists.on('update',(artists)=>this.setState({artists:artists}));
+
+        this.state = {
+            artists:this.artists.execute(),
+            selectedArtist:{name:'Depeche Mode'},
+            albums:[],
+            selectedAlbum:{name:'none'},
+            selectedSong:{name:'none',album:'none'},
+            songs:[]
+        };
+        this.selectArtist = (artist) => {
+            this.setState({selectedArtist:artist});
+            this.albums.updateQuery({
+                type:'album',
+                artist:artist.name
+            })
+        };
+
+        this.selectAlbum = (album) => {
+            this.setState({selectedAlbum:album});
+            this.songs.updateQuery({
+                type:'song',
+                album:album.name
+            })
+        };
+        this.albums = DB.makeLiveQuery(
+            {type:'album', artist:this.state.selectedArtist.name},
+            {order:{name:true}}
+        );
+        this.albums.on('update',(albums)=>this.setState({albums:albums}));
+        this.state.albums = this.albums.execute();
+
+
+        this.selectSong = (song) => {
+            this.setState({selectedSong:song})
+        };
+        this.songs = DB.makeLiveQuery(
+            {type:'song',album:this.state.selectedAlbum.name},
+            {order:{name:true}}
+        );
+        this.songs.on('update', (songs)=>this.setState({songs:songs}));
+        this.state.songs = this.songs.execute();
+    }
+
+    render() {
+        return <VBox>
+            <HBox>
+                <button>prev</button>
+                <button>play/pause</button>
+                <button>next</button>
+                <VBox>
+                    <label>{this.state.selectedSong.name}</label>
+                    <label>{this.state.selectedArtist.name}</label>
+                    <label>{this.state.selectedAlbum.name}</label>
+                </VBox>
+            </HBox>
+        <HBox>
+            <Scroll>
+                <ListView
+                    model={this.state.artists}
+                    template={ArtistTemplate}
+                    onSelect={this.selectArtist}
+                    selected={this.state.selectedArtist}
+                />
+            </Scroll>
+            <Scroll>
+                <ListView
+                    model={this.state.albums}
+                    template={AlbumTemplate}
+                    onSelect={this.selectAlbum}
+                    selected={this.state.selectedAlbum}
+                />
+            </Scroll>
+            <Scroll>
+                <ListView
+                    model={this.state.songs}
+                    template={SongTemplate}
+                    onSelect={this.selectSong}
+                    selected={this.state.selectedSong}
+                />
+            </Scroll>
+        </HBox>
+            </VBox>;
+    }
+}
+
 class App extends Component {
   render() {
     return (
       <VBox>
           <Alarms/>
           <Alarms/>
+          <MusicPlayer/>
       </VBox>
     );
   }
