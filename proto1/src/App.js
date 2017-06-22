@@ -46,36 +46,6 @@ import './App.css';
  scrollbox
  richtextview: <= model.content
 
-
- # Contacts List
-
- contacts_list is query all docs type == contact
- contacts_view is hbox
- vbox
- searchbox <= app.filter
- list <= contacts_list filterby app.filter
- vbox
- hbox
- label: selected.first
- label: selected.last
- hbox
- label: selected.company
- vbox
- selected.phones => map (contact)
- hbox
- label: phone.type
- label: phone.number
- vbox
- selected.addresses => map (address)
- hbox
- label: address.type
- label: address.street
- hbox
- label: address.city
- label: address.state
- label: address.zip
-
-
 */
 /*
  # Todo List
@@ -553,17 +523,36 @@ class Contacts extends Component {
         </VBox>
     }
 }
+
+let TodoTemplate = ((props)=>{
+
+});
+class Todos extends Component {
+
+    render() {
+        return <VBox>
+            <HBox>
+                <PushButton onClick={this.createTodo} className='fa fa-plus'>+</PushButton>
+            </HBox>
+            <Scroll>
+                <ListView model={this.query} template={TodoTemplate}/>
+            </Scroll>
+        </VBox>
+    }
+}
+
 class App extends Component {
   render() {
     return (
-      <VBox>
-          <HBox>
-          <Alarms/>
-          <Alarms/>
-          </HBox>
-          <MusicPlayer/>
-          <Contacts/>
-      </VBox>
+        <VBox>
+            <HBox>
+                <Alarms/>
+                <Alarms/>
+                <Todos/>
+            </HBox>
+            <MusicPlayer/>
+            <Contacts/>
+        </VBox>
     );
   }
 }
