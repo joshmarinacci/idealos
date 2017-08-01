@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
 import {DB} from "./Database";
 /*
- # Todo List
+ # To do List
 
  items = query all docs type == todo_item, ordered by position
     vbox
