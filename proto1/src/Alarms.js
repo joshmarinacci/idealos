@@ -38,7 +38,6 @@ export default class Alarms extends Component {
     constructor(props) {
         super(props);
         this.query = DB.makeLiveQuery({type:'alarm'}, {order:{time:true}});
-        console.log("the query is", this.query);
         this.createAlarm = () => {
             var alarm = {
                 type:'alarm',

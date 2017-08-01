@@ -7,6 +7,7 @@ import {HBox, VBox, PushButton, CheckButton, Scroll, ListView} from "./GUIUtils"
 import {DB} from "./Database";
 import MusicPlayer from "./MusicPlayer";
 import Contacts from "./Contacts";
+import Todos from "./Todo";
 
 
 /*
@@ -55,20 +56,6 @@ import Contacts from "./Contacts";
 
 */
 
-/*
- # Todo List
-
- items = query all docs type == todo_item, ordered by position
-    vbox
-        hbox
-            push_button: insert new type==todo_item
-        scroll listview
-            template(item)
-                check_button <= item.completed
-                text_line    <= item.title
-                text_area    <= item.description
-                tag_box      <= item.tags, query all docs type == todo_item, union item.tags, unique by tag,
-*/
 
 
 [
@@ -159,30 +146,27 @@ import Contacts from "./Contacts";
         last:'Jackson',
         address:[],
         email:[]
+    },
+
+    {
+        type:'todo',
+        text:'take out the trash',
+        completed:false
+    },
+    {
+        type:'todo',
+        text:'remember the milk',
+        completed: true
+    },
+    {
+        type:'todo',
+        text:'fill out annoying forms',
+        completed: false
     }
 
 
 ].forEach((doc)=>DB.insert(doc));
 
-
-
-
-let TodoTemplate = ((props)=>{
-
-});
-class Todos extends Component {
-
-    render() {
-        return <VBox>
-            <HBox>
-                <PushButton onClick={this.createTodo} className='fa fa-plus'>+</PushButton>
-            </HBox>
-            <Scroll>
-                <ListView model={this.query} template={TodoTemplate}/>
-            </Scroll>
-        </VBox>
-    }
-}
 
 const Launcher = (props) => {
     return <VBox style={{
@@ -194,8 +178,10 @@ const Launcher = (props) => {
         <button onClick={()=>props.app.startApp("Alarms",<Alarms/>)} className="fa fa-clock-o"></button>
         <button onClick={()=>props.app.startApp("Music",<MusicPlayer/>)} className="fa fa-music"></button>
         <button onClick={()=>props.app.startApp("Contacts",<Contacts/>)} className="fa fa-address-book"></button>
+        <button onClick={()=>props.app.startApp("Todo List",<Todos/>)} className="fa fa-list"></button>
     </VBox>
 };
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -215,7 +201,6 @@ class App extends Component {
     return (
         <VBox>
             {this.state.apps.map((a,i)=><FakeWindow title={a.title} key={i}>{a.app}</FakeWindow>)}
-            {/*<Todos/>*/}
             <Launcher app={this}/>
         </VBox>
     );

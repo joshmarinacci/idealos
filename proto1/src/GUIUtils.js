@@ -24,7 +24,7 @@ export var HBox = ((props)=>{
     </div>
 });
 
-export var CheckButton = ((props) => <input type="checkbox" value={props.value}/>);
+export var CheckButton = ((props) => <input type="checkbox" checked={props.value}/>);
 export let PushButton = ((props) => <button onClick={props.onClick}>{props.children}</button>);
 export let Scroll = ((props) => <div style={{overflow:"scroll"}}>{props.children}</div>);
 
