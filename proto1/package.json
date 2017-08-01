@@ -6,6 +6,7 @@
     "react-scripts": "1.0.7"
   },
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
