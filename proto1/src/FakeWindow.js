@@ -16,7 +16,7 @@ export default class FakeWindow extends Component {
         };
         this.mouseMove = (e) => {
             if(!this.state.down) return;
-            this.setState({x:e.screenX-80, y:e.screenY-85});
+            this.setState({x:e.screenX-80, y:e.screenY-65});
         }
     }
     render() {

@@ -1,6 +1,6 @@
-# foo
+# Ideal OS
 
-the goal of this project is to experiment with ideas inside of QueryOS, in a robust
+the goal of this project is to experiment with ideas inside of IdealOS, in a robust
 enough implementation that I can use it day to day, even if the implementation is very slow
 and looks ugly.
 
@@ -73,3 +73,23 @@ are saved and 'live'. if a document is added or changed which matches the query,
 owner will receive an event about it.
 
 all apps are minimal bits of code running inside of a highly restricted container
+
+
+
+----------------
+
+Idea for Mark I prototype. 
+
+
+
+* Should be possible to run from the command line and see something: `git co; npm install; npm start;`
+* create a database server using simple JSON database and custom query system, based on mongo query.
+* create a message bus impl using websockets, inside the db server.
+* create UI with React, connects to server via websockets and express (for config).
+* has simple apps for contacts, calendar, todo list, notes (~evernote), alarms, mp3 player.
+* all windows are resizable and dockable to each other. spawn as many copies as you want.
+* alert module can send notifications for alarms when they ring and calendar events.
+* database pre-populated with mp3 URL files on the web somewhere
+* database pre-populated with some notes, contacts, events, alarms, etc.
+* add a due date for a todo list item, shows up in calendar too.
+* mp3s and notes have realtime incremental search. 
