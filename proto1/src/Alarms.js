@@ -22,7 +22,6 @@ vbox
 
 import React, {Component} from "react"
 import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
-import {DB} from "./Database";
 
 let AlarmTemplate = ((props) => {
     var item = props.item;
@@ -37,7 +36,7 @@ let AlarmTemplate = ((props) => {
 export default class Alarms extends Component {
     constructor(props) {
         super(props);
-        this.query = DB.makeLiveQuery({type:'alarm'}, {order:{time:true}});
+        this.query = props.db.makeLiveQuery({type:'alarm'}, {order:{time:true}});
         this.createAlarm = () => {
             var alarm = {
                 type:'alarm',
@@ -46,7 +45,7 @@ export default class Alarms extends Component {
                 name: 'unnamed alarm',
                 repeat: ['none']
             };
-            DB.insert(alarm);
+            props.db.insert(alarm);
         }
     }
     render() {

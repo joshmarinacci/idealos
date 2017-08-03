@@ -9,13 +9,19 @@ class LiveDB {
         docs.forEach((doc)=>{
             this._docs.push(doc);
             this._live_queries.forEach((lq)=>{
+                console.log("checking for a match",doc, lq.query);
                 if(lq.matches(doc)) {
+                    console.log("matched",lq.query)
                     lq.fireInsert([doc]);
                 }
             })
         });
     }
 
+    insert(doc) {
+        this.importDocs([doc]);
+        return Promise.resolve();
+    }
     query(q) {
         if(!q) return Promise.resolve(this._docs);
         if(Object.keys(q).length === 0) return Promise.resolve(this._docs);
@@ -40,6 +46,7 @@ class LiveQuery {
     constructor(q) {
         this.query = q;
         this.cbs = [];
+        this.id = "id_"+Math.floor(Math.random()*10000);
     }
     on(type,cb) {
         this.cbs.push(cb);
@@ -49,7 +56,7 @@ class LiveQuery {
         return false;
     }
     fireInsert(docs) {
-        this.cbs.forEach((cb)=>cb(docs));
+        this.cbs.forEach((cb)=>cb(this.id,docs));
     }
 }
 module.exports = {

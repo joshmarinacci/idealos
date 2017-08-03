@@ -33,8 +33,10 @@ export class ListView extends Component {
     constructor(props) {
         super(props);
         props.model.on('update',(data)=>{this.setState({data:data})});
+        props.model.on('execute',(data)=>{this.setState({data:data})});
+        props.model.execute();
         this.state = {
-            data:props.model.execute()
+            data:[]
         }
     }
     render() {
