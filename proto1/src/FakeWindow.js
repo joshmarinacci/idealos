@@ -9,15 +9,16 @@ export default class FakeWindow extends Component {
             down:false
         };
         this.mouseDown = () => {
-            this.setState({down:true})
+            this.listener = (e) => {
+                this.setState({x:e.clientX-20, y:e.clientY-15});
+            };
+            this.up_listener = (e) => {
+                document.removeEventListener('mousemove',this.listener);
+                document.removeEventListener('mouseup',this.up_listener);
+            };
+            document.addEventListener('mousemove',this.listener);
+            document.addEventListener('mouseup', this.up_listener);
         };
-        this.mouseUp = () => {
-            this.setState({down:false});
-        };
-        this.mouseMove = (e) => {
-            if(!this.state.down) return;
-            this.setState({x:e.screenX-80, y:e.screenY-65});
-        }
     }
     render() {
         const style = {
@@ -27,8 +28,6 @@ export default class FakeWindow extends Component {
         return <div className="window"
         style={style}>
             <header onMouseDown={this.mouseDown}
-                    onMouseMove={this.mouseMove}
-                    onMouseUp={this.mouseUp}
             >{this.props.title}</header>
             {this.props.children}
         </div>
