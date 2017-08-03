@@ -31,7 +31,6 @@
 
 import React, {Component} from "react"
 import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
-import {DB} from "./Database";
 
 let ContactTemplate = ((props) => <label>{props.item.first} {props.item.last}</label>);
 let ContactView = ((props) => {
@@ -54,9 +53,7 @@ let ContactView = ((props) => {
 export default class Contacts extends Component {
     constructor(props) {
         super(props);
-        this.contacts = DB.makeLiveQuery({
-            type:'contact'
-        });
+        this.contacts = props.db.makeLiveQuery({type:'contact'});
         this.state = {
             selectedContact: null,
             searchQuery:''

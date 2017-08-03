@@ -22,11 +22,20 @@ class LiveQuery {
         this.cbs[type].push(cb);
     }
 
+    updateQuery(q) {
+        this.db.updateQuery(this.id,q);
+    }
+
     update(msg) {
-        console.log("live query", this.id,"got an update message",msg.docs);
+        console.log("live query", this.id,"got an update message",msg);
+        if(msg.type === 'queryupdate') {
+            console.log("clearing first");
+            this.data = [];
+        }
         msg.docs.forEach((d)=>{
             this.data.push(d);
         });
+        console.log("new data is",this.data);
         this.cbs.update.forEach((cb)=>cb(this.data));
     }
 
@@ -97,6 +106,10 @@ export default class {
         const id = "mid_"+Math.floor(Math.random()*10000);
         this.pending[id] = cb;
         this.ws.send(JSON.stringify({command:'subscribe',query:q,"messageId":id}));
+    }
+
+    updateQuery(id,q) {
+        return POST_JSON("http://localhost:5151/api/updateQuery",{queryId:id,query:q});
     }
 
     query(q) {

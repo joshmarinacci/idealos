@@ -36,15 +36,21 @@ class LiveDB {
     }
 
     makeLiveQuery(q) {
-        let lq = new LiveQuery(q);
+        let lq = new LiveQuery(q,this);
         this._live_queries.push(lq);
         return lq;
+    }
+
+    updateLiveQuery(queryId,query) {
+        let q = this._live_queries.find((q)=>q.id === queryId);
+        q.updateQuery(query);
     }
 }
 
 class LiveQuery {
-    constructor(q) {
+    constructor(q,db) {
         this.query = q;
+        this.db = db;
         this.cbs = [];
         this.id = "id_"+Math.floor(Math.random()*10000);
     }
@@ -52,10 +58,31 @@ class LiveQuery {
         this.cbs.push(cb);
     }
     matches(doc) {
-        if(doc.type === this.query.type) return true;
-        return false;
+        var keys = Object.keys(this.query)
+        for(let i=0; i<keys.length; i++) {
+            let key = keys[i];
+            if(!doc[key]) return false;
+            if(doc[key] !== this.query[key]) return false;
+        }
+        return true;
     }
     fireInsert(docs) {
+        this.cbs.forEach((cb)=>cb(this.id,docs));
+    }
+    updateQuery(query) {
+        console.log("updating the live query",this.id,this.query,query);
+
+        Object.keys(query).forEach((key)=>{
+            this.query[key] = query[key];
+            //remove keys
+            // if(!desc[key] || desc[key].length === 0) delete this.desc[key];
+        });
+        this.execute();
+    }
+    execute() {
+        console.log("executing the new local query", this.query);
+        var docs = this.db._docs.filter((d)=> this.matches(d));
+        console.log("final docs = ", docs);
         this.cbs.forEach((cb)=>cb(this.id,docs));
     }
 }

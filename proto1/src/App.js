@@ -21,9 +21,9 @@ const Launcher = (props) => {
     }
     } className="launcher">
         <button onClick={()=>props.app.startApp("Alarms",<Alarms db={DB}/>)} className="fa fa-clock-o"></button>
-        <button onClick={()=>props.app.startApp("Music",<MusicPlayer/>)} className="fa fa-music"></button>
-        <button onClick={()=>props.app.startApp("Contacts",<Contacts/>)} className="fa fa-address-book"></button>
-        <button onClick={()=>props.app.startApp("Todo List",<Todos/>)} className="fa fa-list"></button>
+        <button onClick={()=>props.app.startApp("Music",<MusicPlayer db={DB}/>)} className="fa fa-music"></button>
+        <button onClick={()=>props.app.startApp("Contacts",<Contacts db={DB}/>)} className="fa fa-address-book"></button>
+        <button onClick={()=>props.app.startApp("Todo List",<Todos db={DB}/>)} className="fa fa-list"></button>
     </VBox>
 };
 

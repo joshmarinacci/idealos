@@ -32,12 +32,12 @@ export let Scroll = ((props) => <div style={{overflow:"scroll"}}>{props.children
 export class ListView extends Component {
     constructor(props) {
         super(props);
-        props.model.on('update',(data)=>{this.setState({data:data})});
-        props.model.on('execute',(data)=>{this.setState({data:data})});
-        props.model.execute();
         this.state = {
             data:[]
         }
+        props.model.on('update',(data)=>{console.log("updated data",data);this.setState({data:data})});
+        props.model.on('execute',(data)=>{console.log("executed data",data);this.setState({data:data})});
+        props.model.execute();
     }
     render() {
         let Template = this.props.template;

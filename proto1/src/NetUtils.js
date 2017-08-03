@@ -19,7 +19,7 @@ export const GET_JSON = function(path) {
 };
 
 export const POST_JSON = function(path,payload) {
-    console.log("POSTING",path);
+    console.log("POSTING",path,payload);
     return new Promise((res,rej)=> {
         let req = new XMLHttpRequest();
 

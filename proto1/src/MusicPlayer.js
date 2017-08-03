@@ -27,7 +27,6 @@
 
 import React, {Component} from "react"
 import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
-import {DB} from "./Database";
 
 let ArtistTemplate = ((props) => <label>{props.item.name}</label>);
 let AlbumTemplate = ((props) => <label>{props.item.name}</label>);
@@ -36,15 +35,15 @@ let SongTemplate = ((props) => <label>song {props.item.name}</label>);
 export default class MusicPlayer extends Component {
     constructor(props) {
         super(props);
-        this.artists = DB.makeLiveQuery(
+        this.artists = props.db.makeLiveQuery(
             {type:'artist'},
             {order:{name:true}}
         );
-        this.albums = DB.makeLiveQuery(
+        this.albums = props.db.makeLiveQuery(
             {type:'album'},
             {order:{name:true}}
         );
-        this.songs = DB.makeLiveQuery(
+        this.songs = props.db.makeLiveQuery(
             {type:'song'},
             {order:{name:true}}
         );
@@ -61,7 +60,7 @@ export default class MusicPlayer extends Component {
         };
         this.selectAlbum = (album) => {
             this.setState({selectedAlbum:album});
-            this.songs.updateQuery({album:album.name})
+            this.songs.updateQuery({album:album.name});
         };
         this.selectSong = (song) => {
             this.setState({selectedSong:song})

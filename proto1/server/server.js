@@ -43,7 +43,7 @@ function handleDBSubscribe(conn, req) {
 
 const server = new WebSocketServer.Server({port: WEBSOCKET_PORT});
 server.on('connection', (conn) => {
-    console.log('got a websocket connection');
+    // console.log('got a websocket connection');
     conn.on('close', function () {
         console.log("closed the connection");
     });
@@ -52,11 +52,11 @@ server.on('connection', (conn) => {
     });
     conn.on('message', function (e) {
         var msg = JSON.parse(e);
-        console.log("message is", msg);
         if (!msg.command) return handleInfo(conn);
         if (msg.command === 'info') return handleInfo(conn);
         if (msg.command === 'db') return handleDBQuery(conn, msg);
         if (msg.command === 'subscribe') return handleDBSubscribe(conn,msg);
+        console.log("unhandled websocket message ", msg);
     });
 });
 
@@ -73,10 +73,10 @@ function startWebserver(cb) {
     app.use(bodyParser.json());
 
     app.post('/api/dbquery', function(req,res) {
-        console.log("got a query");
-        console.log(req.body);
+        console.log("got a query", req.body);
         DB.query(req.body).then((docs)=>{
             res.json(docs);
+            res.end();
         });
     });
 
@@ -84,7 +84,14 @@ function startWebserver(cb) {
         console.log("got an insert", req.body);
         DB.insert(req.body).then((resp)=>{
             res.json({status:'success'});
+            res.end();
         })
+    });
+
+    app.post('/api/updateQuery', function(req,res) {
+        DB.updateLiveQuery(req.body.queryId,req.body.query);
+        res.json({status:'success'});
+        res.end();
     });
 
     app.listen(HTTP_PORT, function () {
