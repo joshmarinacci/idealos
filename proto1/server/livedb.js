@@ -2,10 +2,18 @@ class LiveDB {
     constructor() {
         console.log("making a database");
         this._docs = [];
+        this._live_queries = [];
     }
 
     importDocs(docs) {
-        docs.forEach((doc)=>this._docs.push(doc));
+        docs.forEach((doc)=>{
+            this._docs.push(doc);
+            this._live_queries.forEach((lq)=>{
+                if(lq.matches(doc)) {
+                    lq.fireInsert([doc]);
+                }
+            })
+        });
     }
 
     query(q) {
@@ -19,6 +27,29 @@ class LiveDB {
         }
 
         console.log("can't do query",q);
+    }
+
+    makeLiveQuery(q) {
+        let lq = new LiveQuery(q);
+        this._live_queries.push(lq);
+        return lq;
+    }
+}
+
+class LiveQuery {
+    constructor(q) {
+        this.query = q;
+        this.cbs = [];
+    }
+    on(type,cb) {
+        this.cbs.push(cb);
+    }
+    matches(doc) {
+        if(doc.type === this.query.type) return true;
+        return false;
+    }
+    fireInsert(docs) {
+        this.cbs.forEach((cb)=>cb(docs));
     }
 }
 module.exports = {

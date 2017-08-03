@@ -37,3 +37,27 @@ test("mass add documents then query alarms", (t)=> {
     ;
 });
 
+
+// create a live query for alarm docs
+// test that query works when inserting a new alarm doc
+
+test('live alarm query', (t)=>{
+    DB.importDocs([
+        {type:'alarm',time:1},
+        {type:'alarm',time:2},
+    ]);
+
+    let live_query = DB.makeLiveQuery({type:'alarm'});
+    live_query.on('insert',(docs)=>{
+        console.log("docs inserted",docs);
+        t.equals(docs.length,1);
+        t.equals(docs[0].type,'alarm');
+        t.equals(docs[0].time,3);
+        t.end();
+    });
+
+    DB.importDocs([
+        {type:'alarm',time:3},
+    ]);
+
+});
