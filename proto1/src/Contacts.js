@@ -36,6 +36,7 @@ let ContactTemplate = ((props) => <label>{props.item.first} {props.item.last}</l
 let ContactView = ((props) => {
     var c = props.contact;
     if(!c) return <VBox></VBox>;
+    if(!c.address) c.address = [];
     return <VBox>
         <label>{c.first} {c.last}</label>
         {c.address.map((addr,i) => {
