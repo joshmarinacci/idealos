@@ -51,9 +51,11 @@ class LiveQuery {
 }
 
 export default class {
-    constructor() {
+    constructor(app) {
+        this.app = app;
         this.cbs = {
-            connect:[]
+            connect:[],
+            receive:[],
         };
         this.pending = [];
         this.queries = [];
@@ -96,10 +98,22 @@ export default class {
                 delete this.pending[msg.messageId];
             }
         }
+        if(msg.type === 'command') {
+            if(msg.command === 'launch') {
+                console.log("launch message, sending back to app");
+                this.app.launch(msg);
+            }
+        }
     }
 
     on(type,cb) {
+        if(!this.cbs[type]) throw new Error(`incorrect event type: '${type}'`);
         this.cbs[type].push(cb);
+    }
+
+    sendMessage(msg) {
+        console.log("sending message",msg);
+        this.ws.send(JSON.stringify(msg));
     }
 
     subscribe(q,cb) {

@@ -41,6 +41,12 @@ function handleDBSubscribe(conn, req) {
     }
 }
 
+function bounceBack(conn, msg) {
+    if(conn.readyState === WebSocketServer.OPEN) {
+        conn.send(JSON.stringify(msg));
+    }
+}
+
 const server = new WebSocketServer.Server({port: WEBSOCKET_PORT});
 server.on('connection', (conn) => {
     // console.log('got a websocket connection');
@@ -56,6 +62,7 @@ server.on('connection', (conn) => {
         if (msg.command === 'info') return handleInfo(conn);
         if (msg.command === 'db') return handleDBQuery(conn, msg);
         if (msg.command === 'subscribe') return handleDBSubscribe(conn,msg);
+        if (msg.command === 'launch') return bounceBack(conn,msg);
         console.log("unhandled websocket message ", msg);
     });
 });
@@ -72,6 +79,10 @@ function startWebserver(cb) {
     //assume all bodies will be JSON and parse them automatically
     app.use(bodyParser.json());
 
+    app.get('/api/info', (req,res)=>{
+        res.json({status:'success'});
+        res.end();
+    });
     app.post('/api/dbquery', function(req,res) {
         console.log("got a query", req.body);
         DB.query(req.body).then((docs)=>{
