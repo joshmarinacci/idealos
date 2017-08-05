@@ -149,17 +149,33 @@ module.exports = [
         first:'Bill',
         last:"Roberts",
     },
-
     {
         type:'contact',
         first:'Rob',
         last:"Williams",
     },
-
     {
         type:'contact',
         first:'Steve',
         last:"Martin",
+    },
+
+
+
+    {
+        type:'note',
+        title:'notes from the meeting',
+        body:'this is a note',
+    },
+    {
+        type:'note',
+        title:'plan for the next year',
+        body:'this is another note',
+    },
+    {
+        type:'note',
+        title:'year for the plan',
+        body:'this is note another note. ha ha. nevermind.',
     },
 
 
