@@ -56,6 +56,7 @@ export default class {
         this.cbs = {
             connect:[],
             receive:[],
+            clipboard:[],
         };
         this.pending = [];
         this.queries = [];
@@ -104,6 +105,7 @@ export default class {
                 this.app.launch(msg);
             }
         }
+        if(msg.type === 'clipboard') this.cbs['clipboard'].forEach((cb)=>cb(msg));
     }
 
     on(type,cb) {

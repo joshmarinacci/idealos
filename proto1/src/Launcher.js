@@ -22,6 +22,7 @@ export default class Launcher extends Component {
             <button onClick={() => this.startApp('contacts')} className="fa fa-address-book"></button>
             <button onClick={() => this.startApp('todolist')} className="fa fa-list"></button>
             <button onClick={() => this.startApp('notes')} className="fa fa-sticky-note"></button>
+            <button onClick={() => this.startApp('clipboard')} className="fa fa-clipboard"></button>
         </VBox>
     }
 }

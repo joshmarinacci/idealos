@@ -11,6 +11,7 @@ import Todos from "./Todo";
 
 import RemoteDB from "./RemoteDB";
 import Notes from "./Notes";
+import ClipboardViewer from "./ClipboardViewer";
 
 
 const APP_REGISTRY = {
@@ -33,6 +34,10 @@ const APP_REGISTRY = {
     'notes': {
         title: 'Notes',
         app: Notes
+    },
+    'clipboard': {
+        title:'Clipboard Viewer',
+        app: ClipboardViewer
     }
 };
 
@@ -75,7 +80,6 @@ class App extends Component {
             </VBox>
         );
     }
-
 }
 
 class CommandBar extends Component {
@@ -85,8 +89,17 @@ class CommandBar extends Component {
             command:"alarm"
         };
 
-        this.keydown = (e) => (e.keyCode === 13)?this.runCommand():"";
+        this.keydown = (e) => { if(e.keyCode === 13) this.runCommand(); };
         this.edited = (e) => this.setState({command:e.target.value});
+        this.copied = (e) => {
+            var text = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
+            this.props.db.sendMessage({
+                type:'clipboard',
+                target:'system',
+                command:'copy',
+                payload:text
+            })
+        }
     }
     runCommand() {
         const app = this.state.command;
@@ -100,7 +113,7 @@ class CommandBar extends Component {
     }
     render() {
         return <div className="command-bar">
-            <input type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited}/>
+            <input type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} onCopy={this.copied}/>
         </div>
     }
 }
