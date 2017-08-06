@@ -10,6 +10,7 @@ import Contacts from "./Contacts";
 import Todos from "./Todo";
 
 import RemoteDB from "./RemoteDB";
+import Notes from "./Notes";
 
 
 const APP_REGISTRY = {
@@ -29,6 +30,10 @@ const APP_REGISTRY = {
         title: 'Todo List',
         app: Todos,
     },
+    'notes': {
+        title: 'Notes',
+        app: Notes
+    }
 };
 
 class App extends Component {
@@ -40,7 +45,6 @@ class App extends Component {
         };
         this.DB.on('connect', (m) => {
             console.log("fully connected", m);
-            this.setState({apps: [{title: 'Alarms 1', app: <Alarms db={this.DB}/>}]});
         });
         this.DB.on("receive", (m) => {
             console.log("got a message back", m);

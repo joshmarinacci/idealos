@@ -23,7 +23,9 @@ export default class FakeWindow extends Component {
     render() {
         const style = {
             top:this.state.y,
-            left:this.state.x
+            left:this.state.x,
+            userSelect:'none',
+            cursor:'move'
         };
         return <div className="window"
         style={style}>
