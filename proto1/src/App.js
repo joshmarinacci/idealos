@@ -52,6 +52,10 @@ class App extends Component {
     launch(msg) {
         console.log("launching an app");
         var apps = this.state.apps.slice();
+        if(!APP_REGISTRY[msg.app]) {
+            console.log("unknown app", msg.app);
+            return;
+        }
         var info = APP_REGISTRY[msg.app];
         var AppComponent = info.app;
         apps.push({title: info.title, app: <AppComponent db={this.DB}/>});
@@ -63,10 +67,38 @@ class App extends Component {
             <VBox>
                 {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i}>{a.app}</FakeWindow>)}
                 <Launcher db={this.DB}/>
+                <CommandBar db={this.DB}/>
             </VBox>
         );
     }
 
+}
+
+class CommandBar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            command:"alarm"
+        };
+
+        this.keydown = (e) => (e.keyCode === 13)?this.runCommand():"";
+        this.edited = (e) => this.setState({command:e.target.value});
+    }
+    runCommand() {
+        const app = this.state.command;
+        this.props.db.sendMessage({
+            type:'command',
+            target: 'system',
+            command: "launch",
+            app: app,
+        });
+        this.setState({command:""})
+    }
+    render() {
+        return <div className="command-bar">
+            <input type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited}/>
+        </div>
+    }
 }
 
 export default App;

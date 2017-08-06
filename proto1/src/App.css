@@ -12,3 +12,27 @@
 .launcher {
     font-size: 300%;
 }
+
+
+.command-bar {
+    border: 1px solid red;
+    position: absolute;
+    background-color: deeppink;
+    padding: 0.5em;
+    border-radius: 2em;
+    bottom:1rem;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+}
+.command-bar input {
+    flex: 1;
+    font-size: 1.5rem;
+    padding: 0.25rem;
+    border-radius: 1em;
+    background-color: lightpink;
+    border: 2px solid pink;
+    margin: 0 auto;
+}
