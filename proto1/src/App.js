@@ -12,6 +12,8 @@ import Todos from "./Todo";
 import RemoteDB from "./RemoteDB";
 import Notes from "./Notes";
 import ClipboardViewer from "./ClipboardViewer";
+import CommandBar from "./CommandBar";
+import Calendar from "./Calendar";
 
 
 const APP_REGISTRY = {
@@ -38,6 +40,10 @@ const APP_REGISTRY = {
     'clipboard': {
         title:'Clipboard Viewer',
         app: ClipboardViewer
+    },
+    'calendar': {
+        title:'Calendar',
+        app: Calendar
     }
 };
 
@@ -59,7 +65,6 @@ class App extends Component {
 
 
     launch(msg) {
-        console.log("launching an app");
         var apps = this.state.apps.slice();
         if(!APP_REGISTRY[msg.app]) {
             console.log("unknown app", msg.app);
@@ -79,42 +84,6 @@ class App extends Component {
                 <CommandBar db={this.DB}/>
             </VBox>
         );
-    }
-}
-
-class CommandBar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            command:"alarm"
-        };
-
-        this.keydown = (e) => { if(e.keyCode === 13) this.runCommand(); };
-        this.edited = (e) => this.setState({command:e.target.value});
-        this.copied = (e) => {
-            var text = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
-            this.props.db.sendMessage({
-                type:'clipboard',
-                target:'system',
-                command:'copy',
-                payload:text
-            })
-        }
-    }
-    runCommand() {
-        const app = this.state.command;
-        this.props.db.sendMessage({
-            type:'command',
-            target: 'system',
-            command: "launch",
-            app: app,
-        });
-        this.setState({command:""})
-    }
-    render() {
-        return <div className="command-bar">
-            <input type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} onCopy={this.copied}/>
-        </div>
     }
 }
 
