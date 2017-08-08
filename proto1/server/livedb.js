@@ -42,6 +42,15 @@ class LiveDB {
         });
         return Promise.resolve(doc);
     }
+
+    delete(doc) {
+        const old_n = this._docs.findIndex((d)=>d.id == doc.id);
+        this._docs.splice(old_n,1);
+        this._live_queries.forEach((lq)=>{
+            if(lq.matches(doc)) lq.fireDelete([doc]);
+        });
+        return Promise.resolve(doc);
+    }
     query(q) {
         if(!q) return Promise.resolve(this._docs);
         if(Object.keys(q).length === 0) return Promise.resolve(this._docs);
@@ -93,6 +102,9 @@ class LiveQuery {
     fireRemove(docs) {
         this.execute();
     }
+    fireDelete(docs) {
+        this.execute();
+    }
     updateQuery(query) {
         console.log("updating the live query",this.id,this.query,query);
 
@@ -105,6 +117,7 @@ class LiveQuery {
     }
     execute() {
         this.docs = this.db._docs.filter((d)=> this.matches(d));
+        console.log("new query is", this.docs);
         this.cbs.forEach((cb)=>cb(this.id,this.docs));
     }
 }

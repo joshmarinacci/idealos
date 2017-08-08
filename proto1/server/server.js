@@ -107,6 +107,16 @@ function startWebserver(cb) {
         })
     });
 
+    app.post('/api/dbdelete', function(req,res) {
+        console.log("got an delete", req.body);
+        DB.delete(req.body).then((resp)=>{
+            res.json({status:'success'});
+            res.end();
+        })
+    });
+
+
+
     app.post('/api/updateQuery', function(req,res) {
         DB.updateLiveQuery(req.body.queryId,req.body.query);
         res.json({status:'success'});

@@ -16,7 +16,23 @@ export default class NotificationViewer extends Component {
 
     constructor(props) {
         super(props);
-        this.query = props.db.makeLiveQuery({type:'notification'}, {order:{time:true}});
+
+        const cleared = {};
+        this.query = props.db.makeLiveQuery({type: 'notification', read:false});
+
+        //clear each notification three seconds after it appears
+        const scheduleClear = (data) => {
+            data.forEach((doc)=>{
+                if(!cleared[doc.id]) {
+                    cleared[doc.id] = setTimeout(()=>{
+                        doc.read = true;
+                        this.query.sendDocumentUpdate(doc);
+                    },3000);
+                }
+            })
+        };
+        this.query.on('update', scheduleClear);
+        this.query.on('execute', scheduleClear);
     }
 
     render() {

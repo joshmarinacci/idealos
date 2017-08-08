@@ -42,6 +42,10 @@ class LiveQuery {
         this.db.update(doc);
     }
 
+    sendDocumentDelete(doc) {
+        this.db.delete(doc);
+    }
+
 
     execute() {
         this.data = [];
@@ -154,6 +158,13 @@ export default class RemoteDB {
 
     update(doc) {
         return POST_JSON("http://localhost:5151/api/dbupdate",doc).then((answer)=>{
+            // console.log("the update response is", answer);
+            return answer;
+        });
+    }
+
+    delete(doc) {
+        return POST_JSON("http://localhost:5151/api/dbdelete",doc).then((answer)=>{
             // console.log("the update response is", answer);
             return answer;
         });
