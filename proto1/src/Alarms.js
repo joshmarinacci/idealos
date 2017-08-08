@@ -54,9 +54,9 @@ export default class Alarms extends Component {
             <HBox>
                 <PushButton onClick={this.createAlarm} className="fa fa-plus">+</PushButton>
             </HBox>
-            <Scroll>
+            <VBox scroll grow>
                 <ListView model={this.query} template={AlarmTemplate}/>
-            </Scroll>
+            </VBox>
         </VBox>
     }
 }

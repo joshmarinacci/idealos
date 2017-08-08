@@ -18,17 +18,19 @@ export class ListView extends Component {
     render() {
         let Template = this.props.template;
         return <div
+            className="ListView"
             style={{
                 border:'0px solid gray',
                 minWidth:'100px',
                 minHeight:'100px',
-                backgroundColor:'#eee',
+                backgroundColor:'#fff',
                 flex:1
             }}
         >{this.state.data.map((item, i)=> {
                 var sel = (this.props.selected === item);
                 return <div
-                    style={{backgroundColor:sel?'lightBlue':'#eee'}}
+                    className="ListItem"
+                    style={{backgroundColor:sel?'lightBlue':'#fff'}}
                     key={i}
                     onClick={()=>this.props.onSelect(item)}
                 ><Template item={item}
