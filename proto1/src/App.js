@@ -63,6 +63,11 @@ class App extends Component {
         this.DB.connect();
     }
 
+    nextId() {
+        if(!this.id) this.id = 0;
+        this.id++;
+        return this.id;
+    }
 
     launch(msg) {
         var apps = this.state.apps.slice();
@@ -72,14 +77,19 @@ class App extends Component {
         }
         var info = APP_REGISTRY[msg.app];
         var AppComponent = info.app;
-        apps.push({title: info.title, app: <AppComponent db={this.DB}/>});
+        var id = this.nextId();
+        apps.push({title: info.title, app: <AppComponent db={this.DB}/>, id:id});
         this.setState({apps: apps});
+    }
+
+    close(msg) {
+        this.setState({apps:this.state.apps.filter(a => a.id !== msg.id)});
     }
 
     render() {
         return (
             <VBox>
-                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i}>{a.app}</FakeWindow>)}
+                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i} db={this.DB} id={a.id}>{a.app}</FakeWindow>)}
                 <Launcher db={this.DB}/>
                 <CommandBar db={this.DB}/>
             </VBox>

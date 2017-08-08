@@ -104,6 +104,10 @@ export default class {
                 console.log("launch message, sending back to app");
                 this.app.launch(msg);
             }
+            if(msg.command === 'close') {
+                console.log("got a close message, sending back to app");
+                this.app.close(msg);
+            }
         }
         if(msg.type === 'clipboard') this.cbs['clipboard'].forEach((cb)=>cb(msg));
     }

@@ -63,6 +63,7 @@ server.on('connection', (conn) => {
         if (msg.command === 'db') return handleDBQuery(conn, msg);
         if (msg.command === 'subscribe') return handleDBSubscribe(conn,msg);
         if (msg.command === 'launch') return bounceBack(conn,msg);
+        if (msg.command === 'close') return bounceBack(conn,msg);
         if (msg.type === 'clipboard') return bounceBack(conn,msg);
         console.log("unhandled websocket message ", msg);
     });

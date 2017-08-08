@@ -27,6 +27,14 @@ export default class FakeWindow extends Component {
         };
         this.mouseDown = (e) => this.setState({action:new DragAction(e,this.moveHandler)});
         this.resizeDown = (e) => this.setState({action:new DragAction(e,this.resizeHandler)});
+        this.closeWindow = (e) => {
+            this.props.db.sendMessage({
+                type:'command',
+                target: 'system',
+                command: "close",
+                id: this.props.id,
+            });
+        }
     }
 
     render() {
@@ -40,7 +48,7 @@ export default class FakeWindow extends Component {
             <HBox onMouseDown={this.mouseDown} style={{userSelect:'none', cursor:'move'}} className="header">
                 {this.props.title}
                 <Spacer/>
-                <button className="fa fa-close"/>
+                <button className="fa fa-close" onClick={this.closeWindow}/>
                 </HBox>
             <VBox grow>
             {this.props.children}
