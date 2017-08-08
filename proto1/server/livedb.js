@@ -51,14 +51,16 @@ class LiveDB {
         });
         return Promise.resolve(doc);
     }
-    query(q) {
+    query(stuff) {
+        const q = stuff.query;
+        const settings = stuff.settings;
         if(!q) return Promise.resolve(this._docs);
         if(Object.keys(q).length === 0) return Promise.resolve(this._docs);
 
 
         if(q.type) {
-            console.log("doing the type",q.type);
-            return Promise.resolve(this._docs.filter((d)=>d.type === q.type));
+            var result = executeRawQuery(this._docs, q, settings);
+            return Promise.resolve(result);
         }
 
         console.log("can't do query",q);
@@ -140,9 +142,7 @@ function executeRawQuery(docs, query, settings) {
         return true;
     });
 
-    console.log("new query result is", docs2);
     if(settings && settings.order) {
-        console.log("sorting", settings.order);
         var fkey = Object.keys(settings.order)[0];
         docs2.sort((a, b) => {
             const av = a[fkey];
@@ -153,6 +153,5 @@ function executeRawQuery(docs, query, settings) {
         });
         console.log(docs2.map((t)=>t[fkey]).join(" \n"));
     }
-
     return docs2
 }

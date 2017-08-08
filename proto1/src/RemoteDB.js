@@ -50,7 +50,7 @@ class LiveQuery {
 
     execute() {
         this.data = [];
-        this.db.query(this.query).then((docs)=>{
+        this.db.query(this.query,this.settings).then((docs)=>{
             this.data = docs;
             this.cbs.execute.forEach((cb)=>cb(docs));
         });
@@ -143,8 +143,8 @@ export default class RemoteDB {
         return POST_JSON("http://localhost:5151/api/updateQuery",{queryId:id,query:q});
     }
 
-    query(q) {
-        return POST_JSON("http://localhost:5151/api/dbquery",q).then((answer)=>{
+    query(q,settings) {
+        return POST_JSON("http://localhost:5151/api/dbquery",{query:q, settings:settings}).then((answer)=>{
             // console.log("the query response is", answer);
             return answer;
         });
