@@ -31,7 +31,7 @@ import {HBox, VBox, Spacer} from "appy-comps";
 
 let ArtistTemplate = ((props) => <label>{props.item.name}</label>);
 let AlbumTemplate = ((props) => <label>{props.item.name}</label>);
-let SongTemplate = ((props) => <label>song {props.item.name}</label>);
+let SongTemplate = ((props) => <label>{props.item.name}</label>);
 
 export default class MusicPlayer extends Component {
     constructor(props) {
@@ -50,9 +50,10 @@ export default class MusicPlayer extends Component {
         );
 
         this.state = {
-            selectedArtist:{name:'Depeche Mode'},
+            selectedArtist:{name:'none'},
             selectedAlbum:{name:'none'},
-            selectedSong:{name:'none',album:'none'}
+            selectedSong:{name:'none',album:'none'},
+            playing:false,
         };
 
         this.selectArtist = (artist) => {
@@ -76,14 +77,29 @@ export default class MusicPlayer extends Component {
             height:350
         });
 
+
+        this.audio = new Audio();
+        this.playPause = () => {
+            if(!this.state.selectedSong.url) return;
+            if(this.audio.paused) {
+                this.audio.src = this.state.selectedSong.url;
+                this.audio.play();
+                this.setState({playing:true});
+            } else {
+                this.audio.pause();
+                this.setState({playing:false});
+            }
+
+        }
     }
 
     render() {
         return <VBox grow>
             <HBox>
-                <button>prev</button>
-                <button>play/pause</button>
-                <button>next</button>
+                <button disabled className="fa fa-backward"/>
+                <button onClick={this.playPause} className={this.state.playing?"fa fa-pause":"fa fa-play"}/>
+                <button disabled className="fa fa-forward"/>
+                <label>{this.audio.duration}</label>
                 <VBox>
                     <label>{this.state.selectedSong.name}</label>
                     <label>{this.state.selectedArtist.name}</label>

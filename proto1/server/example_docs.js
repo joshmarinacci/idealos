@@ -101,6 +101,14 @@ module.exports = [
         name:'Cars'
     },
     {
+        type:'artist',
+        artist:'Alphaville',
+    },
+
+
+
+
+    {
         type:'album',
         artist:'Erasure',
         name:'Wild'
@@ -124,6 +132,38 @@ module.exports = [
         type:'album',
         artist:'Depeche Mode',
         name:'Songs of Faith and Devotion'
+    },
+
+
+
+    {
+        type:'album',
+        artist:'Alphaville',
+        name:'Best Of',
+    },
+    {
+        type:'song',
+        artist:'Alphaville',
+        name:'Forever Young',
+        url:'https://joshondesign.com/p/MaiTai/b1/Samples/Forever_Young.mp3'
+    },
+
+
+
+    {
+        type:'artist',
+        artist:'Liver',
+    },
+    {
+        type:'album',
+        artist:'Liver',
+        name:"Best 'O",
+    },
+    {
+        type:'song',
+        artist:'Liver',
+        name:"Liver Song",
+        url:'https://joshondesign.com/p/MaiTai/b1/Samples/Liver.mp3'
     },
 
 
