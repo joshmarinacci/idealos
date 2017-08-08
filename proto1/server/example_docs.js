@@ -219,4 +219,11 @@ module.exports = [
     },
 
 
+
+    {
+        type:'notification',
+        title:'app launched',
+        read:false
+    }
+
 ];

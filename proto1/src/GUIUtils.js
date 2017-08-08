@@ -10,14 +10,16 @@ export class ListView extends Component {
         super(props);
         this.state = {
             data: []
+        };
+        if(props.model) {
+            props.model.on('update', (data) => {
+                this.setState({data: data})
+            });
+            props.model.on('execute', (data) => {
+                this.setState({data: data})
+            });
+            props.model.execute();
         }
-        props.model.on('update', (data) => {
-            this.setState({data: data})
-        });
-        props.model.on('execute', (data) => {
-            this.setState({data: data})
-        });
-        props.model.execute();
     }
 
     render() {

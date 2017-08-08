@@ -14,6 +14,7 @@ import Notes from "./Notes";
 import ClipboardViewer from "./ClipboardViewer";
 import CommandBar from "./CommandBar";
 import Calendar from "./Calendar";
+import NotificationViewer from "./NotificationViewer";
 
 
 const APP_REGISTRY = {
@@ -52,10 +53,12 @@ class App extends Component {
         super(props);
         this.DB = new RemoteDB(this);
         this.state = {
-            apps: []
+            apps: [],
+            connected:false,
         };
         this.DB.on('connect', (m) => {
             console.log("fully connected", m);
+            this.setState({connected:true})
         });
         this.DB.on("receive", (m) => {
             console.log("got a message back", m);
@@ -95,8 +98,14 @@ class App extends Component {
                 {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i} db={this.DB} appid={a.appid}>{a.app}</FakeWindow>)}
                 <Launcher db={this.DB}/>
                 <CommandBar db={this.DB}/>
+                {this.renderNotificationViewer()}
             </VBox>
         );
+    }
+
+    renderNotificationViewer() {
+        if(this.state.connected) return <NotificationViewer db={this.DB}/>
+        return "not connected";
     }
 }
 
