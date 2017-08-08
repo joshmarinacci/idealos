@@ -1,7 +1,6 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
 import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
-import {DB} from "./Database";
 /*
  # To do List
 
@@ -19,16 +18,16 @@ import {DB} from "./Database";
 
 let TodoTemplate = (props)=>{
     return <HBox>
-        <CheckButton value={props.item.completed}/>
+        <CheckButton value={props.item.completed} onSelect={()=>console.log("checking it")}/>
         <label>{props.item.text}</label>
     </HBox>
 };
 export default class Todos extends Component {
     constructor(props) {
         super(props);
-        this.query = DB.makeLiveQuery({type:'todo'}, {order:{completed:true}});
+        this.query = this.props.db.makeLiveQuery({type:'todo'}, {order:{completed:true}});
         this.createTodo = () => {
-            DB.insert({
+            this.props.db.insert({
                 type:'todo',
                 text:'one more thing to do',
                 completed:false,
@@ -41,7 +40,7 @@ export default class Todos extends Component {
                 <PushButton onClick={this.createTodo} className='fa fa-plus'>+</PushButton>
             </HBox>
             <Scroll>
-                <ListView model={this.query} template={TodoTemplate}/>
+                <ListView model={this.query} template={TodoTemplate} onSelect={()=>console.log("selected")}/>
             </Scroll>
         </VBox>
     }

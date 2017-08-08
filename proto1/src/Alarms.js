@@ -46,7 +46,7 @@ export default class Alarms extends Component {
                 name: 'unnamed alarm',
                 repeat: ['none']
             };
-            props.db.insert(alarm);
+            this.props.db.insert(alarm);
         }
     }
     render() {

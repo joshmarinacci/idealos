@@ -83,6 +83,14 @@ class App extends Component {
         const appid = this.nextId();
         apps.push({title: info.title, app: <AppComponent db={this.DB} appid={appid}/>, appid:appid});
         this.setState({apps: apps});
+
+
+        this.DB.insert({
+            type: 'notification',
+            read: false,
+            title: 'launched ' + msg.app
+        });
+
     }
 
     close(msg) {
