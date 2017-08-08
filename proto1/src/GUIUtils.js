@@ -13,7 +13,7 @@ export class ListView extends Component {
         };
         if(props.model) {
             props.model.on('update', (data) => {
-                this.setState({data: data})
+                this.setState({data: this.state.data.concat(data)})
             });
             props.model.on('execute', (data) => {
                 this.setState({data: data})
@@ -51,9 +51,10 @@ export class ListView extends Component {
 }
 
 export let Input = ((props) => {
+    var {db, ...rest} = props;
     let copied = (e) => {
         var text = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
-        props.db.sendMessage({
+        db.sendMessage({
             type: 'clipboard',
             target: 'system',
             command: 'copy',
@@ -61,5 +62,5 @@ export let Input = ((props) => {
         });
     };
 
-    return <input type="text" onCopy={copied} {...props}/>
+    return <input type="text" onCopy={copied} {...rest}/>
 });

@@ -1,7 +1,7 @@
 
 export const GET_JSON = function(path) {
     return new Promise((res,rej)=>{
-        console.log("GET_JSON fetch:",path);
+        // console.log("GET_JSON fetch:",path);
         let req = new XMLHttpRequest();
         req.onreadystatechange = function() {
             if(req.readyState === 4 && req.status === 200) {
@@ -19,7 +19,7 @@ export const GET_JSON = function(path) {
 };
 
 export const POST_JSON = function(path,payload) {
-    console.log("POSTING",path,payload);
+    // console.log("POSTING",path,payload);
     return new Promise((res,rej)=> {
         let req = new XMLHttpRequest();
 
