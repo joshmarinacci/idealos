@@ -26,8 +26,8 @@
  */
 
 import React, {Component} from "react"
-import {ListView, Scroll} from "./GUIUtils";
-import {HBox, VBox} from "appy-comps";
+import {ListView, Scroll, Input} from "./GUIUtils";
+import {HBox, VBox, Spacer} from "appy-comps";
 
 let ArtistTemplate = ((props) => <label>{props.item.name}</label>);
 let AlbumTemplate = ((props) => <label>{props.item.name}</label>);
@@ -79,6 +79,10 @@ export default class MusicPlayer extends Component {
                     <label>{this.state.selectedArtist.name}</label>
                     <label>{this.state.selectedAlbum.name}</label>
                 </VBox>
+                <Spacer/>
+                <div>
+                    <Input/>
+                </div>
             </HBox>
             <HBox grow>
                 <Scroll>

@@ -31,16 +31,16 @@
 
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
-import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {Input, ListView, Scroll} from "./GUIUtils";
 
 let ContactTemplate = ((props) => <label>{props.item.first} {props.item.last}</label>);
 let ContactView = ((props) => {
     var c = props.contact;
-    if(!c) return <VBox></VBox>;
-    if(!c.address) c.address = [];
+    if (!c) return <VBox></VBox>;
+    if (!c.address) c.address = [];
     return <VBox>
         <label>{c.first} {c.last}</label>
-        {c.address.map((addr,i) => {
+        {c.address.map((addr, i) => {
             return <VBox key={i}>
                 <HBox><label>{addr.street}</label></HBox>
                 <HBox><label>{addr.city}</label>
@@ -55,24 +55,24 @@ let ContactView = ((props) => {
 export default class Contacts extends Component {
     constructor(props) {
         super(props);
-        this.contacts = props.db.makeLiveQuery({type:'contact'});
+        this.contacts = props.db.makeLiveQuery({type: 'contact'});
         this.state = {
             selectedContact: null,
-            searchQuery:''
+            searchQuery: ''
         };
         this.selectContact = (contact) => {
-            this.setState({selectedContact:contact});
+            this.setState({selectedContact: contact});
         };
-        this.typeQuery = () => {
-            let query = this.refs.search.value;
-            this.setState({searchQuery:query});
-            this.contacts.updateQuery({type:'contact',first:query})
+        this.typeQuery = (e) => {
+            this.setState({searchQuery:e.target.value});
+            // this.contacts.updateQuery({type: 'contact', first: query})
         }
     }
+
     render() {
         return <VBox grow>
             <HBox>
-                <input ref='search' onChange={this.typeQuery}
+                <Input ref='search' onChange={this.typeQuery} db={this.props.db}
                        value={this.state.searchQuery}/>
             </HBox>
             <HBox grow>

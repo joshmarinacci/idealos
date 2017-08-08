@@ -42,3 +42,17 @@ export class ListView extends Component {
         )}</div>
     }
 }
+
+export let Input = ((props)=>{
+    let copied = (e) => {
+        var text = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
+        props.db.sendMessage({
+            type:'clipboard',
+            target:'system',
+            command:'copy',
+            payload:text
+        });
+    };
+
+    return <input type="text"  onCopy={copied} {...props}/>
+});

@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
-import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {PushButton, CheckButton, ListView, Scroll, Input} from "./GUIUtils";
 
 let NoteTemplate = (props) => {
     return <HBox>{props.item.title}</HBox>
@@ -26,8 +26,10 @@ export default class Notes extends Component {
     render() {
         return <VBox>
             <HBox>
-                <input ref='search' onChange={this.typeQuery}
-                       value={this.state.query}/>
+                <Input ref='search' onChange={this.typeQuery}
+                       value={this.state.query}
+                       db={this.props.db}
+                />
             </HBox>
             <HBox>
                 <Scroll>
