@@ -24,6 +24,13 @@ module.exports = [
     },
 
 
+    {
+        type:'alarm',
+        time:60*2+0,
+        enabled:false,
+        name:'afternoon coffee',
+        repeat:['weekday']
+    },
 
 
 

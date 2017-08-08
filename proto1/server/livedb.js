@@ -64,8 +64,8 @@ class LiveDB {
         console.log("can't do query",q);
     }
 
-    makeLiveQuery(q) {
-        let lq = new LiveQuery(q,this);
+    makeLiveQuery(q,settings) {
+        let lq = new LiveQuery(q,settings,this);
         this._live_queries.push(lq);
         return lq;
     }
@@ -74,11 +74,13 @@ class LiveDB {
         let q = this._live_queries.find((q)=>q.id === queryId);
         q.updateQuery(query);
     }
+
 }
 
 class LiveQuery {
-    constructor(q,db) {
+    constructor(q,settings,db) {
         this.query = q;
+        this.settings = settings;
         this.db = db;
         this.cbs = [];
         this.id = "id_"+Math.floor(Math.random()*10000);
@@ -116,8 +118,7 @@ class LiveQuery {
         this.execute();
     }
     execute() {
-        this.docs = this.db._docs.filter((d)=> this.matches(d));
-        console.log("new query is", this.docs);
+        this.docs = executeRawQuery(this.db._docs, this.query, this.settings);
         this.cbs.forEach((cb)=>cb(this.id,this.docs));
     }
 }
@@ -125,4 +126,33 @@ module.exports = {
     make: function() {
         return new LiveDB();
     }
+}
+
+
+function executeRawQuery(docs, query, settings) {
+    const docs2 = docs.filter((doc)=>{
+        var keys = Object.keys(query);
+        for(let i=0; i<keys.length; i++) {
+            let key = keys[i];
+            if(typeof doc[key] === 'undefined') return false;
+            if(doc[key] !== query[key]) return false;
+        }
+        return true;
+    });
+
+    console.log("new query result is", docs2);
+    if(settings && settings.order) {
+        console.log("sorting", settings.order);
+        var fkey = Object.keys(settings.order)[0];
+        docs2.sort((a, b) => {
+            const av = a[fkey];
+            const bv = b[fkey];
+            if(av < bv) return -1;
+            if(av > bv) return +1;
+            return 0;
+        });
+        console.log(docs2.map((t)=>t[fkey]).join(" \n"));
+    }
+
+    return docs2
 }

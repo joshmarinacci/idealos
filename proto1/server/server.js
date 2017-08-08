@@ -12,6 +12,8 @@ var WEBSOCKET_PORT = 5150;
 
 DB.importDocs(require('./example_docs'));
 
+// DB.makeLiveQuery({type:'alarm'},{order:{time:true}}).execute();
+
 function handleInfo(res) {
     console.log("doing info");
     res.send(JSON.stringify({
@@ -29,7 +31,7 @@ function handleDBQuery(conn, req) {
 
 function handleDBSubscribe(conn, req) {
     console.log("doing a database subscribe",req);
-    var lq = DB.makeLiveQuery(req.query);
+    var lq = DB.makeLiveQuery(req.query, req.settings);
     lq.on("update", (id,docs)=>{
         console.log("the live query updated",conn.readyState);
         if(conn.readyState === WebSocketServer.OPEN) {

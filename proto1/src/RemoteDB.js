@@ -1,16 +1,17 @@
 import {GET_JSON, POST_JSON} from "./NetUtils";
 
 class LiveQuery {
-    constructor(db,q) {
+    constructor(db,q, settings) {
         this.cbs = {
             update:[],
             execute:[]
         };
         this.db = db;
         this.query = q;
+        this.settings = settings;
         // console.log('created a live query');
 
-        this.db.subscribe(q,(docs)=>{
+        this.db.subscribe(q,settings,(docs)=>{
             // console.log('subscription got some docs',docs);
             if(docs.type==='querycreated') {
                 this.id = docs.queryId;
@@ -132,10 +133,10 @@ export default class RemoteDB {
         this.ws.send(JSON.stringify(msg));
     }
 
-    subscribe(q,cb) {
+    subscribe(q,settings,cb) {
         const id = "mid_"+Math.floor(Math.random()*10000);
         this.pending[id] = cb;
-        this.ws.send(JSON.stringify({command:'subscribe',query:q,"messageId":id}));
+        this.ws.send(JSON.stringify({command:'subscribe',query:q,settings:settings,"messageId":id}));
     }
 
     updateQuery(id,q) {
@@ -171,8 +172,8 @@ export default class RemoteDB {
     }
 
 
-    makeLiveQuery(q) {
-        var lq  = new LiveQuery(this,q);
+    makeLiveQuery(q,settings) {
+        var lq  = new LiveQuery(this,q,settings);
         this.queries.push(lq);
         return lq;
     }
