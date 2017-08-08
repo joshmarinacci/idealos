@@ -21,7 +21,8 @@ vbox
 
 
 import React, {Component} from "react"
-import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {CheckButton, ListView, PushButton, Scroll} from "./GUIUtils";
+import {HBox, VBox} from "appy-comps"
 
 let AlarmTemplate = ((props) => {
     var item = props.item;
@@ -49,7 +50,7 @@ export default class Alarms extends Component {
         }
     }
     render() {
-        return <VBox>
+        return <VBox grow>
             <HBox>
                 <PushButton onClick={this.createAlarm} className="fa fa-plus">+</PushButton>
             </HBox>

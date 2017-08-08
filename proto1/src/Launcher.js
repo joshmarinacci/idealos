@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {VBox} from "./GUIUtils";
+import {VBox} from "appy-comps"
 
 export default class Launcher extends Component {
     startApp(app) {

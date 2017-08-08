@@ -1,32 +1,8 @@
 import React, {Component} from "react"
 
-
-export var VBox = ((props)=>{
-    return <div style={{
-        display:'flex',
-        flexDirection:'column',
-        border:'1px solid #ddd',
-    }}
-                {...props}
-    >
-        {props.children}
-    </div>
-});
-export var HBox = ((props)=>{
-    return <div style={{
-        display:'flex',
-        flexDirection:'row',
-        border:'1px solid #ddd'
-    }}
-                {...props}
-    >
-        {props.children}
-    </div>
-});
-
 export var CheckButton = ((props) => <input type="checkbox" checked={props.value}/>);
 export let PushButton = ((props) => <button onClick={props.onClick}>{props.children}</button>);
-export let Scroll = ((props) => <div style={{overflow:"scroll"}}>{props.children}</div>);
+export let Scroll = ((props) => <div style={{overflow:"scroll", flex:1}}>{props.children}</div>);
 
 
 export class ListView extends Component {
@@ -43,9 +19,11 @@ export class ListView extends Component {
         let Template = this.props.template;
         return <div
             style={{
-                border:'1px solid gray',
+                border:'0px solid gray',
                 minWidth:'100px',
-                minHeight:'100px'
+                minHeight:'100px',
+                backgroundColor:'#eee',
+                flex:1
             }}
         >{this.state.data.map((item, i)=> {
                 var sel = (this.props.selected === item);

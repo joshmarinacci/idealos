@@ -3,7 +3,7 @@ import './App.css';
 import FakeWindow from "./FakeWindow";
 import "font-awesome/css/font-awesome.css";
 import Alarms from "./Alarms";
-import {VBox} from "./GUIUtils";
+import {VBox} from "appy-comps";
 import Launcher from "./Launcher";
 import MusicPlayer from "./MusicPlayer";
 import Contacts from "./Contacts";

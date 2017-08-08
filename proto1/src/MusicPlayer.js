@@ -26,7 +26,8 @@
  */
 
 import React, {Component} from "react"
-import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {ListView, Scroll} from "./GUIUtils";
+import {HBox, VBox} from "appy-comps";
 
 let ArtistTemplate = ((props) => <label>{props.item.name}</label>);
 let AlbumTemplate = ((props) => <label>{props.item.name}</label>);
@@ -68,7 +69,7 @@ export default class MusicPlayer extends Component {
     }
 
     render() {
-        return <VBox>
+        return <VBox grow>
             <HBox>
                 <button>prev</button>
                 <button>play/pause</button>
@@ -79,7 +80,7 @@ export default class MusicPlayer extends Component {
                     <label>{this.state.selectedAlbum.name}</label>
                 </VBox>
             </HBox>
-            <HBox>
+            <HBox grow>
                 <Scroll>
                     <ListView
                         model={this.artists}

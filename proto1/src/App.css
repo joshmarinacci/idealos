@@ -4,9 +4,14 @@
     background-color: white;
 }
 
-.window header {
+.window .header {
     background-color: deeppink;
     padding: 0.5em;
+}
+
+.window .header button, .window .footer button {
+    background-color: transparent;
+    border-width: 0;
 }
 
 .launcher {
@@ -35,4 +40,5 @@
     background-color: lightpink;
     border: 2px solid pink;
     margin: 0 auto;
+    padding-left: 0.5em;
 }

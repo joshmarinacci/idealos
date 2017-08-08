@@ -1,5 +1,6 @@
 import React, {Component} from "react"
-import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {HBox, VBox} from "appy-comps";
+import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
 import {DB} from "./Database";
 /*
  # To do List
@@ -35,7 +36,7 @@ export default class Todos extends Component {
         }
     }
     render() {
-        return <VBox>
+        return <VBox grow>
             <HBox>
                 <PushButton onClick={this.createTodo} className='fa fa-plus'>+</PushButton>
             </HBox>

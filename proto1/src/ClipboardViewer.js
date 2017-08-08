@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {HBox} from "appy-comps";
 
 export default class ClipboardViewer extends Component {
     constructor(props) {
@@ -14,8 +15,9 @@ export default class ClipboardViewer extends Component {
     }
 
     render() {
-        return <ul>{this.state.items.map((it,i)=>{
+        return <HBox
+        >{this.state.items.map((it,i)=>{
             return <li key={i}>{it}</li>
-        })}</ul>
+        })}</HBox>
     }
 }

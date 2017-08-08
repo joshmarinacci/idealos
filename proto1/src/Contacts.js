@@ -30,7 +30,8 @@
  */
 
 import React, {Component} from "react"
-import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {HBox, VBox} from "appy-comps";
+import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
 
 let ContactTemplate = ((props) => <label>{props.item.first} {props.item.last}</label>);
 let ContactView = ((props) => {
@@ -69,12 +70,12 @@ export default class Contacts extends Component {
         }
     }
     render() {
-        return <VBox>
+        return <VBox grow>
             <HBox>
                 <input ref='search' onChange={this.typeQuery}
                        value={this.state.searchQuery}/>
             </HBox>
-            <HBox>
+            <HBox grow>
                 <Scroll>
                     <ListView model={this.contacts}
                               template={ContactTemplate}

@@ -1,5 +1,6 @@
 import React, {Component} from "react"
-import {VBox, HBox, PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
+import {HBox, VBox} from "appy-comps";
+import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
 
 let NoteTemplate = (props) => {
     return <HBox>{props.item.title}</HBox>

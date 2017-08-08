@@ -1,37 +1,58 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {VBox, HBox, Spacer} from "appy-comps";
+import DragAction from "./DragAction";
 
 export default class FakeWindow extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            x:200,
-            y:200,
-            down:false
+            x: 200,
+            y: 200,
+            w: 300,
+            h: 200,
+            down: false,
+            action: null,
         };
-        this.mouseDown = () => {
-            this.listener = (e) => {
-                this.setState({x:e.clientX-20, y:e.clientY-15});
-            };
-            this.up_listener = (e) => {
-                document.removeEventListener('mousemove',this.listener);
-                document.removeEventListener('mouseup',this.up_listener);
-            };
-            document.addEventListener('mousemove',this.listener);
-            document.addEventListener('mouseup', this.up_listener);
+        this.moveHandler = (action) => {
+            this.setState({
+                x: this.state.x + action.delta.x,
+                y: this.state.y + action.delta.y
+            })
         };
+        this.resizeHandler = (action) => {
+            this.setState({
+                w: this.state.w + action.delta.x,
+                h: this.state.h + action.delta.y
+            })
+        };
+        this.mouseDown = (e) => this.setState({action:new DragAction(e,this.moveHandler)});
+        this.resizeDown = (e) => this.setState({action:new DragAction(e,this.resizeHandler)});
     }
+
     render() {
         const style = {
-            top:this.state.y,
-            left:this.state.x,
-            userSelect:'none',
-            cursor:'move'
+            top: this.state.y,
+            left: this.state.x,
+            width: this.state.w,
+            height: this.state.h,
         };
-        return <div className="window"
-        style={style}>
-            <header onMouseDown={this.mouseDown}
-            >{this.props.title}</header>
+        return <VBox className="window" style={style}>
+            <HBox onMouseDown={this.mouseDown} style={{userSelect:'none', cursor:'move'}} className="header">
+                {this.props.title}
+                <Spacer/>
+                <button className="fa fa-close"/>
+                </HBox>
+            <VBox grow>
             {this.props.children}
-        </div>
+            </VBox>
+            <HBox className="footer">
+                <Spacer/>
+                <button className="fa fa-arrows-alt"
+                        style={{
+                            cursor:'nwse-resize'
+                        }}
+                        onMouseDown={this.resizeDown}/>
+            </HBox>
+        </VBox>
     }
 }
