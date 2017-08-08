@@ -75,21 +75,24 @@ class App extends Component {
             console.log("unknown app", msg.app);
             return;
         }
-        var info = APP_REGISTRY[msg.app];
-        var AppComponent = info.app;
-        var id = this.nextId();
-        apps.push({title: info.title, app: <AppComponent db={this.DB}/>, id:id});
+        const info = APP_REGISTRY[msg.app];
+        const AppComponent = info.app;
+        const appid = this.nextId();
+        apps.push({title: info.title, app: <AppComponent db={this.DB} appid={appid}/>, appid:appid});
         this.setState({apps: apps});
     }
 
     close(msg) {
-        this.setState({apps:this.state.apps.filter(a => a.id !== msg.id)});
+        this.setState({apps:this.state.apps.filter(a => a.appid !== msg.appid)});
+    }
+
+    resize(msg) {
     }
 
     render() {
         return (
             <VBox>
-                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i} db={this.DB} id={a.id}>{a.app}</FakeWindow>)}
+                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i} db={this.DB} appid={a.appid}>{a.app}</FakeWindow>)}
                 <Launcher db={this.DB}/>
                 <CommandBar db={this.DB}/>
             </VBox>

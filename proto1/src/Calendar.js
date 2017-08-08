@@ -27,6 +27,16 @@ export default class Calendar extends Component {
             this.setState({events: docs});
         });
         this.query.execute();
+
+        this.props.db.sendMessage({
+            type:'command',
+            target: 'system',
+            command: "resize",
+            appid: this.props.appid,
+            width:700,
+            height:350
+        });
+
     }
 
     render() {

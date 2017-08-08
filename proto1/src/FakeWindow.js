@@ -25,16 +25,26 @@ export default class FakeWindow extends Component {
                 h: this.state.h + action.delta.y
             })
         };
-        this.mouseDown = (e) => this.setState({action:new DragAction(e,this.moveHandler)});
-        this.resizeDown = (e) => this.setState({action:new DragAction(e,this.resizeHandler)});
+        this.mouseDown = (e) => this.setState({action: new DragAction(e, this.moveHandler)});
+        this.resizeDown = (e) => this.setState({action: new DragAction(e, this.resizeHandler)});
         this.closeWindow = (e) => {
             this.props.db.sendMessage({
-                type:'command',
+                type: 'command',
                 target: 'system',
                 command: "close",
-                id: this.props.id,
+                appid: this.props.appid,
             });
-        }
+        };
+
+
+        //handler for resize messages
+        props.db.listenMessages((msg) => {
+            if (msg.type !== 'command') return;
+            if (msg.command !== 'resize') return;
+            if (msg.appid !== this.props.appid) return;
+            if (msg.width) this.setState({w: msg.width});
+            if (msg.height) this.setState({h: msg.height});
+        });
     }
 
     render() {
@@ -45,19 +55,19 @@ export default class FakeWindow extends Component {
             height: this.state.h,
         };
         return <VBox className="window" style={style}>
-            <HBox onMouseDown={this.mouseDown} style={{userSelect:'none', cursor:'move'}} className="header">
+            <HBox onMouseDown={this.mouseDown} style={{userSelect: 'none', cursor: 'move'}} className="header">
                 {this.props.title}
                 <Spacer/>
                 <button className="fa fa-close" onClick={this.closeWindow}/>
-                </HBox>
+            </HBox>
             <VBox grow>
-            {this.props.children}
+                {this.props.children}
             </VBox>
             <HBox className="footer">
                 <Spacer/>
                 <button className="fa fa-arrows-alt"
                         style={{
-                            cursor:'nwse-resize'
+                            cursor: 'nwse-resize'
                         }}
                         onMouseDown={this.resizeDown}/>
             </HBox>

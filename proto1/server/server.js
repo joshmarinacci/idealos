@@ -58,14 +58,12 @@ server.on('connection', (conn) => {
     });
     conn.on('message', function (e) {
         var msg = JSON.parse(e);
+        if (msg.type === 'clipboard') return bounceBack(conn,msg);
         if (!msg.command) return handleInfo(conn);
         if (msg.command === 'info') return handleInfo(conn);
         if (msg.command === 'db') return handleDBQuery(conn, msg);
         if (msg.command === 'subscribe') return handleDBSubscribe(conn,msg);
-        if (msg.command === 'launch') return bounceBack(conn,msg);
-        if (msg.command === 'close') return bounceBack(conn,msg);
-        if (msg.type === 'clipboard') return bounceBack(conn,msg);
-        console.log("unhandled websocket message ", msg);
+        return bounceBack(conn,msg);
     });
 });
 

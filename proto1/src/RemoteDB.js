@@ -8,10 +8,10 @@ class LiveQuery {
         };
         this.db = db;
         this.query = q;
-        console.log('created a live query');
+        // console.log('created a live query');
 
         this.db.subscribe(q,(docs)=>{
-            console.log('subscription got some docs',docs);
+            // console.log('subscription got some docs',docs);
             if(docs.type==='querycreated') {
                 this.id = docs.queryId;
             }
@@ -27,15 +27,15 @@ class LiveQuery {
     }
 
     update(msg) {
-        console.log("live query", this.id,"got an update message",msg);
+        // console.log("live query", this.id,"got an update message",msg);
         if(msg.type === 'queryupdate') {
-            console.log("clearing first");
+            // console.log("clearing first");
             this.data = [];
         }
         msg.docs.forEach((d)=>{
             this.data.push(d);
         });
-        console.log("new data is",this.data);
+        // console.log("new data is",this.data);
         this.cbs.update.forEach((cb)=>cb(this.data));
     }
 
@@ -60,54 +60,57 @@ export default class {
         };
         this.pending = [];
         this.queries = [];
+        this.messageListeners = [];
     }
     connect() {
         function log(...rest) {
             console.log(...rest);
         };
-        console.log("connecting");
+        // console.log("connecting");
         this.ws = new WebSocket('ws://localhost:5150');
         this.ws.onerror = () => log('WebSocket error');
         this.ws.onopen = () => {
-            log('WebSocket connection established');
+            // log('WebSocket connection established');
             this.cbs.connect.forEach((cb)=>cb("connected"));
         };
         this.ws.onclose = () => log('WebSocket connection closed');
         this.ws.onmessage =  (event) =>  this.dispatchMessage(JSON.parse(event.data));
 
         GET_JSON("http://localhost:5151/api/info").then((answer) => {
-            console.log("connection to server said",answer);
+            // console.log("connection to server said",answer);
         });
     }
 
+    listenMessages(cb) {
+        this.messageListeners.push(cb);
+    }
+
     dispatchMessage(msg) {
-        console.log("message arrived",msg);
+        this.messageListeners.forEach((cb)=>cb(msg));
         if(msg.type==='queryupdate') {
-            console.log('live query updated',msg.queryId);
+            // console.log('live query updated',msg.queryId);
             this.queries.forEach((q)=>{
                 if(q.id === msg.queryId) {
-                    console.log("query match");
+                    // console.log("query match");
                     q.update(msg);
                 }
             })
+            return;
 
         }
         if(msg.type === 'querycreated') {
-            console.log("query was created with id",msg.queryId, msg.messageId);
+            // console.log("query was created with id",msg.queryId, msg.messageId);
             if(this.pending[msg.messageId]) {
                 this.pending[msg.messageId](msg);
                 delete this.pending[msg.messageId];
             }
+            return;
         }
+        // console.log("message arrived",msg);
         if(msg.type === 'command') {
-            if(msg.command === 'launch') {
-                console.log("launch message, sending back to app");
-                this.app.launch(msg);
-            }
-            if(msg.command === 'close') {
-                console.log("got a close message, sending back to app");
-                this.app.close(msg);
-            }
+            if(msg.command === 'launch') this.app.launch(msg);
+            if(msg.command === 'close')  this.app.close(msg);
+            if(msg.command === 'resize') this.app.resize(msg);
         }
         if(msg.type === 'clipboard') this.cbs['clipboard'].forEach((cb)=>cb(msg));
     }
@@ -134,14 +137,14 @@ export default class {
 
     query(q) {
         return POST_JSON("http://localhost:5151/api/dbquery",q).then((answer)=>{
-            console.log("the query response is", answer);
+            // console.log("the query response is", answer);
             return answer;
         });
     }
 
     insert(doc) {
         return POST_JSON("http://localhost:5151/api/dbinsert",doc).then((answer)=>{
-            console.log("the insert response is", answer);
+            // console.log("the insert response is", answer);
             return answer;
         });
     }

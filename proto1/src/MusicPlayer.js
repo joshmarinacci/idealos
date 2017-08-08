@@ -66,6 +66,16 @@ export default class MusicPlayer extends Component {
         this.selectSong = (song) => {
             this.setState({selectedSong:song})
         };
+
+        this.props.db.sendMessage({
+            type:'command',
+            target: 'system',
+            command: "resize",
+            appid: this.props.appid,
+            width:700,
+            height:350
+        });
+
     }
 
     render() {
