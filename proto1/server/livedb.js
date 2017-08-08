@@ -5,9 +5,15 @@ class LiveDB {
         this._live_queries = [];
     }
 
+    generateID() {
+        return "did_" + Math.floor(Math.random() * 10000);
+    }
+
+
     importDocs(docs) {
         docs.forEach((doc)=>{
             this._docs.push(doc);
+            if(!doc.id) doc.id = this.generateID();
             this._live_queries.forEach((lq)=>{
                 console.log("checking for a match",doc, lq.query);
                 if(lq.matches(doc)) {
@@ -21,6 +27,20 @@ class LiveDB {
     insert(doc) {
         this.importDocs([doc]);
         return Promise.resolve();
+    }
+
+    update(doc) {
+        const old_n = this._docs.findIndex((d)=>d.id == doc.id);
+        const old_doc = this._docs[old_n];
+
+        this._docs.splice(old_n,1,doc);
+        this._live_queries.forEach((lq)=>{
+            if(lq.matches(old_doc)) lq.fireRemove([old_doc]);
+        });
+        this._live_queries.forEach((lq)=>{
+            if(lq.matches(doc)) lq.fireInsert([doc]);
+        });
+        return Promise.resolve(doc);
     }
     query(q) {
         if(!q) return Promise.resolve(this._docs);
@@ -53,6 +73,7 @@ class LiveQuery {
         this.db = db;
         this.cbs = [];
         this.id = "id_"+Math.floor(Math.random()*10000);
+        this.docs = [];
     }
     on(type,cb) {
         this.cbs.push(cb);
@@ -61,13 +82,16 @@ class LiveQuery {
         var keys = Object.keys(this.query)
         for(let i=0; i<keys.length; i++) {
             let key = keys[i];
-            if(!doc[key]) return false;
+            if(typeof doc[key] === 'undefined') return false;
             if(doc[key] !== this.query[key]) return false;
         }
         return true;
     }
     fireInsert(docs) {
-        this.cbs.forEach((cb)=>cb(this.id,docs));
+        this.execute();
+    }
+    fireRemove(docs) {
+        this.execute();
     }
     updateQuery(query) {
         console.log("updating the live query",this.id,this.query,query);
@@ -80,10 +104,8 @@ class LiveQuery {
         this.execute();
     }
     execute() {
-        console.log("executing the new local query", this.query);
-        var docs = this.db._docs.filter((d)=> this.matches(d));
-        console.log("final docs = ", docs);
-        this.cbs.forEach((cb)=>cb(this.id,docs));
+        this.docs = this.db._docs.filter((d)=> this.matches(d));
+        this.cbs.forEach((cb)=>cb(this.id,this.docs));
     }
 }
 module.exports = {

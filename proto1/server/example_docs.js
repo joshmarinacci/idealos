@@ -224,6 +224,19 @@ module.exports = [
         type:'notification',
         title:'app launched',
         read:false
+    },
+
+
+    {
+        type:'todo',
+        text:"get the milk",
+        completed:false
+    },
+
+    {
+        type:'todo',
+        text:"pick up the dry cleaning",
+        completed: false
     }
 
 ];

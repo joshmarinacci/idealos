@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-export var CheckButton = ((props) => <input type="checkbox" checked={props.value}/>);
+export var CheckButton = ((props) => <input type="checkbox" checked={props.value} onChange={props.onChange}/>);
 export let PushButton = ((props) => <button onClick={props.onClick}>{props.children}</button>);
 export let Scroll = ((props) => <div style={{overflow: "scroll", flex: 1}}>{props.children}</div>);
 
@@ -12,12 +12,8 @@ export class ListView extends Component {
             data: []
         };
         if(props.model) {
-            props.model.on('update', (data) => {
-                this.setState({data: this.state.data.concat(data)})
-            });
-            props.model.on('execute', (data) => {
-                this.setState({data: data})
-            });
+            props.model.on('update', (data) =>  this.setState({data: data}));
+            props.model.on('execute', (data) => this.setState({data: data}));
             props.model.execute();
         }
     }
@@ -43,6 +39,7 @@ export class ListView extends Component {
                 ><Template item={item}
                            onSelect={this.props.onSelect}
                            selected={this.props.selected}
+                           model={this.props.model}
 
                 /></div>
             }

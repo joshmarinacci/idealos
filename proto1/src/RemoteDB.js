@@ -35,8 +35,11 @@ class LiveQuery {
         msg.docs.forEach((d)=>{
             this.data.push(d);
         });
-        // console.log("new data is",this.data);
         this.cbs.update.forEach((cb)=>cb(this.data));
+    }
+
+    sendDocumentUpdate(doc) {
+        this.db.update(doc);
     }
 
 
@@ -50,7 +53,7 @@ class LiveQuery {
     }
 }
 
-export default class {
+export default class RemoteDB {
     constructor(app) {
         this.app = app;
         this.cbs = {
@@ -145,6 +148,13 @@ export default class {
     insert(doc) {
         return POST_JSON("http://localhost:5151/api/dbinsert",doc).then((answer)=>{
             // console.log("the insert response is", answer);
+            return answer;
+        });
+    }
+
+    update(doc) {
+        return POST_JSON("http://localhost:5151/api/dbupdate",doc).then((answer)=>{
+            // console.log("the update response is", answer);
             return answer;
         });
     }

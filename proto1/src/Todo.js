@@ -17,15 +17,19 @@ import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
 */
 
 let TodoTemplate = (props)=>{
+    function complete() {
+        props.item.completed = true;
+        props.model.sendDocumentUpdate(props.item);
+    }
     return <HBox>
-        <CheckButton value={props.item.completed} onSelect={()=>console.log("checking it")}/>
+        <CheckButton value={props.item.completed} onChange={complete}/>
         <label>{props.item.text}</label>
     </HBox>
 };
 export default class Todos extends Component {
     constructor(props) {
         super(props);
-        this.query = this.props.db.makeLiveQuery({type:'todo'}, {order:{completed:true}});
+        this.query = this.props.db.makeLiveQuery({type:'todo',completed:false});
         this.createTodo = () => {
             this.props.db.insert({
                 type:'todo',
