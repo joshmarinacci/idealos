@@ -1,6 +1,21 @@
 # idealos
 mockups of an ideal desktop operating system / environment
 
+
+to run it:
+
+* checkout the code
+* cd to proto1 dir:  `cd idealos/proto1`
+* install deps:   `npm install`
+* run server in background:  `npm run server`
+* run client in dev mode: `npm run start`
+
+
+
+
+
+-------------
+
 email client
 
 folder_list_query = query all docs where type is mail_folder, order by name
