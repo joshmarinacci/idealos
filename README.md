@@ -7,9 +7,10 @@ to run it:
 * checkout the code
 * cd to proto1 dir:  `cd idealos/proto1`
 * install deps:   `npm install`
-* run server in background:  `npm run server`
+* run server in background:  `npm run server &`
 * run client in dev mode: `npm run start`
 
+The browser will open and start the mockup desktop operating system.  All data is in memory and will be reset when the server is restarted.
 
 
 
