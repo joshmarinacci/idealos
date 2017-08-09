@@ -18,6 +18,8 @@ to run it:
 
 email client
 
+
+```
 folder_list_query = query all docs where type is mail_folder, order by name
 folder_list_view is view, bound to folder_list_query
 mail_list_query = query all docs where type is email, folder is in folder_list_view.selected, order by date
@@ -56,11 +58,13 @@ edit_view is vbox
 		textline <= model.subject
 	scrollbox
 		richtextview: <= model.content
-
+```
 
 # Contacts List
 
 contacts_list is query all docs type == contact
+
+```
 contacts_view is hbox
 	vbox
 		searchbox <= app.filter
@@ -86,6 +90,7 @@ contacts_view is hbox
 					label: address.state
 					label: address.zip
 
+```
 
 # MP3 player
 
