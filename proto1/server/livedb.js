@@ -1,3 +1,5 @@
+const mingo = require('mingo');
+
 class LiveDB {
     constructor() {
         console.log("making a database");
@@ -51,14 +53,11 @@ class LiveDB {
         });
         return Promise.resolve(doc);
     }
-    query(stuff) {
-        const q = stuff.query;
-        const settings = stuff.settings;
-        if(!q) return Promise.resolve(this._docs);
-        if(Object.keys(q).length === 0) return Promise.resolve(this._docs);
-
-
-        return Promise.resolve(executeRawQuery(this._docs, q, settings));
+    query(q) {
+        if(!q) q = {};
+        let mq = new mingo.Query(q);
+        var res = mq.find(this._docs);
+        return Promise.resolve(res.all());
     }
 
     makeLiveQuery(q,settings) {

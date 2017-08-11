@@ -32,102 +32,67 @@ const contacts = [
     },
 
     {
-        type:'contact',
-        first:'Bill',
-        last:'Sanders',
+        type: 'contact',
+        first: 'Bill',
+        last: 'Sanders',
     },
 
     {
-        type:'contact',
-        first:'Sally',
-        last:'Salamander'
+        type: 'contact',
+        first: 'Sally',
+        last: 'Salamander'
     }
 ];
 
 DB.importDocs(contacts);
 
 test('query all docs', (t) => {
-    DB.query({
-        query: {},
-        settings: {}
-    }).then((docs) => {
+    DB.query().then((docs) => {
         t.equals(docs.length, 6);
         t.end();
-    })
+    });
 });
 
 test('query first name is Josh', (t) => {
-    DB.query({
-        query: {first: 'Josh'},
-        settings: {}
-    }).then((docs) => {
+    DB.query({first: 'Josh'}).then((docs) => {
         t.equals(docs.length, 1);
         t.end();
-    })
+    });
 });
 
+
 test('query first name is josh, case insensitive', (t) => {
-    DB.query({
-        query: {first: 'josh'},
-        settings: {caseInsensitive: true}
-    }).then((docs) => {
+    DB.query({first: /josh/i}).then((docs) => {
         t.equals(docs.length, 1);
         t.end();
-    })
+    });
 });
 
 test('search field with a prefix', (t) => {
-    DB.query({
-        query: {
-            first: {prefix: 'J', caseInsensitive: false},
-        },
-        settings: {}
-    }).then((docs) => {
+    DB.query({first: /^J/}).then((docs) => {
         t.equals(docs.length, 1);
         t.end();
-    })
+    });
 });
 
 test('search field with a prefix, case insensitive', (t) => {
-    DB.query({
-        query: {
-            first: {prefix: 'j', caseInsensitive: true},
-        },
-        settings: {
-        }
-    }).then((docs) => {
+    DB.query({first: /^J/i}).then((docs) => {
         t.equals(docs.length, 1);
         t.end();
-    })
+    });
 });
 
 test('search two fields with a prefix, case insensitive, OR', (t) => {
-    DB.query({
-        query: {
-            first: {prefix: 's', caseInsensitive: true},
-            last: {prefix: 's', caseInsensitive: true}
-        },
-        settings: {
-            combine: 'or'
-        }
-    }).then((docs) => {
+    DB.query({$or: [{first: /^s/i}, {last: /^s/i}]}).then((docs) => {
         t.equals(docs.length, 3);
         t.end();
-    })
+    });
 });
 
 
 test('search two fields with a prefix, case insensitive, AND', (t) => {
-    DB.query({
-        query: {
-            first: {prefix: 's', caseInsensitive: true},
-            last: {prefix: 's', caseInsensitive: true}
-        },
-        settings: {
-            combine: 'and'
-        }
-    }).then((docs) => {
+    DB.query({$and: [{first: /^s/i}, {last: /^s/i}]}).then((docs) => {
         t.equals(docs.length, 1);
         t.end();
-    })
+    });
 });
