@@ -22,17 +22,48 @@ vbox
 
 import React, {Component} from "react"
 import {CheckButton, ListView, PushButton, Scroll} from "./GUIUtils";
-import {HBox, VBox} from "appy-comps"
+import {HBox, VBox, PopupMenu, PopupManager} from "appy-comps"
 
-let AlarmTemplate = ((props) => {
-    var item = props.item;
-    return <HBox>
-        <CheckButton/>
-        <label>{item.title}</label>
-        <label>{Math.floor(item.time/60)+ ':' + item.time % 60}</label>
-        <label>{item.repeat.join("")}</label>
-    </HBox>
-});
+const ColorItemTemplate = (props) => {
+    return <label style={{backgroundColor:props.item}} onClick={props.onSelect}>some color</label>;
+}
+
+class AlarmTemplate extends Component {
+    constructor(props) {
+        super(props);
+
+        const colors = ['white','black',"red",'green','blue'];
+
+        this.state = {
+            color:colors[0]
+        };
+
+        this.changed = (item) => {
+            console.log('changed to ',item);
+            PopupManager.hide();
+            this.setState({color:item})
+        };
+        this.colorize = (e) => {
+            var contents = <PopupMenu
+                list={colors}
+                template={ColorItemTemplate}
+                onChange={this.changed}
+            />;
+            PopupManager.show(contents, this.refs.button);
+        };
+    }
+
+    render() {
+        const item = this.props.item;
+        return <HBox>
+            <CheckButton/>
+            <label>{item.title}</label>
+            <label>{Math.floor(item.time / 60) + ':' + item.time % 60}</label>
+            <label>{item.repeat.join("")}</label>
+            <button ref='button' onClick={this.colorize} style={{backgroundColor:this.state.color}}>colorize</button>
+        </HBox>
+    }
+}
 
 export default class Alarms extends Component {
     constructor(props) {

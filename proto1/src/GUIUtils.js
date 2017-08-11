@@ -16,6 +16,10 @@ export class ListView extends Component {
             props.model.on('execute', (data) => this.setState({data: data}));
             props.model.execute();
         }
+
+        this.onSelect = (item) => {
+            if(this.props.onSelect) this.props.onSelect(item)
+        }
     }
 
     render() {
@@ -35,12 +39,11 @@ export class ListView extends Component {
                     className="ListItem"
                     style={{backgroundColor: sel ? 'lightBlue' : '#fff'}}
                     key={i}
-                    onClick={() => this.props.onSelect(item)}
+                    onClick={() => this.onSelect(item)}
                 ><Template item={item}
-                           onSelect={this.props.onSelect}
+                           onSelect={()=>this.onSelect(item)}
                            selected={this.props.selected}
                            model={this.props.model}
-
                 /></div>
             }
         )}</div>

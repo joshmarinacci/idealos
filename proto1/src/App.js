@@ -1,7 +1,7 @@
 
 import React, {Component} from 'react';
 import FakeWindow from "./FakeWindow";
-import {VBox} from "appy-comps";
+import {VBox, PopupContainer} from "appy-comps";
 import {APP_REGISTRY} from "./Constants";
 
 import Launcher from "./Launcher";
@@ -74,6 +74,7 @@ class App extends Component {
                 <Launcher db={this.DB}/>
                 <CommandBar db={this.DB}/>
                 {this.renderNotificationViewer()}
+                <PopupContainer/>
             </VBox>
         );
     }
