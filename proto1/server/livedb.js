@@ -58,12 +58,7 @@ class LiveDB {
         if(Object.keys(q).length === 0) return Promise.resolve(this._docs);
 
 
-        if(q.type) {
-            var result = executeRawQuery(this._docs, q, settings);
-            return Promise.resolve(result);
-        }
-
-        console.log("can't do query",q);
+        return Promise.resolve(executeRawQuery(this._docs, q, settings));
     }
 
     makeLiveQuery(q,settings) {
@@ -130,14 +125,61 @@ module.exports = {
     }
 }
 
+function doQueryObjectMatch(doc, key, set, settings) {
+    let docval = doc[key];
+    if(set.prefix) {
+        console.log("doing a prefix search on field", key);
+        var prefix = set.prefix;
+        if(set.caseInsensitive === true) {
+            prefix = prefix.toLowerCase();
+            docval = docval.toLowerCase();
+        }
+        if(docval.indexOf(prefix) >= 0) {
+            console.log("matches prefix");
+            return true;
+        }
+    }
+}
+
+const CONSTS = {
+    AND:'and',
+    OR:'or'
+};
+
+function normalizeSettings(settings) {
+    if(!settings.combine) settings.combine = CONSTS.AND;
+    settings.combine = settings.combine.toLowerCase();
+    return settings;
+}
 
 function executeRawQuery(docs, query, settings) {
+    //normalize
+    settings = normalizeSettings(settings);
+
     const docs2 = docs.filter((doc)=>{
         var keys = Object.keys(query);
         for(let i=0; i<keys.length; i++) {
             let key = keys[i];
             if(typeof doc[key] === 'undefined') return false;
-            if(doc[key] !== query[key]) return false;
+
+            let docval = doc[key];
+
+            if(typeof query[key] === 'object') {
+                let queryspec = query[key];
+                return doQueryObjectMatch(doc, key, queryspec, settings);
+            }
+
+            let queryval = query[key];
+
+
+
+            if(settings && settings.caseInsensitive === true) {
+                docval = docval.toString().toLowerCase();
+                queryval = queryval.toString().toLowerCase();
+                if (docval !== queryval) return false;
+            } else {
+                if (docval !== queryval) return false;
+            }
         }
         return true;
     });
