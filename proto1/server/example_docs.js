@@ -141,6 +141,13 @@ module.exports = [
         name:'Songs of Faith and Devotion'
     },
 
+    {
+        type:'song',
+        artist:'Depeche Mode',
+        album:'Violator',
+        name:'In Your Eyes'
+    },
+
 
 
     {
