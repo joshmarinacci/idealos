@@ -68,7 +68,7 @@ class AlarmTemplate extends Component {
 export default class Alarms extends Component {
     constructor(props) {
         super(props);
-        this.query = props.db.makeLiveQuery({type:'alarm'}, {order:{time:true}});
+        this.query = props.db.makeLiveQuery({type:'alarm'});
         this.createAlarm = () => {
             var alarm = {
                 type:'alarm',

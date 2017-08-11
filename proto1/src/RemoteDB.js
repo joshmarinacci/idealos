@@ -1,17 +1,15 @@
 import {GET_JSON, POST_JSON} from "./NetUtils";
 
 class LiveQuery {
-    constructor(db,q, settings) {
+    constructor(db,q) {
         this.cbs = {
             update:[],
             execute:[]
         };
         this.db = db;
         this.query = q;
-        this.settings = settings;
-        // console.log('created a live query');
 
-        this.db.subscribe(q,settings,(docs)=>{
+        this.db.subscribe(q,(docs)=>{
             // console.log('subscription got some docs',docs);
             if(docs.type==='querycreated') {
                 this.id = docs.queryId;
@@ -50,7 +48,7 @@ class LiveQuery {
 
     execute() {
         this.data = [];
-        this.db.query(this.query,this.settings).then((docs)=>{
+        this.db.query(this.query).then((docs)=>{
             this.data = docs;
             this.cbs.execute.forEach((cb)=>cb(docs));
         });
@@ -133,18 +131,18 @@ export default class RemoteDB {
         this.ws.send(JSON.stringify(msg));
     }
 
-    subscribe(q,settings,cb) {
+    subscribe(q,cb) {
         const id = "mid_"+Math.floor(Math.random()*10000);
         this.pending[id] = cb;
-        this.ws.send(JSON.stringify({command:'subscribe',query:q,settings:settings,"messageId":id}));
+        this.ws.send(JSON.stringify({command:'subscribe',query:q,"messageId":id}));
     }
 
     updateQuery(id,q) {
         return POST_JSON("http://localhost:5151/api/updateQuery",{queryId:id,query:q});
     }
 
-    query(q,settings) {
-        return POST_JSON("http://localhost:5151/api/dbquery",{query:q, settings:settings}).then((answer)=>{
+    query(q) {
+        return POST_JSON("http://localhost:5151/api/dbquery",{query:q}).then((answer)=>{
             // console.log("the query response is", answer);
             return answer;
         });
@@ -172,8 +170,8 @@ export default class RemoteDB {
     }
 
 
-    makeLiveQuery(q,settings) {
-        var lq  = new LiveQuery(this,q,settings);
+    makeLiveQuery(q) {
+        var lq  = new LiveQuery(this,q);
         this.queries.push(lq);
         return lq;
     }

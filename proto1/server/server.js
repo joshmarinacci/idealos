@@ -3,7 +3,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const WebSocketServer = require('ws');
-console.log("starting it up");
 const DB = require('./livedb').make({path: "tempdb.json"});
 
 
@@ -15,7 +14,6 @@ DB.importDocs(require('./example_docs'));
 // DB.makeLiveQuery({type:'alarm'},{order:{time:true}}).execute();
 
 function handleInfo(res) {
-    console.log("doing info");
     res.send(JSON.stringify({
         success: true,
         message: "the server is running fine"
@@ -23,17 +21,14 @@ function handleInfo(res) {
 }
 
 function handleDBQuery(conn, req) {
-    console.log("doing a database query", req);
     DB.query(req).then((docs) => {
         conn.send(JSON.stringify(docs));
     });
 }
 
 function handleDBSubscribe(conn, req) {
-    console.log("doing a database subscribe",req);
     var lq = DB.makeLiveQuery(req.query, req.settings);
     lq.on("update", (id,docs)=>{
-        console.log("the live query updated",conn.readyState);
         if(conn.readyState === WebSocketServer.OPEN) {
             conn.send(JSON.stringify({type: "queryupdate", queryId:id,docs: docs}));
         }
@@ -51,7 +46,6 @@ function bounceBack(conn, msg) {
 
 const server = new WebSocketServer.Server({port: WEBSOCKET_PORT});
 server.on('connection', (conn) => {
-    // console.log('got a websocket connection');
     conn.on('close', function () {
         console.log("closed the connection");
     });
@@ -86,15 +80,13 @@ function startWebserver(cb) {
         res.end();
     });
     app.post('/api/dbquery', function(req,res) {
-        console.log("got a query", req.body);
-        DB.query(req.body).then((docs)=>{
+        DB.query(req.body.query).then((docs)=>{
             res.json(docs);
             res.end();
         });
     });
 
     app.post('/api/dbinsert', function(req,res) {
-        console.log("got an insert", req.body);
         DB.insert(req.body).then((resp)=>{
             res.json({status:'success'});
             res.end();
@@ -102,7 +94,6 @@ function startWebserver(cb) {
     });
 
     app.post('/api/dbupdate', function(req,res) {
-        console.log("got an update", req.body);
         DB.update(req.body).then((resp)=>{
             res.json({status:'success'});
             res.end();
@@ -110,7 +101,6 @@ function startWebserver(cb) {
     });
 
     app.post('/api/dbdelete', function(req,res) {
-        console.log("got an delete", req.body);
         DB.delete(req.body).then((resp)=>{
             res.json({status:'success'});
             res.end();
