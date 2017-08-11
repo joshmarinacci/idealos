@@ -36,21 +36,13 @@ let SongTemplate = ((props) => <label>{props.item.name}</label>);
 export default class MusicPlayer extends Component {
     constructor(props) {
         super(props);
-        this.artists = props.db.makeLiveQuery(
-            {type:'artist'},
-            {order:{name:true}}
-        );
-        this.albums = props.db.makeLiveQuery(
-            {type:'album'},
-            {order:{name:true}}
-        );
-        this.songs = props.db.makeLiveQuery(
-            {type:'song'},
-            {order:{name:true}}
-        );
+        this.artists = props.db.makeLiveQuery({type:'artist'});
+        this.albums = props.db.makeLiveQuery({type:'album'});
+        this.songs = props.db.makeLiveQuery({type:'song'});
 
         this.state = {
             selectedArtist:{name:'none'},
+            queryText:"",
             selectedAlbum:{name:'none'},
             selectedSong:{name:'none',album:'none'},
             playing:false,
@@ -91,6 +83,16 @@ export default class MusicPlayer extends Component {
             }
 
         }
+
+        this.typeQuery = (e) => {
+            const txt = e.target.value;
+            this.setState({queryText:txt});
+            this.artists.updateQuery({type:'artist', name:{$regex:txt, $options:'i'}});
+            this.albums.updateQuery({type:'album', $or:[
+                {name:{$regex:txt, $options:'i'}},
+                {artist:{$regex:txt, $options:'i'}},
+            ]});
+        }
     }
 
     render() {
@@ -107,7 +109,7 @@ export default class MusicPlayer extends Component {
                 </VBox>
                 <Spacer/>
                 <div>
-                    <Input/>
+                    <Input onChange={this.typeQuery} db={this.props.db} value={this.state.queryText}/>
                 </div>
             </HBox>
             <HBox grow>

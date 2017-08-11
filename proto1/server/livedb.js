@@ -23,6 +23,11 @@ class LiveDB {
         });
     }
 
+    reset() {
+        this._docs = [];
+        this._live_queries = [];
+    }
+
     insert(doc) {
         this.importDocs([doc]);
         return Promise.resolve();
