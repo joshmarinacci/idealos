@@ -60,12 +60,14 @@ export default class Contacts extends Component {
             selectedContact: null,
             searchQuery: ''
         };
-        this.selectContact = (contact) => {
-            this.setState({selectedContact: contact});
-        };
+        this.selectContact = (contact) => this.setState({selectedContact: contact});
         this.typeQuery = (e) => {
-            this.setState({searchQuery:e.target.value});
-            // this.contacts.updateQuery({type: 'contact', first: query})
+            const txt = e.target.value;
+            this.setState({searchQuery:txt});
+            this.contacts.updateQuery({
+                type: 'contact',
+                first: { $regex: `^${txt}`, $options:'i' }
+            });
         }
     }
 
