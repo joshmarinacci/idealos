@@ -251,6 +251,12 @@ module.exports = [
         type:'todo',
         text:"pick up the dry cleaning",
         completed: false
-    }
+    },
+
+
+    { type:'app', title:'Alarm', name:'alarms'},
+    { type:'app', title:'Music', name:'musicplayer'},
+    { type:'app', title:'Contacts', name:'contacts'},
+    { type:'app', title:'Todo List', name:'todos'},
 
 ];

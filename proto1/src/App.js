@@ -67,6 +67,7 @@ class App extends Component {
     }
 
     render() {
+        if(!this.state.connected) return <VBox></VBox>;
         return (
             <VBox>
                 {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i} db={this.DB}

@@ -39,9 +39,8 @@ export default class NotificationViewer extends Component {
         return <VBox style={{
             position: 'absolute',
             left: 10,
-            top: 10,
+            bottom: 10,
             width:'10em',
-            minHeight:'5em',
         }} className="notifications">
             <ListView model={this.query} template={NotificationTemplate}/>
         </VBox>

@@ -25,7 +25,7 @@
     background-color: deeppink;
     padding: 0.5em;
     border-radius: 2em;
-    bottom:1rem;
+    top:1rem;
     left: 0;
     right: 0;
     margin: auto;
@@ -41,4 +41,23 @@
     border: 2px solid pink;
     margin: 0 auto;
     padding-left: 0.5em;
+}
+
+.command-bar .dropdown {
+    border: 1px solid red;
+    position: absolute;
+    left: 1em;
+    top: 2.5em;
+    background-color: #eee;
+    list-style: none;
+    padding: 0;
+}
+.command-bar .dropdown li {
+    padding: 0.25em 0.5em;
+}
+
+
+.notifications {
+    border: 0px solid red;
+    background-color: transparent;
 }
