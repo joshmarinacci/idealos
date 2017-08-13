@@ -117,6 +117,7 @@ export default class RemoteDB {
             if(msg.command === 'launch') this.app.launch(msg);
             if(msg.command === 'close')  this.app.close(msg);
             if(msg.command === 'resize') this.app.resize(msg);
+            if(msg.command === 'enter-fullscreen') this.app.enterFullscreen();
         }
         if(msg.type === 'clipboard') this.cbs['clipboard'].forEach((cb)=>cb(msg));
     }

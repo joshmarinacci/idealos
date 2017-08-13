@@ -48,7 +48,7 @@ export default class CommandBar extends Component {
     }
 
     renderDropdown() {
-        if(this.state.command.length < 2) return <ul></ul>;
+        if(this.state.command.length < 2) return <ul className="dropdown"></ul>;
         return <ul className="dropdown">
             {this.state.data.map((app,i) => {
                 return <li key={i} onClick={()=>this.runCommand(app.name)}>{app.title}</li>

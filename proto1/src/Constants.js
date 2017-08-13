@@ -5,6 +5,7 @@ import Todos from "./Todo";
 import Notes from "./Notes";
 import ClipboardViewer from "./ClipboardViewer";
 import Calendar from "./Calendar";
+import DebugPanel from "./DebugPanel";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -34,5 +35,9 @@ export const APP_REGISTRY = {
     'calendar': {
         title:'Calendar',
         app: Calendar
+    },
+    'debug': {
+        title:'Debug',
+        app: DebugPanel
     }
 };

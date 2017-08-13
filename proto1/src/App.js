@@ -66,6 +66,10 @@ class App extends Component {
     resize(msg) {
     }
 
+    enterFullscreen() {
+        console.log("we can enter fullscreen");
+    }
+
     render() {
         if(!this.state.connected) return <VBox></VBox>;
         return (

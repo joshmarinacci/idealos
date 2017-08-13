@@ -26,9 +26,9 @@
     padding: 0.5em;
     border-radius: 2em;
     top:1rem;
-    left: 0;
-    right: 0;
-    margin: auto;
+    left: 10em;
+    right: 10em;
+    margin: 0em;
     display: flex;
     flex-direction: row;
 }
@@ -39,8 +39,8 @@
     border-radius: 1em;
     background-color: lightpink;
     border: 2px solid pink;
-    margin: 0 auto;
-    padding-left: 0.5em;
+    margin: 0;
+    padding-left: 0em;
 }
 
 .command-bar .dropdown {
