@@ -32,6 +32,7 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
 import {Input, ListView, Scroll} from "./GUIUtils";
+import RemoteDB from "./RemoteDB"
 
 let ContactTemplate = ((props) => <label>{props.item.first} {props.item.last}</label>);
 let ContactView = ((props) => {
@@ -55,7 +56,9 @@ let ContactView = ((props) => {
 export default class Contacts extends Component {
     constructor(props) {
         super(props);
-        this.contacts = props.db.makeLiveQuery({type: 'contact'});
+        this.db = new RemoteDB("contacts");
+        this.db.connect();
+        this.contacts = this.db.makeLiveQuery({type: 'contact'});
         this.state = {
             selectedContact: null,
             searchQuery: ''
@@ -74,7 +77,7 @@ export default class Contacts extends Component {
     render() {
         return <VBox grow>
             <HBox>
-                <Input ref='search' onChange={this.typeQuery} db={this.props.db}
+                <Input ref='search' onChange={this.typeQuery} db={this.db}
                        value={this.state.searchQuery}/>
             </HBox>
             <HBox grow>

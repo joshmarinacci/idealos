@@ -23,6 +23,7 @@ vbox
 import React, {Component} from "react"
 import {CheckButton, ListView, PushButton, Scroll} from "./GUIUtils";
 import {HBox, VBox, PopupMenu, PopupManager} from "appy-comps"
+import RemoteDB from "./RemoteDB"
 
 const ColorItemTemplate = (props) => {
     return <label style={{backgroundColor:props.item}} onClick={props.onSelect}>some color</label>;
@@ -31,7 +32,6 @@ const ColorItemTemplate = (props) => {
 class AlarmTemplate extends Component {
     constructor(props) {
         super(props);
-
         const colors = ['white','black',"red",'green','blue'];
 
         this.state = {
@@ -68,7 +68,8 @@ class AlarmTemplate extends Component {
 export default class Alarms extends Component {
     constructor(props) {
         super(props);
-        this.query = props.db.makeLiveQuery({type:'alarm'});
+        this.db = new RemoteDB("alarms");
+        this.query = this.db.makeLiveQuery({type:'alarm'});
         this.createAlarm = () => {
             var alarm = {
                 type:'alarm',
@@ -77,7 +78,7 @@ export default class Alarms extends Component {
                 name: 'unnamed alarm',
                 repeat: ['none']
             };
-            this.props.db.insert(alarm);
+            this.db.insert(alarm);
         }
     }
     render() {

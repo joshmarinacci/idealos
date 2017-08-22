@@ -1,33 +1,7 @@
-/*
- mp3_artist_names <= query all docs
-        type === song,
-        unique by artist_id
-        pick artist_id
- mp3_artist_list  <= query all docs
-    type === song_artist
-    where id in mp3_artist_names
- mp3_artist_view  <= listview, model <= mp3_artist_list
- mp3_albums_list  <= query all docs
-    song_album where id in (all where type === song, unique by album_id)
-    where artist == mp3_artist_view.selected.id
- mp3_albums_view  .model <= mp3_albums_list
- mp3_songs_list   <= query all docs where type == song, album == mp3_albums_view.selected.id
-
- hbox
- hbox
- prev
- play:  playing <= mp3_songs_list.selected, player.play(playing)
- next
- vbox
- label: playing.song
- label: (query all artist where (id == playing.artist_id)).name
- label: (query all album where (id == playing.album_id)).name
-
- */
-
 import React, {Component} from "react"
 import {ListView, Scroll, Input} from "./GUIUtils";
 import {HBox, VBox, Spacer} from "appy-comps";
+import RemoteDB from "./RemoteDB"
 
 let ArtistTemplate = ((props) => <label>{props.item.name}</label>);
 let AlbumTemplate = ((props) => <label>{props.item.name}</label>);
@@ -36,9 +10,12 @@ let SongTemplate = ((props) => <label>{props.item.name}</label>);
 export default class MusicPlayer extends Component {
     constructor(props) {
         super(props);
-        this.artists = props.db.makeLiveQuery({type:'artist'});
-        this.albums = props.db.makeLiveQuery({type:'album'});
-        this.songs = props.db.makeLiveQuery({type:'song'});
+        this.db = new RemoteDB("musicplayer");
+        this.db.connect();
+
+        this.artists = this.db.makeLiveQuery({type:'artist'});
+        this.albums = this.db.makeLiveQuery({type:'album'});
+        this.songs = this.db.makeLiveQuery({type:'song'});
 
         this.state = {
             selectedArtist:{name:'none'},
@@ -60,14 +37,16 @@ export default class MusicPlayer extends Component {
             this.setState({selectedSong:song})
         };
 
-        this.props.db.sendMessage({
-            type:'command',
-            target: 'system',
-            command: "resize",
-            appid: this.props.appid,
-            width:700,
-            height:350
-        });
+        this.db.whenConnected(()=>{
+            this.db.sendMessage({
+                type:'command',
+                target: 'system',
+                command: "resize",
+                appid: this.props.appid,
+                width:700,
+                height:350
+            });
+        })
 
 
         this.audio = new Audio();
@@ -109,7 +88,7 @@ export default class MusicPlayer extends Component {
                 </VBox>
                 <Spacer/>
                 <div>
-                    <Input onChange={this.typeQuery} db={this.props.db} value={this.state.queryText}/>
+                    <Input onChange={this.typeQuery} db={this.db} value={this.state.queryText}/>
                 </div>
             </HBox>
             <HBox grow>

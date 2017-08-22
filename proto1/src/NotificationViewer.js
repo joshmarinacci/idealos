@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {HBox, VBox} from "appy-comps"
 import {ListView} from "./GUIUtils";
+import RemoteDB from "./RemoteDB"
 
 const style = {
     borderRadius:'0.25em',
@@ -16,9 +17,11 @@ export default class NotificationViewer extends Component {
 
     constructor(props) {
         super(props);
+        this.db = new RemoteDB("notificationviewer");
+        this.db.connect();
 
         const cleared = {};
-        this.query = props.db.makeLiveQuery({type: 'notification', read:false});
+        this.query = this.db.makeLiveQuery({type: 'notification', read:false});
 
         //clear each notification three seconds after it appears
         const scheduleClear = (data) => {

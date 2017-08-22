@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
+import RemoteDB from "./RemoteDB"
 import {PushButton, CheckButton, ListView, Scroll} from "./GUIUtils";
 /*
  # To do List
@@ -29,9 +30,11 @@ let TodoTemplate = (props)=>{
 export default class Todos extends Component {
     constructor(props) {
         super(props);
-        this.query = this.props.db.makeLiveQuery({type:'todo',completed:false});
+        this.db = new RemoteDB("todos");
+        this.db.connect();
+        this.query = this.db.makeLiveQuery({type:'todo',completed:false});
         this.createTodo = () => {
-            this.props.db.insert({
+            this.db.insert({
                 type:'todo',
                 text:'one more thing to do',
                 completed:false,

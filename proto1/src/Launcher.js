@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
 import {VBox} from "appy-comps"
+import RemoteDB from "./RemoteDB";
 
 export default class Launcher extends Component {
+    constructor(props) {
+        super(props);
+        this.db = new RemoteDB("launcher");
+        this.db.connect();
+    }
     startApp(app) {
-        this.props.db.sendMessage({
+        this.db.sendMessage({
             type:'command',
             target: 'system',
             command: "launch",

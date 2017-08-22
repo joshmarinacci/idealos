@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Input} from "./GUIUtils";
+import RemoteDB from "./RemoteDB"
 
 
 export default class CommandBar extends Component {
@@ -10,7 +11,10 @@ export default class CommandBar extends Component {
             data:[],
         };
 
-        this.query = props.db.makeLiveQuery({type:'app'});
+        this.db = new RemoteDB("commandbar");
+        this.db.connect();
+
+        this.query = this.db.makeLiveQuery({type:'app'});
 
         this.query.on('update', (data) =>  {
             console.log("update",data);
@@ -32,7 +36,7 @@ export default class CommandBar extends Component {
 
     }
     runCommand(app) {
-        this.props.db.sendMessage({
+        this.db.sendMessage({
             type:'command',
             target: 'system',
             command: "launch",
@@ -42,7 +46,7 @@ export default class CommandBar extends Component {
     }
     render() {
         return <div className="command-bar">
-            <Input ref='text' type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} db={this.props.db}/>
+            <Input ref='text' type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} db={this.db}/>
             {this.renderDropdown()}
         </div>
     }

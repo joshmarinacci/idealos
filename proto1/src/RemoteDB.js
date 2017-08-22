@@ -9,12 +9,14 @@ class LiveQuery {
         this.db = db;
         this.query = q;
 
-        this.db.subscribe(q,(docs)=>{
-            // console.log('subscription got some docs',docs);
-            if(docs.type==='querycreated') {
-                this.id = docs.queryId;
-            }
-        })
+        this.db.whenConnected(()=>{
+            this.db.subscribe(q, (docs) => {
+                // console.log('subscription got some docs',docs);
+                if (docs.type === 'querycreated') {
+                    this.id = docs.queryId;
+                }
+            });
+        });
     }
 
     on(type,cb) {
@@ -57,8 +59,8 @@ class LiveQuery {
 }
 
 export default class RemoteDB {
-    constructor(app) {
-        this.app = app;
+    constructor(id) {
+        this.id = id;
         this.cbs = {
             connect:[],
             receive:[],
@@ -67,6 +69,7 @@ export default class RemoteDB {
         this.pending = [];
         this.queries = [];
         this.messageListeners = [];
+        this.connected = false;
     }
     connect() {
         function log(...rest) {
@@ -77,6 +80,7 @@ export default class RemoteDB {
         this.ws.onerror = () => log('WebSocket error');
         this.ws.onopen = () => {
             // log('WebSocket connection established');
+            this.connected = true;
             this.cbs.connect.forEach((cb)=>cb("connected"));
         };
         this.ws.onclose = () => log('WebSocket connection closed');
@@ -87,11 +91,17 @@ export default class RemoteDB {
         });
     }
 
+    whenConnected(cb) {
+        if(this.connected) return cb();
+        this.on("connect",cb);
+    }
+
     listenMessages(cb) {
         this.messageListeners.push(cb);
     }
 
     dispatchMessage(msg) {
+        // console.log(this.id," received message",msg);
         this.messageListeners.forEach((cb)=>cb(msg));
         if(msg.type==='queryupdate') {
             // console.log('live query updated',msg.queryId);
@@ -113,12 +123,6 @@ export default class RemoteDB {
             return;
         }
         // console.log("message arrived",msg);
-        if(msg.type === 'command') {
-            if(msg.command === 'launch') this.app.launch(msg);
-            if(msg.command === 'close')  this.app.close(msg);
-            if(msg.command === 'resize') this.app.resize(msg);
-            if(msg.command === 'enter-fullscreen') this.app.enterFullscreen();
-        }
         if(msg.type === 'clipboard') this.cbs['clipboard'].forEach((cb)=>cb(msg));
     }
 
@@ -128,7 +132,7 @@ export default class RemoteDB {
     }
 
     sendMessage(msg) {
-        console.log("sending message",msg);
+        // console.log(this.id," sending message",msg);
         this.ws.send(JSON.stringify(msg));
     }
 

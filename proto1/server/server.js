@@ -38,14 +38,18 @@ function handleDBSubscribe(conn, req) {
     }
 }
 
-function bounceBack(conn, msg) {
-    if(conn.readyState === WebSocketServer.OPEN) {
-        conn.send(JSON.stringify(msg));
-    }
+const conns = [];
+function bounceBack(msg) {
+    conns.forEach((conn)=> {
+        if (conn.readyState === WebSocketServer.OPEN) {
+            conn.send(JSON.stringify(msg));
+        }
+    });
 }
 
 const server = new WebSocketServer.Server({port: WEBSOCKET_PORT});
 server.on('connection', (conn) => {
+    conns.push(conn);
     conn.on('close', function () {
         console.log("closed the connection");
     });
@@ -59,7 +63,7 @@ server.on('connection', (conn) => {
         if (msg.command === 'info') return handleInfo(conn);
         if (msg.command === 'db') return handleDBQuery(conn, msg);
         if (msg.command === 'subscribe') return handleDBSubscribe(conn,msg);
-        return bounceBack(conn,msg);
+        return bounceBack(msg);
     });
 });
 

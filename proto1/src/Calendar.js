@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import RemoteDB from "./RemoteDB"
 
 const style = {
     display: 'flex',
@@ -16,10 +17,12 @@ const st2 = {
 export default class Calendar extends Component {
     constructor(props) {
         super(props);
+        this.db = new RemoteDB("calendar");
+        this.db.connect();
         this.state = {
             events: [],
         };
-        this.query = props.db.makeLiveQuery({type: 'event'});
+        this.query = this.db.makeLiveQuery({type: 'event'});
         this.query.on("execute", (docs) => {
             this.setState({events: docs});
         });
@@ -28,15 +31,16 @@ export default class Calendar extends Component {
         });
         this.query.execute();
 
-        this.props.db.sendMessage({
-            type:'command',
-            target: 'system',
-            command: "resize",
-            appid: this.props.appid,
-            width:700,
-            height:350
-        });
-
+        this.db.whenConnected(()=>{
+            this.db.sendMessage({
+                type:'command',
+                target: 'system',
+                command: "resize",
+                appid: this.props.appid,
+                width:700,
+                height:350
+            });
+        })
     }
 
     render() {
