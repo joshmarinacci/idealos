@@ -6,6 +6,7 @@ import Notes from "./Notes";
 import ClipboardViewer from "./ClipboardViewer";
 import Calendar from "./Calendar";
 import DebugPanel from "./DebugPanel";
+import Browser from "./Browser";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -39,5 +40,9 @@ export const APP_REGISTRY = {
     'debug': {
         title:'Debug',
         app: DebugPanel
+    },
+    'browser': {
+        title:"Web Browser",
+        app: Browser,
     }
 };

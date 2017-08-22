@@ -29,7 +29,7 @@ export default class Notes extends Component {
     render() {
         return <VBox>
             <HBox>
-                <Input ref='search' onChange={this.typeQuery}
+                <Input onChange={this.typeQuery}
                        value={this.state.query}
                        db={this.db}
                 />
