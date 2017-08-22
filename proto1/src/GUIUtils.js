@@ -3,7 +3,7 @@ import React, {Component} from "react"
 export var CheckButton = ((props) => <input type="checkbox" checked={props.value} onChange={props.onChange}/>);
 export let PushButton = ((props) => <button onClick={props.onClick}>{props.children}</button>);
 export let Scroll = ((props) => <div style={{overflow: "scroll", flex: 1}}>{props.children}</div>);
-
+export let SimpleTemplate = ((props) => <div>{props.item.toString()}</div>);
 
 export class ListView extends Component {
     constructor(props) {
@@ -23,7 +23,10 @@ export class ListView extends Component {
     }
 
     render() {
-        let Template = this.props.template;
+        var Template = this.props.template;
+        if(!this.props.template) {
+            Template = SimpleTemplate;
+        }
         return <div
             className="ListView"
             style={{

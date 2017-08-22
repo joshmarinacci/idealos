@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
-import {PushButton, CheckButton, ListView, Scroll, Input} from "./GUIUtils";
-import RemoteDB from "./RemoteDB"
+import {Input, ListView, Scroll} from "./GUIUtils";
+import RemoteDB from "./RemoteDB";
 
 let NoteTemplate = (props) => {
     return <HBox>{props.item.title}</HBox>
