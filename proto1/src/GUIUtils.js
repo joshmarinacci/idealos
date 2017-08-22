@@ -55,7 +55,24 @@ export class ListView extends Component {
 
 export let Input = ((props) => {
     var {db, ...rest} = props;
+
+
+    var lastid = 0;
+    var target = null;
+    db.on('clipboard', (msg) => {
+        if(msg.command === 'respond-clip' && msg.requestid === lastid) {
+            const pst = msg.payload;
+            const txt = target.value;
+            const start = target.selectionStart;
+            const end = target.selectionEnd;
+            target.value = txt.substring(0, start) + pst + txt.substring(end, txt.length);
+            target.selectionStart = start+pst.length;
+            target.selectionEnd = target.selectionStart;
+        }
+    });
+
     let copied = (e) => {
+        e.preventDefault();
         var text = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
         db.sendMessage({
             type: 'clipboard',
@@ -65,5 +82,31 @@ export let Input = ((props) => {
         });
     };
 
-    return <input type="text" onCopy={copied} {...rest}/>
+    let pasted = (e) => {
+        e.preventDefault();
+        console.log("pasted",e, e.type);
+        lastid = Math.floor(Math.random()*100000);
+        e.persist();
+        target = e.target;
+        db.sendMessage({
+            type:'clipboard',
+            target:'system',
+            command:'request-clip',
+            requestid:lastid,
+        })
+    };
+
+    let cutted = (e) => {
+        e.preventDefault();
+        var text = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
+        console.log("redirecting cut");
+        db.sendMessage({
+            type: 'clipboard',
+            target: 'system',
+            command: 'cut',
+            payload: text
+        });
+    };
+
+    return <input type="text" onCopy={copied} onPaste={pasted} onCut={cutted} {...rest}/>
 });

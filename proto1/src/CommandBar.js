@@ -17,11 +17,9 @@ export default class CommandBar extends Component {
         this.query = this.db.makeLiveQuery({type:'app'});
 
         this.query.on('update', (data) =>  {
-            console.log("update",data);
             this.setState({data: data})
         });
         this.query.on('execute', (data) => {
-            console.log("execute",data);
             this.setState({data: data})
         });
 
