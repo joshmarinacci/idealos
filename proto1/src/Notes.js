@@ -31,7 +31,7 @@ export default class Notes extends Component {
             <HBox>
                 <Input ref='search' onChange={this.typeQuery}
                        value={this.state.query}
-                       db={this.props.db}
+                       db={this.db}
                 />
             </HBox>
             <HBox>

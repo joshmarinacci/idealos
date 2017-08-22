@@ -69,6 +69,8 @@ export default class Alarms extends Component {
     constructor(props) {
         super(props);
         this.db = new RemoteDB("alarms");
+        this.db.DEBUG = true;
+        this.db.connect();
         this.query = this.db.makeLiveQuery({type:'alarm'});
         this.createAlarm = () => {
             var alarm = {

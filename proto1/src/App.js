@@ -30,7 +30,7 @@ class App extends Component {
             console.log("got a message back", m);
         });
         this.DB.listenMessages((msg)=>{
-            console.log("message came in",msg);
+            // console.log("message came in",msg);
             if(msg.type==='command') {
                 if(msg.command === 'launch') return this.launch(msg);
                 if(msg.command === 'close') return this.close(msg);
