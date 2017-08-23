@@ -7,6 +7,7 @@ import ClipboardViewer from "./ClipboardViewer";
 import Calendar from "./Calendar";
 import DebugPanel from "./DebugPanel";
 import Browser from "./Browser";
+import Email from "./Email";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -44,5 +45,9 @@ export const APP_REGISTRY = {
     'browser': {
         title:"Web Browser",
         app: Browser,
+    },
+    'email': {
+        title:'Mail',
+        app: Email
     }
 };

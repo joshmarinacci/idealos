@@ -259,6 +259,7 @@ module.exports = [
     { type:'app', title:'Contacts', name:'contacts'},
     { type:'app', title:'Todo List', name:'todos'},
     { type:'app', title:'Web Browser', name:'browser'},
+    { type:'app', title:'Mail', name:'email'},
     { type:'app', title:'Debug', name:'debug'}
 
 ];
