@@ -15,27 +15,12 @@ export default class ClipboardViewer extends Component {
         };
         this.clips = this.db.makeLiveQuery({type: 'clip'});
 
-        this.db.on('clipboard', (msg) => {
-            if(msg.command === 'copy' || msg.command === 'cut') {
-                //store new clippings into the database
-                this.db.insert({
-                    type: 'clip',
-                    text: msg.payload
-                });
-            }
-            if(msg.command === 'request-clip') {
-                this.db.sendMessage({
-                    type:'clipboard',
-                    target:'system',
-                    command:'respond-clip',
-                    payload:this.state.selected?this.state.selected.text:"",
-                    requestid:msg.requestid
-                });
-            }
-        });
-
         this.selectClip = (clip)=>{
             this.setState({selected:clip});
+            this.db.update({
+                id:'CURRENT_CLIPBOARD_SELECTION',
+                clips:[clip.id]
+            })
         };
     }
 

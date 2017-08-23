@@ -38,6 +38,45 @@ class App extends Component {
             }
         });
         this.DB.connect();
+
+
+        this.DB.on('clipboard', (msg) => {
+            // console.log("got a clipboard command",msg);
+            if(msg.command === 'copy' || msg.command === 'cut') {
+                //store new clippings into the database
+                this.DB.insert({
+                    type: 'clip',
+                    text: msg.payload
+                }).then((doc)=>{
+                    // console.log("the new doc is",doc);
+                    this.DB.update({
+                        id:'CURRENT_CLIPBOARD_SELECTION',
+                        clips:[doc.id]
+                    })
+                });
+            }
+            if(msg.command === 'request-clip') {
+                this.DB.query({id:'CURRENT_CLIPBOARD_SELECTION'}).then((docs)=>{
+                    var clip = docs[0];
+                    // console.log("got the docs",clip);
+                    // console.log("must load the clips",clip.clips);
+                    Promise.all(clip.clips.map((c)=>{
+                        return this.DB.query({id:c}).then((docs)=>docs[0])
+                    })).then((clips)=>{
+                        // console.log("lst clips = ", clips);
+
+                        this.DB.sendMessage({
+                            type:'clipboard',
+                            target:'system',
+                            command:'respond-clip',
+                            payload:clips,
+                            requestid:msg.requestid
+                        });
+                    });
+                });
+            }
+        });
+
     }
 
     nextId() {

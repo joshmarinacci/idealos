@@ -1,5 +1,11 @@
 module.exports = [
 
+    {
+        type:'system',
+        id:'CURRENT_CLIPBOARD_SELECTION',
+        clips:[]
+    },
+
 
     {
         type:'alarm',

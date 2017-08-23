@@ -170,7 +170,7 @@ export default class RemoteDB {
         this.log('inserting',doc);
         return POST_JSON("http://localhost:5151/api/dbinsert",doc).then((answer)=>{
             // console.log("the insert response is", answer);
-            return answer;
+            return answer.doc;
         });
     }
 

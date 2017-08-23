@@ -61,7 +61,7 @@ export let Input = ((props) => {
     var target = null;
     db.on('clipboard', (msg) => {
         if(msg.command === 'respond-clip' && msg.requestid === lastid) {
-            const pst = msg.payload;
+            const pst = msg.payload.map((clip)=>clip.text).join("");
             const txt = target.value;
             const start = target.selectionStart;
             const end = target.selectionEnd;

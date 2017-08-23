@@ -91,8 +91,8 @@ function startWebserver(cb) {
     });
 
     app.post('/api/dbinsert', function(req,res) {
-        DB.insert(req.body).then((resp)=>{
-            res.json({status:'success'});
+        DB.insert(req.body).then((doc)=>{
+            res.json({status:'success', doc:doc});
             res.end();
         })
     });
