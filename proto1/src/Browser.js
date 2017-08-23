@@ -1,3 +1,13 @@
+/*
+
+
+* when clicking on a link, detect when changing the url
+* back and forward set a new url
+* store history as a constantly growing list
+
+
+ */
+
 import React, {Component} from 'react';
 import {HBox, VBox} from "appy-comps";
 import {ListView, Scroll, Input} from "./GUIUtils";
@@ -11,17 +21,28 @@ export default class Browser extends Component {
 
         this.state = {
             url:'https://joshondesign.com/'
-        }
+        };
+
+        this.navBack = () => {
+        };
+
+        this.navForward = () => {
+        };
+
+        this.load = () => {
+            console.log("loaded", this.refs.iframe, this.refs.iframe.contentWindow);
+        };
+
     }
     render() {
         return <VBox grow>
             <HBox>
-                <button className="fa fa-arrow-left"/>
-                <button className="fa fa-arrow-right"/>
+                <button className="fa fa-arrow-left" onClick={this.navBack}/>
+                <button className="fa fa-arrow-right" onClick={this.navForward}/>
                 <Input db={this.db} value={this.state.url} style={{flex:1}}/>
             </HBox>
             <HBox grow>
-                <iframe src={this.state.url} style={{flex:1}}/>
+                <iframe ref="iframe" src={this.state.url} style={{flex:1}} onLoad={this.load}/>
             </HBox>
         </VBox>
     }
