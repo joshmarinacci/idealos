@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import FakeWindow from "./FakeWindow";
 import {VBox, PopupContainer} from "appy-comps";
-import {APP_REGISTRY} from "./Constants";
+import {APP_REGISTRY, SPECIAL_DOCS} from "./Constants";
 
 import Launcher from "./Launcher";
 import RemoteDB from "./RemoteDB";
@@ -50,13 +50,13 @@ class App extends Component {
                 }).then((doc)=>{
                     // console.log("the new doc is",doc);
                     this.DB.update({
-                        id:'CURRENT_CLIPBOARD_SELECTION',
+                        id:SPECIAL_DOCS.CURRENT_CLIPBOARD_SELECTION,
                         clips:[doc.id]
                     })
                 });
             }
             if(msg.command === 'request-clip') {
-                this.DB.query({id:'CURRENT_CLIPBOARD_SELECTION'}).then((docs)=>{
+                this.DB.query({id:SPECIAL_DOCS.CURRENT_CLIPBOARD_SELECTION}).then((docs)=>{
                     var clip = docs[0];
                     // console.log("got the docs",clip);
                     // console.log("must load the clips",clip.clips);

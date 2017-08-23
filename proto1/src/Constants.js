@@ -51,3 +51,8 @@ export const APP_REGISTRY = {
         app: Email
     }
 };
+
+
+export const SPECIAL_DOCS = {
+    CURRENT_CLIPBOARD_SELECTION:'CURRENT_CLIPBOARD_SELECTION'
+};
