@@ -30,7 +30,7 @@ class LiveDB {
 
     insert(doc) {
         this.importDocs([doc]);
-        return Promise.resolve();
+        return Promise.resolve(doc);
     }
 
     update(doc) {

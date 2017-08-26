@@ -9,12 +9,14 @@ class LiveQuery {
         this.db = db;
         this.query = q;
 
-        this.db.subscribe(q,(docs)=>{
-            // console.log('subscription got some docs',docs);
-            if(docs.type==='querycreated') {
-                this.id = docs.queryId;
-            }
-        })
+        this.db.whenConnected(()=>{
+            this.db.subscribe(q, (docs) => {
+                // console.log('subscription got some docs',docs);
+                if (docs.type === 'querycreated') {
+                    this.id = docs.queryId;
+                }
+            });
+        });
     }
 
     on(type,cb) {
@@ -22,6 +24,7 @@ class LiveQuery {
     }
 
     updateQuery(q) {
+        this.query = q;
         this.db.updateQuery(this.id,q);
     }
 
@@ -57,8 +60,10 @@ class LiveQuery {
 }
 
 export default class RemoteDB {
-    constructor(app) {
-        this.app = app;
+    constructor(id) {
+        this.id = id;
+        this.DEBUG = false;
+        this.workspace = 'single';
         this.cbs = {
             connect:[],
             receive:[],
@@ -67,24 +72,28 @@ export default class RemoteDB {
         this.pending = [];
         this.queries = [];
         this.messageListeners = [];
+        this.connected = false;
     }
     connect() {
-        function log(...rest) {
-            console.log(...rest);
-        };
-        // console.log("connecting");
+        this.log("connecting to the server");
         this.ws = new WebSocket('ws://localhost:5150');
-        this.ws.onerror = () => log('WebSocket error');
+        this.ws.onerror = () => this.log('WebSocket error');
         this.ws.onopen = () => {
-            // log('WebSocket connection established');
+            this.log('WebSocket connection established');
+            this.connected = true;
             this.cbs.connect.forEach((cb)=>cb("connected"));
         };
-        this.ws.onclose = () => log('WebSocket connection closed');
+        this.ws.onclose = () => this.log('WebSocket connection closed');
         this.ws.onmessage =  (event) =>  this.dispatchMessage(JSON.parse(event.data));
 
         GET_JSON("http://localhost:5151/api/info").then((answer) => {
-            // console.log("connection to server said",answer);
+            this.log("connection to server said",answer);
         });
+    }
+
+    whenConnected(cb) {
+        if(this.connected) return cb();
+        this.on("connect",cb);
     }
 
     listenMessages(cb) {
@@ -92,6 +101,7 @@ export default class RemoteDB {
     }
 
     dispatchMessage(msg) {
+        this.log(" received message",msg);
         this.messageListeners.forEach((cb)=>cb(msg));
         if(msg.type==='queryupdate') {
             // console.log('live query updated',msg.queryId);
@@ -113,12 +123,6 @@ export default class RemoteDB {
             return;
         }
         // console.log("message arrived",msg);
-        if(msg.type === 'command') {
-            if(msg.command === 'launch') this.app.launch(msg);
-            if(msg.command === 'close')  this.app.close(msg);
-            if(msg.command === 'resize') this.app.resize(msg);
-            if(msg.command === 'enter-fullscreen') this.app.enterFullscreen();
-        }
         if(msg.type === 'clipboard') this.cbs['clipboard'].forEach((cb)=>cb(msg));
     }
 
@@ -127,22 +131,33 @@ export default class RemoteDB {
         this.cbs[type].push(cb);
     }
 
+    log(...rest) {
+        if(this.DEBUG === true) {
+            console.log(this.id,":",...rest);
+        }
+    }
     sendMessage(msg) {
-        console.log("sending message",msg);
+        msg.appname = this.id;
+        msg.workspace = 'single';
+        this.log(" sending message",msg);
         this.ws.send(JSON.stringify(msg));
     }
 
     subscribe(q,cb) {
         const id = "mid_"+Math.floor(Math.random()*10000);
         this.pending[id] = cb;
-        this.ws.send(JSON.stringify({command:'subscribe',query:q,"messageId":id}));
+        this.ws.send(JSON.stringify({command:'subscribe',query:q,"messageId":id,
+            // appname:this.id, workspace :'single'
+        }));
     }
 
     updateQuery(id,q) {
+        this.log(`updating the query ${id} with `,q);
         return POST_JSON("http://localhost:5151/api/updateQuery",{queryId:id,query:q});
     }
 
     query(q) {
+        this.log('executing the query',q);
         return POST_JSON("http://localhost:5151/api/dbquery",{query:q}).then((answer)=>{
             // console.log("the query response is", answer);
             return answer;
@@ -150,13 +165,19 @@ export default class RemoteDB {
     }
 
     insert(doc) {
+        doc.appname = this.id;
+        doc.workspace = this.workspace;
+        this.log('inserting',doc);
         return POST_JSON("http://localhost:5151/api/dbinsert",doc).then((answer)=>{
             // console.log("the insert response is", answer);
-            return answer;
+            return answer.doc;
         });
     }
 
     update(doc) {
+        doc.appname = this.id;
+        doc.workspace = this.workspace;
+        this.log('updating',doc);
         return POST_JSON("http://localhost:5151/api/dbupdate",doc).then((answer)=>{
             // console.log("the update response is", answer);
             return answer;
@@ -164,6 +185,9 @@ export default class RemoteDB {
     }
 
     delete(doc) {
+        doc.appname = this.id;
+        doc.workspace = this.workspace;
+        this.log('deleting',doc);
         return POST_JSON("http://localhost:5151/api/dbdelete",doc).then((answer)=>{
             // console.log("the update response is", answer);
             return answer;

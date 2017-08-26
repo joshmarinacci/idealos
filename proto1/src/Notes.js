@@ -1,6 +1,7 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
-import {PushButton, CheckButton, ListView, Scroll, Input} from "./GUIUtils";
+import {Input, ListView, Scroll} from "./GUIUtils";
+import RemoteDB from "./RemoteDB";
 
 let NoteTemplate = (props) => {
     return <HBox>{props.item.title}</HBox>
@@ -13,7 +14,9 @@ let NoteView = (props)=>{
 export default class Notes extends Component {
     constructor(props) {
         super(props);
-        this.notes = props.db.makeLiveQuery({type:'note'});
+        this.db = new RemoteDB("notes");
+        this.db.connect();
+        this.notes = this.db.makeLiveQuery({type:'note'});
         this.state = {
             selected:null,
             query:''
@@ -26,9 +29,9 @@ export default class Notes extends Component {
     render() {
         return <VBox>
             <HBox>
-                <Input ref='search' onChange={this.typeQuery}
+                <Input onChange={this.typeQuery}
                        value={this.state.query}
-                       db={this.props.db}
+                       db={this.db}
                 />
             </HBox>
             <HBox>

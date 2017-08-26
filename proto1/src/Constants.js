@@ -6,6 +6,8 @@ import Notes from "./Notes";
 import ClipboardViewer from "./ClipboardViewer";
 import Calendar from "./Calendar";
 import DebugPanel from "./DebugPanel";
+import Browser from "./Browser";
+import Email from "./Email";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -39,5 +41,18 @@ export const APP_REGISTRY = {
     'debug': {
         title:'Debug',
         app: DebugPanel
+    },
+    'browser': {
+        title:"Web Browser",
+        app: Browser,
+    },
+    'email': {
+        title:'Mail',
+        app: Email
     }
+};
+
+
+export const SPECIAL_DOCS = {
+    CURRENT_CLIPBOARD_SELECTION:'CURRENT_CLIPBOARD_SELECTION'
 };

@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import FakeWindow from "./FakeWindow";
 import {VBox, PopupContainer} from "appy-comps";
-import {APP_REGISTRY} from "./Constants";
+import {APP_REGISTRY, SPECIAL_DOCS} from "./Constants";
 
 import Launcher from "./Launcher";
 import RemoteDB from "./RemoteDB";
@@ -17,7 +17,7 @@ import "font-awesome/css/font-awesome.css";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.DB = new RemoteDB(this);
+        this.DB = new RemoteDB('master');
         this.state = {
             apps: [],
             connected: false,
@@ -29,7 +29,54 @@ class App extends Component {
         this.DB.on("receive", (m) => {
             console.log("got a message back", m);
         });
+        this.DB.listenMessages((msg)=>{
+            // console.log("message came in",msg);
+            if(msg.type==='command') {
+                if(msg.command === 'launch') return this.launch(msg);
+                if(msg.command === 'close') return this.close(msg);
+                if(msg.command === 'enter-fullscreen') return this.enterFullscreen();
+            }
+        });
         this.DB.connect();
+
+
+        this.DB.on('clipboard', (msg) => {
+            // console.log("got a clipboard command",msg);
+            if(msg.command === 'copy' || msg.command === 'cut') {
+                //store new clippings into the database
+                this.DB.insert({
+                    type: 'clip',
+                    text: msg.payload
+                }).then((doc)=>{
+                    // console.log("the new doc is",doc);
+                    this.DB.update({
+                        id:SPECIAL_DOCS.CURRENT_CLIPBOARD_SELECTION,
+                        clips:[doc.id]
+                    })
+                });
+            }
+            if(msg.command === 'request-clip') {
+                this.DB.query({id:SPECIAL_DOCS.CURRENT_CLIPBOARD_SELECTION}).then((docs)=>{
+                    var clip = docs[0];
+                    // console.log("got the docs",clip);
+                    // console.log("must load the clips",clip.clips);
+                    Promise.all(clip.clips.map((c)=>{
+                        return this.DB.query({id:c}).then((docs)=>docs[0])
+                    })).then((clips)=>{
+                        // console.log("lst clips = ", clips);
+
+                        this.DB.sendMessage({
+                            type:'clipboard',
+                            target:'system',
+                            command:'respond-clip',
+                            payload:clips,
+                            requestid:msg.requestid
+                        });
+                    });
+                });
+            }
+        });
+
     }
 
     nextId() {
@@ -47,7 +94,7 @@ class App extends Component {
         const info = APP_REGISTRY[msg.app];
         const AppComponent = info.app;
         const appid = this.nextId();
-        apps.push({title: info.title, app: <AppComponent db={this.DB} appid={appid}/>, appid: appid});
+        apps.push({title: info.title, app: <AppComponent appid={appid}/>, appid: appid});
         this.setState({apps: apps});
 
 
@@ -63,9 +110,6 @@ class App extends Component {
         this.setState({apps: this.state.apps.filter(a => a.appid !== msg.appid)});
     }
 
-    resize(msg) {
-    }
-
     enterFullscreen() {
         console.log("we can enter fullscreen");
     }
@@ -74,10 +118,10 @@ class App extends Component {
         if(!this.state.connected) return <VBox></VBox>;
         return (
             <VBox>
-                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i} db={this.DB}
+                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i}
                                                            appid={a.appid}>{a.app}</FakeWindow>)}
-                <Launcher db={this.DB}/>
-                <CommandBar db={this.DB}/>
+                <Launcher/>
+                <CommandBar/>
                 {this.renderNotificationViewer()}
                 <PopupContainer/>
             </VBox>
@@ -85,7 +129,7 @@ class App extends Component {
     }
 
     renderNotificationViewer() {
-        if (this.state.connected) return <NotificationViewer db={this.DB}/>
+        if (this.state.connected) return <NotificationViewer/>
         return "not connected";
     }
 }

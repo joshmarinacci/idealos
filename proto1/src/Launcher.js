@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
 import {VBox} from "appy-comps"
+import RemoteDB from "./RemoteDB";
 
 export default class Launcher extends Component {
+    constructor(props) {
+        super(props);
+        this.db = new RemoteDB("launcher");
+        this.db.connect();
+    }
     startApp(app) {
-        this.props.db.sendMessage({
+        this.db.sendMessage({
             type:'command',
             target: 'system',
             command: "launch",
@@ -24,6 +30,7 @@ export default class Launcher extends Component {
             <button onClick={() => this.startApp('notes')} className="fa fa-sticky-note"></button>
             <button onClick={() => this.startApp('clipboard')} className="fa fa-clipboard"></button>
             <button onClick={() => this.startApp('calendar')} className="fa fa-calendar"></button>
+            <button onClick={() => this.startApp('browser')} className="fa fa-firefox"></button>
         </VBox>
     }
 }

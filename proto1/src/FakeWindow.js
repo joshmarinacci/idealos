@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 import {VBox, HBox, Spacer} from "appy-comps";
 import DragAction from "./DragAction";
+import RemoteDB from "./RemoteDB";
 
 export default class FakeWindow extends Component {
     constructor(props) {
         super(props);
+
+        this.db = new RemoteDB("fakewindow");
+        this.db.connect();
         this.state = {
             x: 200,
             y: 200,
@@ -28,7 +32,7 @@ export default class FakeWindow extends Component {
         this.mouseDown = (e) => this.setState({action: new DragAction(e, this.moveHandler)});
         this.resizeDown = (e) => this.setState({action: new DragAction(e, this.resizeHandler)});
         this.closeWindow = (e) => {
-            this.props.db.sendMessage({
+            this.db.sendMessage({
                 type: 'command',
                 target: 'system',
                 command: "close",
@@ -38,7 +42,7 @@ export default class FakeWindow extends Component {
 
 
         //handler for resize messages
-        props.db.listenMessages((msg) => {
+        this.db.listenMessages((msg) => {
             if (msg.type !== 'command') return;
             if (msg.command !== 'resize') return;
             if (msg.appid !== this.props.appid) return;

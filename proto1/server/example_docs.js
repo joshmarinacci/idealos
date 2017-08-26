@@ -1,5 +1,11 @@
 module.exports = [
 
+    {
+        type:'system',
+        id:'CURRENT_CLIPBOARD_SELECTION',
+        clips:[]
+    },
+
 
     {
         type:'alarm',
@@ -35,40 +41,6 @@ module.exports = [
 
 
 
-    {
-        type:'email',
-        from:'Nigerian Prince',
-        subject:'A fortune you have inherited',
-        folder:['inbox'],
-        read:false,
-        content: {
-            mimeType:'text/plain',
-            text:"Dear sirs"
-        }
-    },
-    {
-        type:'email',
-        from:'Nigerian Princess',
-        subject:'Yet another fortune!',
-        folder:['inbox'],
-        read:true,
-        content: {
-            mimeType:'text/plain',
-            text:"Dear sirs"
-        }
-    },
-
-    {
-        type:'email',
-        from:'United',
-        subject:'Flight update',
-        folder:['travel'],
-        read:true,
-        content: {
-            mimeType:'text/plain',
-            text:"Dear sirs"
-        }
-    },
 
 
 
@@ -258,6 +230,64 @@ module.exports = [
     { type:'app', title:'Music', name:'musicplayer'},
     { type:'app', title:'Contacts', name:'contacts'},
     { type:'app', title:'Todo List', name:'todos'},
-    { type:'app', title:'Debug', name:'debug'}
+    { type:'app', title:'Web Browser', name:'browser'},
+    { type:'app', title:'Mail', name:'email'},
+    { type:'app', title:'Debug', name:'debug'},
+
+
+    // EMAILS
+    {   type:'folder',  name:'root', id:'id_root', },
+    {   type:'folder',  name:'Inbox',  id:'id_inbox',  folders:['id_root']   },
+    {   type:'folder',  name:'Outbox',  id:'id_outbox',  folders:['id_root'] },
+    {   type:'folder',  name:'Drafts',  id:'id_drafts',  folders:['id_root'] },
+
+    {   type:'email',  from:'foo@person.com', to:'me', subject:"yo. 'sup?",  folders:['id_inbox'], read:true, archived:true},
+    {   type:'email', from:'bob@bob.com', to:'me', subject:"your order is ready", folders:['id_inbox'], read:false, archived:true},
+    {   type:'email', from:'mister man', to:'other me', subject:"other cool stuff", folders:['id_inbox'],  read:true, archived:true,},
+    {   type:'email', from:'me', folders:['id_drafts'], subject:"foo bar baz", read:true, archived:false,},
+
+
+
+{
+    type:'email',
+    from:'Nigerian Prince',
+    subject:'A fortune you have inherited',
+    folders:['id_inbox'],
+    read:false,
+    content: {
+        mimeType:'text/plain',
+        text:"Dear sirs"
+    }
+},
+
+
+{
+    type:'email',
+    from:'Nigerian Princess',
+    subject:'Yet another fortune!',
+    folders:['id_inbox'],
+    read:true,
+    content: {
+        mimeType:'text/plain',
+        text:"Dear sirs"
+    }
+},
+
+
+{
+    type:'email',
+    from:'United',
+    subject:'Flight update',
+    folders:['id_travel'],
+    read:true,
+    content: {
+        mimeType:'text/plain',
+        text:"Dear sirs"
+    }
+}
+
+
+
+
 
 ];

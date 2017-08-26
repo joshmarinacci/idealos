@@ -38,14 +38,18 @@ function handleDBSubscribe(conn, req) {
     }
 }
 
-function bounceBack(conn, msg) {
-    if(conn.readyState === WebSocketServer.OPEN) {
-        conn.send(JSON.stringify(msg));
-    }
+const conns = [];
+function bounceBack(msg) {
+    conns.forEach((conn)=> {
+        if (conn.readyState === WebSocketServer.OPEN) {
+            conn.send(JSON.stringify(msg));
+        }
+    });
 }
 
 const server = new WebSocketServer.Server({port: WEBSOCKET_PORT});
 server.on('connection', (conn) => {
+    conns.push(conn);
     conn.on('close', function () {
         console.log("closed the connection");
     });
@@ -54,12 +58,12 @@ server.on('connection', (conn) => {
     });
     conn.on('message', function (e) {
         var msg = JSON.parse(e);
-        if (msg.type === 'clipboard') return bounceBack(conn,msg);
+        if (msg.type === 'clipboard') return bounceBack(msg);
         if (!msg.command) return handleInfo(conn);
         if (msg.command === 'info') return handleInfo(conn);
         if (msg.command === 'db') return handleDBQuery(conn, msg);
         if (msg.command === 'subscribe') return handleDBSubscribe(conn,msg);
-        return bounceBack(conn,msg);
+        return bounceBack(msg);
     });
 });
 
@@ -87,8 +91,8 @@ function startWebserver(cb) {
     });
 
     app.post('/api/dbinsert', function(req,res) {
-        DB.insert(req.body).then((resp)=>{
-            res.json({status:'success'});
+        DB.insert(req.body).then((doc)=>{
+            res.json({status:'success', doc:doc});
             res.end();
         })
     });
