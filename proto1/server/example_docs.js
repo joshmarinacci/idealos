@@ -232,6 +232,7 @@ module.exports = [
     { type:'app', title:'Todo List', name:'todos'},
     { type:'app', title:'Web Browser', name:'browser'},
     { type:'app', title:'Mail', name:'email'},
+    { type:'app', title:'Compose Mail', name:'compose-email'},
     { type:'app', title:'Debug', name:'debug'},
 
 
@@ -240,11 +241,13 @@ module.exports = [
     {   type:'folder',  name:'Inbox',  id:'id_inbox',  folders:['id_root']   },
     {   type:'folder',  name:'Outbox',  id:'id_outbox',  folders:['id_root'] },
     {   type:'folder',  name:'Drafts',  id:'id_drafts',  folders:['id_root'] },
+    {   type:'folder',  name:'Archive',  id:'id_archive',  folders:['id_root'] },
 
-    {   type:'email',  from:'foo@person.com', to:'me', subject:"yo. 'sup?",  folders:['id_inbox'], read:true, archived:true},
-    {   type:'email', from:'bob@bob.com', to:'me', subject:"your order is ready", folders:['id_inbox'], read:false, archived:true},
-    {   type:'email', from:'mister man', to:'other me', subject:"other cool stuff", folders:['id_inbox'],  read:true, archived:true,},
-    {   type:'email', from:'me', folders:['id_drafts'], subject:"foo bar baz", read:true, archived:false,},
+    {   type:'email',  from:'foo@person.com', to:'me', subject:"yo. 'sup?",  folders:['id_inbox'], read:true,  content: {text:'body'}},
+    {   type:'email', from:'bob@bob.com', to:'me', subject:"your order is ready", folders:['id_inbox'], read:false,  content: {text:'body'}},
+    {   type:'email', from:'mister man', to:'other me', subject:"other cool stuff", folders:['id_inbox'],  read:true,  content: {text:'body'}},
+    {   type:'email', from:'me', folders:['id_drafts'], subject:"foo bar baz", read:true,  content: {text:'body'}},
+    {   type:'email', from:'yo-dude', folders:['id_archive'], subject:"old message", read:true, content: {text:'body'}},
 
 
 

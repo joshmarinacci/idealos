@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import {HBox, VBox} from "appy-comps";
+import {HBox, VBox, Spacer} from "appy-comps";
 import {Input, ListView, Scroll} from "./GUIUtils";
 import RemoteDB from "./RemoteDB";
 
@@ -26,9 +26,39 @@ export default class Email extends Component {
             this.inbox.updateQuery({type:'email', folders:[item.id]})
         };
         this.selectEmail  = (item) => this.setState({selectedEmail:item});
+        this.archiveMessage = () => {
+            console.log("archiving", this.state.selectedEmail);
+        };
+        this.composeMessage = () => {
+            console.log("opening a new window to compose a message");
+            this.db.sendMessage({
+                type:'command',
+                target: 'system',
+                command: "launch",
+                app: 'compose-email',
+            });
+        }
+
+        this.db.whenConnected(()=>{
+            this.db.sendMessage({
+                type:'command',
+                target: 'system',
+                command: "resize",
+                appid: this.props.appid,
+                width:500,
+                height:400
+            });
+        })
+
     }
     render() {
         return <VBox grow>
+            <HBox>
+                <button onClick={this.archiveMessage}>archive</button>
+                <button onClick={this.composeMessage}>compose</button>
+                <Spacer/>
+                <Input db={this.db}/>
+            </HBox>
             <HBox grow>
                 <Scroll>
                     <ListView model={this.root} template={MailboxTemplate} selected={this.state.selectedFolder} onSelect={this.selectFolder}/>

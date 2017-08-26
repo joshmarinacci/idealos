@@ -8,6 +8,7 @@ import Calendar from "./Calendar";
 import DebugPanel from "./DebugPanel";
 import Browser from "./Browser";
 import Email from "./Email";
+import ComposeEmail from "./ComposeEmail";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -49,7 +50,12 @@ export const APP_REGISTRY = {
     'email': {
         title:'Mail',
         app: Email
-    }
+    },
+    'compose-email': {
+        title:'Compose Mail',
+        app: ComposeEmail
+    },
+
 };
 
 
