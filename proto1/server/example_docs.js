@@ -325,7 +325,7 @@ module.exports = [
     },
     {
         type: 'clip',
-        text: 'pharmacy ID number: 6767898u-98723',
+        text: 'pharmacy ID number',
         pinned: true,
     },
     {

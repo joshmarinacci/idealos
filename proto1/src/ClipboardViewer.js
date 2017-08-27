@@ -4,22 +4,24 @@ import {Scroll} from "./GUIUtils";
 import {SPECIAL_DOCS} from "./Constants";
 import RemoteDB from "./RemoteDB"
 
-const LIST_ITEM_STYLE = {
-    border: '1px solid lightGray',
-    borderWidth: '0 0 1px 0'
-};
+const STYLES = {
+    LIST_ITEM: {
+        border: '1px solid lightGray',
+        borderWidth: '0 0 1px 0'
+    },
+    TRANSPARENT_BUTTON : {
+        borderWidth: 0,
+        backgroundColor: 'transparent'
+    }
+}
 
-const TRANSPARENT_BUTTON = {
-    borderWidth: 0,
-    backgroundColor: 'transparent'
-};
 
 const ClipTemplate = (props) => {
     const clss = props.item.pinned ? "fa fa-star" : "fa fa-star-o";
-    return <HBox style={LIST_ITEM_STYLE}>
+    return <HBox style={STYLES.LIST_ITEM}>
         {props.item.text}
         <Spacer/>
-        <button className={clss} onClick={() => props.onPin(props.item)} style={TRANSPARENT_BUTTON}/>
+        <button className={clss} onClick={() => props.onPin(props.item)} style={STYLES.TRANSPARENT_BUTTON}/>
     </HBox>
 };
 
