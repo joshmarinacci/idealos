@@ -1,10 +1,27 @@
 import React, {Component} from 'react';
-import {HBox} from "appy-comps";
+import {HBox, VBox, Spacer} from "appy-comps";
 import {Scroll} from "./GUIUtils";
 import {SPECIAL_DOCS} from "./Constants";
 import RemoteDB from "./RemoteDB"
 
-const ClipTemplate = ((props)=><div>{props.item.text}</div>);
+const LIST_ITEM_STYLE = {
+    border: '1px solid lightGray',
+    borderWidth: '0 0 1px 0'
+};
+
+const TRANSPARENT_BUTTON = {
+    borderWidth: 0,
+    backgroundColor: 'transparent'
+};
+
+const ClipTemplate = (props) => {
+    const clss = props.item.pinned ? "fa fa-star" : "fa fa-star-o";
+    return <HBox style={LIST_ITEM_STYLE}>
+        {props.item.text}
+        <Spacer/>
+        <button className={clss} onClick={() => props.onPin(props.item)} style={TRANSPARENT_BUTTON}/>
+    </HBox>
+};
 
 class MultiSelectionListView extends Component {
     constructor(props) {
@@ -12,35 +29,39 @@ class MultiSelectionListView extends Component {
         this.state = {
             data: []
         };
-        if(props.model) {
-            props.model.on('update', (data) =>  this.setState({data: data}));
-            props.model.on('execute', (data) => this.setState({data: data}));
-            props.model.execute();
+
+        const {model, onSelectionChange, ...rest} = props;
+        this.delgateProperties = rest;
+        if (model) {
+            model.on('update', (data) => this.setState({data: data}));
+            model.on('execute', (data) => this.setState({data: data}));
+            model.execute();
         }
 
-        this.onSelect = (e,item) => {
-            if(!this.props.onSelectionChange) return;
-            if(!e.shiftKey) return this.props.onSelectionChange([item]);
+        this.onSelect = (e, item) => {
+            if (!onSelectionChange) return;
+            if (!e.shiftKey) return onSelectionChange([item]);
 
             let oldSelection = this.props.selection.slice();
             const n = oldSelection.indexOf(item);
-            if(n>=0) {
-                oldSelection.splice(n,1);
+            if (n >= 0) {
+                oldSelection.splice(n, 1);
             } else {
                 oldSelection.push(item);
             }
-            this.props.onSelectionChange(oldSelection);
+            onSelectionChange(oldSelection);
         }
     }
+
     render() {
         return <div style={{
-                border: '0px solid gray',
-                minWidth: '100px',
-                minHeight: '100px',
-                backgroundColor: '#fff',
-                flex: 1
-            }}
-        >{this.state.data.map((item, i) => this.renderItem(item,i))}</div>
+            border: '0px solid gray',
+            minWidth: '100px',
+            minHeight: '100px',
+            backgroundColor: '#fff',
+            flex: 1
+        }}
+        >{this.state.data.map((item, i) => this.renderItem(item, i))}</div>
     }
 
     renderItem(item, i) {
@@ -50,11 +71,12 @@ class MultiSelectionListView extends Component {
             className="ListItem"
             style={{backgroundColor: selected ? 'lightBlue' : '#fff'}}
             key={i}
-            onClick={(e) => this.onSelect(e,item)}
+            onClick={(e) => this.onSelect(e, item)}
         ><Template item={item}
-                   onSelect={()=>this.onSelect(item)}
+                   onSelect={() => this.onSelect(item)}
                    selected={this.props.selection}
                    model={this.props.model}
+                   {...this.delgateProperties}
         /></div>
     }
 }
@@ -65,29 +87,44 @@ export default class ClipboardViewer extends Component {
         this.db = new RemoteDB("clipboard-viewer");
         this.db.connect();
         this.state = {
-            selection:[]
+            selection: []
         };
         this.clips = this.db.makeLiveQuery({type: 'clip'});
 
         this.selectionChanged = (selection) => {
-            this.setState({selection:selection});
+            this.setState({selection: selection});
             this.db.update({
-                id:SPECIAL_DOCS.CURRENT_CLIPBOARD_SELECTION,
-                clips:selection.map((clip)=>clip.id)
+                id: SPECIAL_DOCS.CURRENT_CLIPBOARD_SELECTION,
+                clips: selection.map((clip) => clip.id)
             })
         };
+
+        this.showAll = () => {
+            this.clips.updateQuery({type: 'clip'});
+        };
+        this.showPinned = () => {
+            this.clips.updateQuery({type: 'clip', pinned: true});
+        };
+        this.clipPin = (clip) => {
+            clip.pinned = !clip.pinned;
+            this.db.update(clip);
+        }
     }
 
     render() {
-        return <HBox grow>
-            <Scroll>
+        return <VBox grow>
+            <HBox>
+                <button onClick={this.showAll}>all</button>
+                <button onClick={this.showPinned}>pinned</button>
+            </HBox>
+            <Scroll style={{border: '1px solid lightGray', flex:1}}>
                 <MultiSelectionListView model={this.clips}
                                         selection={this.state.selection}
                                         template={ClipTemplate}
                                         onSelectionChange={this.selectionChanged}
+                                        onPin={this.clipPin}
                 />
             </Scroll>
-        </HBox>
-
+        </VBox>
     }
 }
