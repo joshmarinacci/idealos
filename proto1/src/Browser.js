@@ -10,7 +10,7 @@
 
 import React, {Component} from 'react';
 import {HBox, VBox} from "appy-comps";
-import {ListView, Scroll, Input} from "./GUIUtils";
+import {Input} from "./GUIUtils";
 import RemoteDB from "./RemoteDB"
 
 export default class Browser extends Component {
@@ -33,7 +33,7 @@ export default class Browser extends Component {
         };
 
         this.load = (e) => {
-            var location = this.refs.iframe.contentWindow.location;
+            // var location = this.refs.iframe.contentWindow.location;
             // console.log("loaded", this.refs.iframe, this.refs.iframe.contentWindow, this.refs.iframe.src);
             // console.log("doc = ", this.refs.iframe.contentDocument);
             // console.log("location",location);
@@ -50,7 +50,7 @@ export default class Browser extends Component {
                 <Input db={this.db} value={this.state.url} style={{flex:1}}/>
             </HBox>
             <HBox grow>
-                <iframe ref="iframe" src={this.state.url} style={{flex:1}} onLoad={this.load}/>
+                <iframe title="fake browser" ref="iframe" src={this.state.url} style={{flex:1}} onLoad={this.load}/>
             </HBox>
         </VBox>
     }

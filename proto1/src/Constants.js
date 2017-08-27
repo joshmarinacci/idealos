@@ -9,6 +9,7 @@ import DebugPanel from "./DebugPanel";
 import Browser from "./Browser";
 import Email from "./Email";
 import ComposeEmail from "./ComposeEmail";
+import Chat from "./Chat";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -55,6 +56,10 @@ export const APP_REGISTRY = {
         title:'Compose Mail',
         app: ComposeEmail
     },
+    'chat':{
+        title:'Chat',
+        app: Chat
+    }
 
 };
 

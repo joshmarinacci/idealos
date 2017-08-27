@@ -158,6 +158,7 @@ module.exports = [
 
 
     {
+        id:'contact_me',
         type:'contact',
         first:"Josh",
         last:"Marinacci",
@@ -168,23 +169,43 @@ module.exports = [
                 state:"TA",
                 zip:"66666"
             }
-        ]
+        ],
+        avatar:"https://api.adorable.io/avatars/128/abott@adorable.png",
     },
     {
+        id:'contact_bill',
         type:'contact',
         first:'Bill',
         last:"Roberts",
+        avatar:"https://api.adorable.io/avatars/128/bill.png",
     },
     {
+        id:'contact_rob',
         type:'contact',
         first:'Rob',
         last:"Williams",
+        avatar:"https://api.adorable.io/avatars/128/rob.png",
     },
     {
+        id:'contact_steve',
         type:'contact',
         first:'Steve',
         last:"Martin",
+        avatar:"https://api.adorable.io/avatars/128/steve.png",
     },
+    {
+        id:'contact_jen',
+        type:'contact',
+        first:'Jen',
+        last:'Marinacci',
+        avatar:"https://api.adorable.io/avatars/128/jen.png"
+    },
+
+
+    { type:"message", from:'contact_me', to:'contact_jen', text:"Hi Sweetie. I'm heading home", timestamp:0,},
+    { type:"message", from:'contact_jen', to:'contact_me', text:"Great. Can you pick up some milk?", timestamp:1,},
+
+
 
 
 
@@ -233,6 +254,7 @@ module.exports = [
     { type:'app', title:'Web Browser', name:'browser'},
     { type:'app', title:'Mail', name:'email'},
     { type:'app', title:'Compose Mail', name:'compose-email'},
+    { type:'app', title:'Chat', name:'chat'},
     { type:'app', title:'Debug', name:'debug'},
 
 

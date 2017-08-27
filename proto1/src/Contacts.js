@@ -34,12 +34,20 @@ import {HBox, VBox} from "appy-comps";
 import {Input, ListView, Scroll} from "./GUIUtils";
 import RemoteDB from "./RemoteDB"
 
-let ContactTemplate = ((props) => <label>{props.item.first} {props.item.last}</label>);
-let ContactView = ((props) => {
+let ContactTemplate = (props) => {
+    return <HBox>
+        <img src={props.item.avatar} width={32} height={32}/>
+        {props.item.first} {props.item.last}
+    </HBox>
+};
+
+
+let ContactView = (props) => {
     var c = props.contact;
     if (!c) return <VBox></VBox>;
     if (!c.address) c.address = [];
-    return <VBox>
+    return <VBox grow>
+        <img src={c.avatar} width={64} height={64}/>
         <label>{c.first} {c.last}</label>
         {c.address.map((addr, i) => {
             return <VBox key={i}>
@@ -51,7 +59,7 @@ let ContactView = ((props) => {
             </VBox>
         })}
     </VBox>
-});
+};
 
 export default class Contacts extends Component {
     constructor(props) {
@@ -75,20 +83,19 @@ export default class Contacts extends Component {
     }
 
     render() {
-        return <VBox grow>
-            <HBox>
-                <Input ref='search' onChange={this.typeQuery} db={this.db}
-                       value={this.state.searchQuery}/>
-            </HBox>
-            <HBox grow>
+        return <HBox grow>
+            <VBox>
+                <Input onChange={this.typeQuery} db={this.db} value={this.state.searchQuery}/>
                 <Scroll>
                     <ListView model={this.contacts}
                               template={ContactTemplate}
                               onSelect={this.selectContact}
                               selected={this.state.selectedContact}/>
                 </Scroll>
+            </VBox>
+            <HBox grow>
                 <ContactView contact={this.state.selectedContact}/>
             </HBox>
-        </VBox>
+        </HBox>
     }
 }

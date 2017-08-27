@@ -21,8 +21,8 @@ vbox
 
 
 import React, {Component} from "react"
-import {CheckButton, ListView, PushButton, Scroll} from "./GUIUtils";
-import {HBox, VBox, PopupMenu, PopupManager} from "appy-comps"
+import {CheckButton, ListView, PushButton} from "./GUIUtils";
+import {HBox, PopupManager, PopupMenu, VBox} from "appy-comps"
 import RemoteDB from "./RemoteDB"
 
 const ColorItemTemplate = (props) => {
