@@ -44,7 +44,7 @@ export default class CommandBar extends Component {
     }
     render() {
         return <div className="command-bar">
-            <Input ref='text' type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} db={this.db}/>
+            <Input type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} db={this.db}/>
             {this.renderDropdown()}
         </div>
     }

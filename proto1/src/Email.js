@@ -27,10 +27,12 @@ export default class Email extends Component {
         };
         this.selectEmail  = (item) => this.setState({selectedEmail:item});
         this.archiveMessage = () => {
-            console.log("archiving", this.state.selectedEmail);
+            this.db.update({
+                id:this.state.selectedEmail,
+                folders:['id_archive']
+            })
         };
         this.composeMessage = () => {
-            console.log("opening a new window to compose a message");
             this.db.sendMessage({
                 type:'command',
                 target: 'system',
