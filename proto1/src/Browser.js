@@ -20,7 +20,10 @@ export default class Browser extends Component {
         this.db.connect();
 
         this.state = {
-            url:'https://joshondesign.com/'
+            url:'https://joshondesign.com/',
+            history: [
+                "https://joshondesign.com/"
+            ]
         };
 
         this.navBack = () => {
@@ -29,8 +32,13 @@ export default class Browser extends Component {
         this.navForward = () => {
         };
 
-        this.load = () => {
-            console.log("loaded", this.refs.iframe, this.refs.iframe.contentWindow);
+        this.load = (e) => {
+            var location = this.refs.iframe.contentWindow.location;
+            // console.log("loaded", this.refs.iframe, this.refs.iframe.contentWindow, this.refs.iframe.src);
+            // console.log("doc = ", this.refs.iframe.contentDocument);
+            // console.log("location",location);
+            // console.log("event",e);
+            // console.log("body", this.refs.iframe.contentWindow.document);
         };
 
     }
