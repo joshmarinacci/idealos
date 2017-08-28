@@ -3,13 +3,21 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const WebSocketServer = require('ws');
-const DB = require('./livedb').make({path: "tempdb.json"});
 
 
 var HTTP_PORT = 5151;
 var WEBSOCKET_PORT = 5150;
 
-DB.importDocs(require('./example_docs'));
+// Command line parameters
+var persistent = false;
+var reload = false;
+for (var i = 2; i < process.argv.length; i++) {
+    if (process.argv[i] === "mongo") persistent = true;
+    if (process.argv[i] === "reload") reload = true;
+}
+const dbProvider = persistent ? './persistdb' : './livedb';
+const DB = require(dbProvider).make({path: "tempdb.json"});
+
 
 // DB.makeLiveQuery({type:'alarm'},{order:{time:true}}).execute();
 
@@ -125,4 +133,12 @@ function startWebserver(cb) {
     });
 }
 
-startWebserver()
+DB.connect(function() {
+   if (!persistent)
+       DB.importDocs(require('./example_docs'));
+   if (persistent && reload) {
+       DB.reset();	
+       DB.importDocs(require('./example_docs'));
+   }
+   startWebserver();
+})

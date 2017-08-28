@@ -6,6 +6,10 @@ class LiveDB {
         this._live_queries = [];
     }
 
+    connect(callback) {
+	callback();
+    }
+
     generateID() {
         return "did_" + Math.floor(Math.random() * 10000);
     }
