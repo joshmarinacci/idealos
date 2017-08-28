@@ -60,8 +60,14 @@ export default class MusicPlayer extends Component {
                 this.audio.pause();
                 this.setState({playing:false});
             }
+        };
 
-        }
+
+        this.db.listenMessages((msg)=>{
+            if(msg.type === 'audio' && msg.command === 'toggle-play') {
+                this.playPause();
+            }
+        });
 
         this.typeQuery = (e) => {
             const txt = e.target.value;

@@ -132,6 +132,28 @@ class App extends Component {
         if (this.state.connected) return <NotificationViewer/>
         return "not connected";
     }
+
+
+    componentDidMount() {
+        // console.log("app has mounted",document);
+        document.addEventListener('keydown',(e)=>{
+            // console.log("a key has been pressed", e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.key);
+            if(e.shiftKey && e.ctrlKey && e.key === 'P') {
+                console.log("pressed control shift p");
+                e.preventDefault();
+                this.DB.sendMessage({
+                    type:'audio',
+                    target:'system',
+                    command:'toggle-play',
+                });
+                this.DB.insert({
+                    type: 'notification',
+                    read: false,
+                    title: 'toggle play/pause'
+                });
+            }
+        });
+    }
 }
 
 export default App;
