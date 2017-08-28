@@ -27,7 +27,7 @@ export default class MusicPlayer extends Component {
 
         this.selectArtist = (artist) => {
             this.setState({selectedArtist:artist});
-            this.albums.updateQuery({artist:artist.name});
+            this.albums.updateQuery({type:'album', artist:artist.name});
         };
         this.selectAlbum = (album) => {
             this.setState({selectedAlbum:album});

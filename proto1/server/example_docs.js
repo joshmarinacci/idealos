@@ -62,85 +62,82 @@ module.exports = [
 
 
     {
-        type: 'artist',
-        name: 'Erasure'
+        type:'artist',
+        name:'And.',
     },
     {
-        type: 'artist',
-        name: 'Depeche Mode'
+        type:'album',
+        artist:'And.',
+        name:'Dans'
     },
     {
-        type: 'artist',
-        name: 'Cars'
+        type:'song',
+        artist:'And.',
+        album:'Dans',
+        name:'Gigababoki',
+        url:'https://joshondesign.com/p/music/And_-_Dans/And_-_01_-_Gigababoki.mp3'
     },
     {
-        type: 'artist',
-        artist: 'Alphaville',
+        type:'song',
+        artist:'And.',
+        album:'Dans',
+        name:'Hilton Orbital Hotel',
+        url:'https://joshondesign.com/p/music/And_-_Dans/And_-_02_-_Hilton_Orbital_Hotel.mp3'
+    },
+    {
+        type:'song',
+        artist:'And.',
+        album:'Dans',
+        name:'Start Havok',
+        url:'https://joshondesign.com/p/music/And_-_Dans/And_-_03_-_Start_Havok.mp3'
+    },
+    {
+        type:'song',
+        artist:'And.',
+        album:'Dans',
+        name:'Chicken Soup',
+        url:'https://joshondesign.com/p/music/And_-_Dans/And_-_04_-_Chicken_Soup.mp3'
     },
 
 
     {
-        type: 'album',
-        artist: 'Erasure',
-        name: 'Wild'
+        type:'artist',
+        name:'Binrpilot'
     },
     {
-        type: 'album',
-        artist: 'Erasure',
-        name: 'The Innocents'
+        type:'album',
+        artist:'Binrpilot',
+        name:'Defrag',
     },
     {
-        type: 'album',
-        artist: 'Depeche Mode',
-        name: 'Some Great Reward'
+        type:'song',
+        artist:'Binrpilot',
+        album:'Defrag',
+        name:'Goof',
+        url:'https://joshondesign.com/p/music/Binrpilot_-_Defrag/Binrpilot_-_01_-_Goof.mp3'
     },
     {
-        type: 'album',
-        artist: 'Depeche Mode',
-        name: 'Violator'
+        type:'song',
+        artist:'Binrpilot',
+        album:'Defrag',
+        name:'Sandjorda',
+        url:'https://joshondesign.com/p/music/Binrpilot_-_Defrag/Binrpilot_-_02_-_Sandjorda.mp3'
     },
     {
-        type: 'album',
-        artist: 'Depeche Mode',
-        name: 'Songs of Faith and Devotion'
+        type:'song',
+        artist:'Binrpilot',
+        album:'Defrag',
+        name:'Widibf',
+        url:'https://joshondesign.com/p/music/Binrpilot_-_Defrag/Binrpilot_-_03_-_Widibf.mp3'
+    },
+    {
+        type:'song',
+        artist:'Binrpilot',
+        album:'Defrag',
+        name:'Fuayfsilfm',
+        url:'https://joshondesign.com/p/music/Binrpilot_-_Defrag/Binrpilot_-_04_-_Fuayfsilfm.mp3'
     },
 
-    {
-        type: 'song',
-        artist: 'Depeche Mode',
-        album: 'Violator',
-        name: 'In Your Eyes'
-    },
-
-
-    {
-        type: 'album',
-        artist: 'Alphaville',
-        name: 'Best Of',
-    },
-    {
-        type: 'song',
-        artist: 'Alphaville',
-        name: 'Forever Young',
-        url: 'https://joshondesign.com/p/MaiTai/b1/Samples/Forever_Young.mp3'
-    },
-
-
-    {
-        type: 'artist',
-        artist: 'Liver',
-    },
-    {
-        type: 'album',
-        artist: 'Liver',
-        name: "Best 'O",
-    },
-    {
-        type: 'song',
-        artist: 'Liver',
-        name: "Liver Song",
-        url: 'https://joshondesign.com/p/MaiTai/b1/Samples/Liver.mp3'
-    },
 
 
     {
