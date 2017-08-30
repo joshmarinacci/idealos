@@ -1,8 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  font-size: 14pt;
+  font-family: sans-serif, "Interface";
+  font-size: 13pt;
+  color: #303030;
+  background-color: #F2F2F2;
 }
 
 button {

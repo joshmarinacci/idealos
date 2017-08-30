@@ -94,4 +94,3 @@ export default class Alarms extends Component {
         </VBox>
     }
 }
-

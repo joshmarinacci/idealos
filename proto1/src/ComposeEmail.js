@@ -44,10 +44,6 @@ export default class ComposeEmail extends Component {
     render() {
         return <VBox grow>
             <HBox>
-                <button onClick={this.send}>send</button>
-                <button>cancel</button>
-            </HBox>
-            <HBox>
                 <label>to</label>
                 <input onChange={(e)=>this.edited(e,'to')}/>
             </HBox>
@@ -57,6 +53,11 @@ export default class ComposeEmail extends Component {
             </HBox>
 
             <textarea style={{flex: 1}} onChange={(e)=>this.edited(e,'body')}></textarea>
+
+              <HBox>
+                  <button onClick={this.send}>send</button>
+                  <button>cancel</button>
+              </HBox>
         </VBox>
     }
 }

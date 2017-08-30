@@ -1,30 +1,84 @@
+/*GENERAL*/
+
+input {
+  padding: 5px;
+  border: 1px solid #B0B0B0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+label {
+  color: #B0B0B0;
+  font-size: 10px;
+  margin-right: 10px;
+  padding-top: 16px;
+}
+
+textarea {
+  min-height: 100%;
+  border: 1px solid #B0B0B0;
+}
+
+button {
+  background: #0099B4;
+  color: #fff;
+  outline: none;
+  border: 0px;
+  cursor: pointer;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+button:hover {
+  background: #B0B0B0;
+}
+
+.fa.fa-arrows-alt {
+    cursor: nwse-resize;
+    margin-right: -10px;
+    margin-bottom: -10px;
+    background: #B0B0B0;
+}
+
+/*END GENERAL*/
+
 .window {
     position: absolute;
-    border: 1px solid green;
-    background-color: white;
+    border: 1px solid #B0B0B0;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
 }
 
-.window .header {
-    background-color: deeppink;
+.window:hover {
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+}
+
+.window .header{
     padding: 0.5em;
+    margin-left: -10px;
+    margin-top: -10px;
+    margin-right: -10px;
+    margin-bottom: 10px;
+    color: #B0B0B0;
 }
 
-.window .header button, .window .footer button {
-    background-color: transparent;
-    border-width: 0;
+.window .header button{
+  background: #B0B0B0;
 }
 
-.launcher {
-    font-size: 300%;
+.window .header:hover {
+    background-color: #B0B0B0;
+    color: #F2F2F2;
+    padding: 0.5em;
 }
 
 
 .command-bar {
-    border: 1px solid red;
     position: absolute;
-    background-color: deeppink;
     padding: 0.5em;
-    border-radius: 2em;
     top:1rem;
     left: 10em;
     right: 10em;
@@ -35,29 +89,37 @@
 .command-bar input {
     flex: 1;
     font-size: 1.5rem;
-    padding: 0.25rem;
-    border-radius: 1em;
-    background-color: lightpink;
-    border: 2px solid pink;
+    background-color: #fff;
+    border: 2px solid #B0B0B0;
     margin: 0;
-    padding-left: 0em;
+    padding-left: 0.2em;
+    padding-bottom: 2px;
+    outline: none;
+}
+.command-bar input:hover,
+.command-bar input:focus {
+  border: 2px solid #007DC3;
 }
 
 .command-bar .dropdown {
-    border: 1px solid red;
     position: absolute;
-    left: 1em;
-    top: 2.5em;
-    background-color: #eee;
+    left: .5em;
+    top: 1.8em;
+    background-color: #B0B0B0;
     list-style: none;
-    padding: 0;
+    padding: 0px;
 }
 .command-bar .dropdown li {
     padding: 0.25em 0.5em;
 }
 
+.command-bar .dropdown li:hover {
+    background-color: #fff;
+    cursor: pointer;
+}
+
 
 .notifications {
-    border: 0px solid red;
+    border: 0px solid #007DC3;
     background-color: transparent;
 }
