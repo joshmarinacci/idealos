@@ -34,6 +34,7 @@ class App extends Component {
             if(msg.type==='command') {
                 if(msg.command === 'launch') return this.launch(msg);
                 if(msg.command === 'close') return this.close(msg);
+                if(msg.command === 'raise') return this.raise(msg);
                 if(msg.command === 'enter-fullscreen') return this.enterFullscreen();
             }
         });
@@ -110,6 +111,15 @@ class App extends Component {
         this.setState({apps: this.state.apps.filter(a => a.appid !== msg.appid)});
     }
 
+    raise(msg) {
+        const last = this.state.apps[this.state.apps.length-1];
+        if(last.appid === msg.appid) return; //don't raise the top window
+        const app = this.state.apps.find((a => a.appid === msg.appid));
+        const apps = this.state.apps.filter(a => a.appid !== msg.appid);
+        apps.push(app);
+        this.setState({apps:apps});
+    }
+
     enterFullscreen() {
         console.log("we can enter fullscreen");
     }
@@ -118,7 +128,7 @@ class App extends Component {
         if(!this.state.connected) return <VBox></VBox>;
         return (
             <VBox>
-                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={i}
+                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={a.appid}
                                                            appid={a.appid}>{a.app}</FakeWindow>)}
                 <Launcher/>
                 <CommandBar/>

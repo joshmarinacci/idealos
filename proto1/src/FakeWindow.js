@@ -29,7 +29,15 @@ export default class FakeWindow extends Component {
                 h: this.state.h + action.delta.y
             })
         };
-        this.mouseDown = (e) => this.setState({action: new DragAction(e, this.moveHandler)});
+        this.mouseDown = (e) => {
+            this.db.sendMessage({
+                type: 'command',
+                target: 'system',
+                command: "raise",
+                appid: this.props.appid,
+            });
+            this.setState({action: new DragAction(e, this.moveHandler)});
+        };
         this.resizeDown = (e) => this.setState({action: new DragAction(e, this.resizeHandler)});
         this.closeWindow = (e) => {
             this.db.sendMessage({
