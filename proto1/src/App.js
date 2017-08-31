@@ -36,6 +36,7 @@ class App extends Component {
                 if(msg.command === 'close') return this.close(msg);
                 if(msg.command === 'raise') return this.raise(msg);
                 if(msg.command === 'enter-fullscreen') return this.enterFullscreen();
+                if(msg.command === 'enter-overview') return this.enterOverview();
             }
         });
         this.DB.connect();
@@ -122,6 +123,10 @@ class App extends Component {
 
     enterFullscreen() {
         console.log("we can enter fullscreen");
+    }
+
+    enterOverview() {
+        console.log("we can enter overview");
     }
 
     render() {

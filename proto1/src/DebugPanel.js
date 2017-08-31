@@ -39,6 +39,15 @@ export default class DebugPanel extends Component {
                 this.setState({valid: false});
             }
         }
+
+        this.enterOverview = () => {
+            this.db.sendMessage({
+                type: 'command',
+                target: 'system',
+                command: "enter-overview",
+                appid: this.props.appid,
+            });
+        }
     }
 
     render() {
@@ -46,6 +55,7 @@ export default class DebugPanel extends Component {
             <h3>Debug</h3>
             <HBox>
                 <button disabled onClick={this.enterFullscreen}>full screen</button>
+                <button onClick={this.enterOverview}>overview</button>
             </HBox>
             <label>query tester</label>
             <HBox style={{border: '1px solid ' + (this.state.valid ? 'green' : 'red')}}>
