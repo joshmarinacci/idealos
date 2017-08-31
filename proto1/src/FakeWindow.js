@@ -10,18 +10,14 @@ export default class FakeWindow extends Component {
         this.db = new RemoteDB("fakewindow");
         this.db.connect();
         this.state = {
-            x: 200,
-            y: 200,
             w: 300,
             h: 200,
             down: false,
             action: null,
         };
         this.moveHandler = (action) => {
-            this.setState({
-                x: this.state.x + action.delta.x,
-                y: this.state.y + action.delta.y
-            })
+            var a = this.props.app;
+            this.props.onMove(a, a.x+action.delta.x, a.y + action.delta.y);
         };
         this.resizeHandler = (action) => {
             this.setState({
@@ -61,8 +57,8 @@ export default class FakeWindow extends Component {
 
     render() {
         const style = {
-            top: this.state.y,
-            left: this.state.x,
+            top: this.props.app.y,
+            left: this.props.app.x,
             width: this.state.w,
             height: this.state.h,
         };

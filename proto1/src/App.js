@@ -79,6 +79,11 @@ class App extends Component {
             }
         });
 
+        this.moveAppWindow = (app,x,y) => {
+            app.x = x;
+            app.y = y;
+            this.setState({apps:this.state.apps.slice()});
+        }
     }
 
     nextId() {
@@ -96,10 +101,14 @@ class App extends Component {
         const info = APP_REGISTRY[msg.app];
         const AppComponent = info.app;
         const appid = this.nextId();
-        apps.push({title: info.title, app: <AppComponent appid={appid}/>, appid: appid});
+        const appInstance = <AppComponent appid={appid}/>;
+        apps.push({title: info.title,
+            appid: appid,
+            app: appInstance,
+            x:200,
+            y:100,
+        });
         this.setState({apps: apps});
-
-
         this.DB.insert({
             type: 'notification',
             read: false,
@@ -126,15 +135,19 @@ class App extends Component {
     }
 
     enterOverview() {
-        console.log("we can enter overview");
+        this.state.apps.forEach((app,i)=>{
+            app.x = i*100;
+            app.y = i*100;
+        });
+        this.setState({apps:this.state.apps.slice()});
     }
 
     render() {
         if(!this.state.connected) return <VBox></VBox>;
         return (
             <VBox>
-                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={a.appid}
-                                                           appid={a.appid}>{a.app}</FakeWindow>)}
+                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={a.appid} app={a}
+                                                           appid={a.appid} onMove={this.moveAppWindow}>{a.app}</FakeWindow>)}
                 <Launcher/>
                 <CommandBar/>
                 {this.renderNotificationViewer()}
