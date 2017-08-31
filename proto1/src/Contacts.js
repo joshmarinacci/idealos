@@ -33,6 +33,7 @@ import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
 import {Input, ListView, Scroll} from "./GUIUtils";
 import RemoteDB from "./RemoteDB"
+import {ProfileImage} from "./ProfileImage";
 
 let ContactTemplate = (props) => {
     return <HBox>
@@ -47,7 +48,7 @@ let ContactView = (props) => {
     if (!c) return <VBox></VBox>;
     if (!c.address) c.address = [];
     return <VBox grow>
-        <img src={c.avatar} width={64} height={64}/>
+        <ProfileImage size={64} item={c.id}/>
         <label>{c.first} {c.last}</label>
         {c.address.map((addr, i) => {
             return <VBox key={i}>

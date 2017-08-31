@@ -26,12 +26,13 @@ import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
 import {Input, ListView, Scroll} from "./GUIUtils";
 import RemoteDB from "./RemoteDB"
+import {ProfileImage} from "./ProfileImage";
 
 const ContactTemplate = (props) => {
-    return <HBox><img src={props.item.avatar} width={32} height={32}/> {props.item.first} (online)</HBox>
+    return <HBox><ProfileImage size={32} item={props.item.id}/> {props.item.first} (online)</HBox>
 };
 const ConversationItemTemplate = (props) => {
-    return <HBox>{props.item.from} {props.item.text}</HBox>
+    return <HBox><ProfileImage size={32} item={props.item.from}/>{props.item.from} {props.item.text}</HBox>
 };
 
 export default class Chat extends Component {
