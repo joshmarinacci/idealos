@@ -83,7 +83,13 @@ class App extends Component {
             app.x = x;
             app.y = y;
             this.setState({apps:this.state.apps.slice()});
-        }
+        };
+
+        this.resizeAppWindow = (app,w,h) => {
+            app.w = w;
+            app.h = h;
+            this.setState({apps:this.state.apps.slice()});
+        };
     }
 
     nextId() {
@@ -107,6 +113,8 @@ class App extends Component {
             app: appInstance,
             x:200,
             y:100,
+            w:300,
+            h:200
         });
         this.setState({apps: apps});
         this.DB.insert({
@@ -135,9 +143,20 @@ class App extends Component {
     }
 
     enterOverview() {
+        let y = 100;
+        let x = 100;
+        const maxy = 1200;
+        let maxh = 0;
         this.state.apps.forEach((app,i)=>{
-            app.x = i*100;
-            app.y = i*100;
+            if(x + app.w > maxy) {
+                x = 100;
+                y += maxh;
+                maxh = 0;
+            }
+            app.x = x;
+            app.y = y;
+            x += app.w+20;
+            if(app.h > maxh) maxh = app.h;
         });
         this.setState({apps:this.state.apps.slice()});
     }
@@ -147,7 +166,9 @@ class App extends Component {
         return (
             <VBox>
                 {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={a.appid} app={a}
-                                                           appid={a.appid} onMove={this.moveAppWindow}>{a.app}</FakeWindow>)}
+                                                           appid={a.appid}
+                                                           onResize={this.resizeAppWindow}
+                                                           onMove={this.moveAppWindow}>{a.app}</FakeWindow>)}
                 <Launcher/>
                 <CommandBar/>
                 {this.renderNotificationViewer()}
