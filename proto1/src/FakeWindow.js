@@ -64,7 +64,7 @@ export default class FakeWindow extends Component {
                 <Spacer/>
                 <button className="fa fa-close" onClick={this.closeWindow}/>
             </HBox>
-            <VBox grow>
+            <VBox grow scroll>
                 {this.props.children}
             </VBox>
             <HBox className="footer">
