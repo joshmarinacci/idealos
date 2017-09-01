@@ -2,7 +2,33 @@ import React, {Component} from 'react';
 import {VBox, HBox, Spacer} from "appy-comps";
 import DragAction from "./DragAction";
 import RemoteDB from "./RemoteDB";
+import Transition from 'react-transition-group/Transition';
 
+const duration = 250;
+
+const defaultStyle = {
+    transition: `opacity ${duration}ms ease-in-out`,
+};
+
+const transitionStyles = {
+    entering: { opacity: 0 },
+    entered:  { opacity: 1 },
+    exiting:  { opacity: 1 },
+    exited:   { opacity: 0 }
+};
+
+const Fade = ({ in: inProp, children, onDone }) => (
+    <Transition in={inProp} timeout={0}  appear  addEndListener={node =>  node.addEventListener('transitionend', onDone,false)}>
+        {(state) => (
+            <div style={{
+                ...defaultStyle,
+                ...transitionStyles[state]
+            }}>
+                {children}
+            </div>
+        )}
+    </Transition>
+);
 export default class FakeWindow extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +38,7 @@ export default class FakeWindow extends Component {
         this.state = {
             down: false,
             action: null,
+            open:true,
         };
         this.moveHandler = (action) => {
             const a = this.props.app;
@@ -31,7 +58,11 @@ export default class FakeWindow extends Component {
             this.setState({action: new DragAction(e, this.moveHandler)});
         };
         this.resizeDown = (e) => this.setState({action: new DragAction(e, this.resizeHandler)});
-        this.closeWindow = (e) => {
+        this.fadeWindow = () => {
+            this.setState({open:false});
+        };
+        this.closeWindow = (node,done) => {
+            if(this.state.open) return;
             this.db.sendMessage({
                 type: 'command',
                 target: 'system',
@@ -58,23 +89,28 @@ export default class FakeWindow extends Component {
             width: this.props.app.w,
             height: this.props.app.h,
         };
-        return <VBox className="window" style={style}>
-            <HBox onMouseDown={this.mouseDown} style={{userSelect: 'none', cursor: 'move'}} className="header">
-                {this.props.title}
-                <Spacer/>
-                <button className="fa fa-close" onClick={this.closeWindow}/>
-            </HBox>
-            <VBox grow scroll>
-                {this.props.children}
-            </VBox>
-            <HBox className="footer">
-                <Spacer/>
-                <button className="fa fa-arrows-alt"
-                        style={{
-                            cursor: 'nwse-resize'
-                        }}
-                        onMouseDown={this.resizeDown}/>
-            </HBox>
-        </VBox>
+
+        return(
+            <Fade in={this.state.open} onDone={this.closeWindow}>
+                <VBox className="window" style={style}>
+                    <HBox onMouseDown={this.mouseDown} style={{userSelect: 'none', cursor: 'move'}} className="header">
+                        {this.props.title}
+                        <Spacer/>
+                        <button className="fa fa-close" onClick={this.fadeWindow}/>
+                    </HBox>
+                    <VBox grow scroll>
+                        {this.props.children}
+                    </VBox>
+                    <HBox className="footer">
+                        <Spacer/>
+                        <button className="fa fa-arrows-alt"
+                                style={{
+                                    cursor: 'nwse-resize'
+                                }}
+                                onMouseDown={this.resizeDown}/>
+                    </HBox>
+                </VBox>
+            </Fade>
+        )
     }
 }
