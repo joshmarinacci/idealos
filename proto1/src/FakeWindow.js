@@ -7,14 +7,15 @@ import Transition from 'react-transition-group/Transition';
 const duration = 250;
 
 const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
+    transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`,
+
 };
 
 const transitionStyles = {
-    entering: { opacity: 0 },
-    entered:  { opacity: 1 },
-    exiting:  { opacity: 1 },
-    exited:   { opacity: 0 }
+    entering: { opacity: 0, transform: 'scale(1.3)' },
+    entered:  { opacity: 1, transform: 'scale(1)'},
+    exiting:  { opacity: 1, transform: 'scale(1)'},
+    exited:   { opacity: 0, transform: 'scale(1.3)'}
 };
 
 const Fade = ({ in: inProp, children, onDone }) => (
@@ -91,8 +92,13 @@ export default class FakeWindow extends Component {
         };
 
         return(
-            <Fade in={this.state.open} onDone={this.closeWindow}>
-                <VBox className="window" style={style}>
+            <Transition in={this.state.open} timeout={0} appear addEndListener={node => node.addEventListener('transitionend', this.closeWindow, false)}>
+                {(state) => (
+                <VBox className="window" style={{
+                    ...style,
+                    ...defaultStyle,
+                    ...transitionStyles[state]
+                }}>
                     <HBox onMouseDown={this.mouseDown} style={{userSelect: 'none', cursor: 'move'}} className="header">
                         {this.props.title}
                         <Spacer/>
@@ -110,7 +116,11 @@ export default class FakeWindow extends Component {
                                 onMouseDown={this.resizeDown}/>
                     </HBox>
                 </VBox>
-            </Fade>
+                    )}
+            </Transition>
         )
+    }
+
+    componentWillReceiveProps(newProps) {
     }
 }
