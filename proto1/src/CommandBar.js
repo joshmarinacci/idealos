@@ -1,7 +1,8 @@
 import React, {Component} from "react";
+import {PopupManager} from "appy-comps";
 import {Input} from "./GUIUtils";
 import RemoteDB from "./RemoteDB"
-
+import SelectMenu from "./SelectMenu";
 
 export default class CommandBar extends Component {
     constructor(props) {
@@ -30,6 +31,13 @@ export default class CommandBar extends Component {
             const txt = e.target.value;
             this.setState({command:txt});
             this.query.updateQuery({type:'app', name: { $regex:txt, $options:'i'}});
+            if(txt.length >= 2) {
+                let popupMenu = <SelectMenu items={this.state.data} template={(item)=>item.title} onSelect={(item)=>{
+                    this.runCommand(item.name);
+                    PopupManager.hide();
+                }}/>;
+                PopupManager.show(popupMenu,this.refs.body);
+            }
         }
 
     }
@@ -43,18 +51,8 @@ export default class CommandBar extends Component {
         this.setState({command:""})
     }
     render() {
-        return <div className="command-bar">
+        return <div className="command-bar" ref="body">
             <Input type="text" value={this.state.command} onKeyDown={this.keydown} onChange={this.edited} db={this.db}/>
-            {this.renderDropdown()}
         </div>
-    }
-
-    renderDropdown() {
-        if(this.state.command.length < 2) return <ul className="dropdown"></ul>;
-        return <ul className="dropdown">
-            {this.state.data.map((app,i) => {
-                return <li key={i} onClick={()=>this.runCommand(app.name)}>{app.title}</li>
-            })}
-        </ul>
     }
 }

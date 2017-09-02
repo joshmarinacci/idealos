@@ -18,18 +18,6 @@ const transitionStyles = {
     exited:   { opacity: 0, transform: 'scale(1.3)'}
 };
 
-const Fade = ({ in: inProp, children, onDone }) => (
-    <Transition in={inProp} timeout={0}  appear  addEndListener={node =>  node.addEventListener('transitionend', onDone,false)}>
-        {(state) => (
-            <div style={{
-                ...defaultStyle,
-                ...transitionStyles[state]
-            }}>
-                {children}
-            </div>
-        )}
-    </Transition>
-);
 export default class FakeWindow extends Component {
     constructor(props) {
         super(props);
