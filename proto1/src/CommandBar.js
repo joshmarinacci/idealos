@@ -26,17 +26,23 @@ export default class CommandBar extends Component {
 
         this.query.execute();
 
-        this.keydown = (e) => { if(e.keyCode === 13) this.runCommand(this.state.command); };
+
+        this.keydown = (e) => {
+            if(e.keyCode === 13) this.runCommand(this.state.command);
+        };
         this.edited = (e) => {
             const txt = e.target.value;
             this.setState({command:txt});
             this.query.updateQuery({type:'app', name: { $regex:txt, $options:'i'}});
-            if(txt.length >= 2) {
-                let popupMenu = <SelectMenu items={this.state.data} template={(item)=>item.title} onSelect={(item)=>{
-                    this.runCommand(item.name);
-                    PopupManager.hide();
-                }}/>;
-                PopupManager.show(popupMenu,this.refs.body);
+            if(!this.popupMenu) {
+                this.popupMenu = <SelectMenu query={this.query} template={(item) => item.title}
+                                             onSelect={(item) => {
+                                                 this.runCommand(item.name);
+                                                 PopupManager.hide();
+                                                 this.popupMenu = null;
+                                             }}
+                />;
+                PopupManager.show(this.popupMenu, this.refs.body);
             }
         }
 

@@ -24,7 +24,7 @@ export const APP_REGISTRY = {
         title: 'Contacts',
         app: Contacts,
     },
-    'todolist': {
+    'todos': {
         title: 'Todo List',
         app: Todos,
     },

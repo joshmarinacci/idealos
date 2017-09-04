@@ -41,19 +41,23 @@ export default class SelectMenu extends Component {
 
         this.state = {
             highlightedIndex: 0,
+            items:[],
         };
 
-        this.keyDown = (e) => {
-            // console.log("pressed",e.keyCode);
-            if(e.keyCode === 40) return this.navDown();
-            if(e.keyCode === 38) return this.navUp();
-            if(e.keyCode === 13) return this.choose();
+        this.mounted = false;
+        this.updateItems = (data) => {
+            if(!this.mounted) return;
+            this.setState({items:data});
         };
+        props.query.on('update', this.updateItems);
+        props.query.on('execute', this.updateItems);
+
+
 
         this.navDown = () => {
             let index = this.state.highlightedIndex;
             while(true) {
-                index = (index + 1) % this.props.items.length;
+                index = (index + 1) % this.state.items.length;
                 var item = this.getItem(index);
                 if(item.disabled) continue;
                 break;
@@ -64,7 +68,7 @@ export default class SelectMenu extends Component {
             let index = this.state.highlightedIndex;
             while(true) {
                 index = (index -1 );
-                if(index < 0) index = this.props.items.length -1;
+                if(index < 0) index = this.state.items.length -1;
                 var item = this.getItem(index);
                 if(item.disabled) continue;
                 break;
@@ -74,20 +78,40 @@ export default class SelectMenu extends Component {
         this.choose = () => {
             const item = this.getItem(this.state.highlightedIndex);
             if(this.props.onSelect) this.props.onSelect(item,this.state.highlightedIndex);
-        }
+        };
+        this.documentKeydown = (e) => {
+            if(e.keyCode === 40) {
+                e.stopPropagation();
+                e.preventDefault();
+                this.navDown()
+            }
+            if(e.keyCode=== 38) {
+                e.stopPropagation();
+                e.preventDefault();
+                this.navUp()
+            }
+            if(e.keyCode === 13) {
+                this.choose();
+            }
+        };
     }
     getItem(index) {
-        return this.props.items[index];
+        return this.state.items[index];
     }
 
     componentDidMount() {
-        console.log("shown");
-        this.refs.div.focus();
+        document.addEventListener('keydown',this.documentKeydown,true);
+        this.mounted = true;
+        this.props.query.execute();
+    }
+    componentWillUnmount() {
+        document.removeEventListener('keydown',this.documentKeydown,true);
+        this.mounted = false;
     }
 
     render() {
-        return <div style={menuStyle} onKeyDown={this.keyDown} tabIndex={1} ref="div">
-            {this.props.items.map((it,i)=>{
+        return <div style={menuStyle} ref="div">
+            {this.state.items.map((it,i)=>{
                 return <SelectItemTemplate key={i} item={it} highlighted={this.state.highlightedIndex === i} template={this.props.template}/>
             })}
         </div>
