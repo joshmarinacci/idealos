@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {VBox} from "appy-comps";
 
 const menuStyle = {
     border: '1px solid black',
@@ -31,7 +30,7 @@ const SelectItemTemplate = (props) => {
     if(props.template) {
         text = props.template(props.item);
     }
-    return <div style={{ ...menuItemStyle,  ...override}}
+    return <div style={{ ...menuItemStyle,  ...override}} onClick={()=>props.onClick(props.item)}
     >{text}</div>
 };
 
@@ -94,6 +93,10 @@ export default class SelectMenu extends Component {
                 this.choose();
             }
         };
+        this.clickChoose = (item) => {
+            console.log("item",item);
+            if(this.props.onSelect) this.props.onSelect(item);
+        }
     }
     getItem(index) {
         return this.state.items[index];
@@ -112,7 +115,9 @@ export default class SelectMenu extends Component {
     render() {
         return <div style={menuStyle} ref="div">
             {this.state.items.map((it,i)=>{
-                return <SelectItemTemplate key={i} item={it} highlighted={this.state.highlightedIndex === i} template={this.props.template}/>
+                return <SelectItemTemplate key={i} item={it} highlighted={this.state.highlightedIndex === i} template={this.props.template}
+                                           onClick={this.clickChoose}
+                />
             })}
         </div>
     }
