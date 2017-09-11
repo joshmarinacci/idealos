@@ -48,6 +48,28 @@ export default class DebugPanel extends Component {
                 appid: this.props.appid,
             });
         }
+
+        this.sendPlayPause = () => {
+            this.db.sendMessage({
+                type:'audio',
+                target:'system',
+                command:'toggle-play',
+            });
+        };
+
+        this.sendFakeEmail = () => {
+            this.db.insert({
+                type:'email',
+                from:'bob@website.com',
+                to:"me@me.com",
+                subject:"Domain Registration",
+                content: {
+                    text:"I'm glad to see we got it all sorted out.\nThanks for your help."
+                },
+                folders:['id_inbox']
+            });
+
+        }
     }
 
     render() {
@@ -63,6 +85,11 @@ export default class DebugPanel extends Component {
                     <button onClick={this.submitQuery}>run</button>
             </HBox>
             <Scroll>{this.renderResultsTable(this.state.results)}</Scroll>
+
+            <HBox>
+                <button onClick={this.sendFakeEmail}>receive fake email</button>
+                <button onClick={this.sendPlayPause}>send playpause trigger</button>
+            </HBox>
         </VBox>
     }
 
