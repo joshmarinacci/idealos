@@ -153,7 +153,7 @@ module.exports = [
                 zip: "66666"
             }
         ],
-        avatar: "https://api.adorable.io/avatars/128/abott@adorable.png",
+        avatar: "resource:avatar_01",
     },
     {
         id: 'contact_bill',
@@ -337,28 +337,32 @@ module.exports = [
         format:'png',
         tags:['avatar'],
         url:'resource:avatars/if_users-2_984102.png',
-        title:'if_users-2_984102'
+        title:'if_users-2_984102',
+        id:'avatar_01'
     },
     {
         type:'image',
         format:'png',
         tags:['avatar'],
         url:'resource:avatars/if_users-12_984125.png',
-        title:'if_users-12_984125'
+        title:'if_users-12_984125',
+        id:'avatar_02'
     },
     {
         type:'image',
         format:'png',
         tags:['avatar'],
         url:'resource:avatars/if_users-13_984120.png',
-        title:'if_users-13_984120'
+        title:'if_users-13_984120',
+        id:'avatar_03'
     },
     {
         type:'image',
         format:'png',
         tags:['avatar'],
         url:'resource:avatars/if_users-16_984113-1.png',
-        title:'if_users-16_984113-1'
+        title:'if_users-16_984113-1',
+        id:'avatar_04'
     },
 
 ];

@@ -1,3 +1,4 @@
+const PATHS = require("path");
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -6,8 +7,8 @@ const WebSocketServer = require('ws');
 const DB = require('./livedb').make({path: "tempdb.json"});
 
 
-var HTTP_PORT = 5151;
-var WEBSOCKET_PORT = 5150;
+const HTTP_PORT = 5151;
+const WEBSOCKET_PORT = 5150;
 
 DB.importDocs(require('./example_docs'));
 
@@ -67,6 +68,16 @@ server.on('connection', (conn) => {
     });
 });
 
+function doMissing(res) {
+    res.set('Content-Type','text/html');
+    res.send("<html><body><h1>cannot find the content</h1></body>");
+    res.end();
+}
+function doFile(doc,res) {
+    var path = PATHS.join(process.cwd(),'resources', doc.url.slice("resource:".length));
+    res.sendFile(path);
+}
+
 
 function startWebserver(cb) {
     const app = express();
@@ -118,6 +129,21 @@ function startWebserver(cb) {
         res.json({status:'success'});
         res.end();
     });
+
+    app.get('/api/resource/:id', (req,res)=>{
+        DB.query({id:req.params.id}).then((docs)=>{
+            if(!docs) return doMissing(res);
+            var doc = docs[0];
+            if(!doc) return doMissing(res);
+            if(doc.type !== 'image') return doMissing(res);
+            if(!doc.url) return doMissing(res);
+            return doFile(doc,res);
+        }).catch((e)=>{
+            console.log(e);
+            doMissing(res);
+        });
+    });
+
 
     app.listen(HTTP_PORT, function () {
         console.log("ready to serve on http://localhost:" + HTTP_PORT + "/");

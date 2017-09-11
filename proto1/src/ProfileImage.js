@@ -9,7 +9,12 @@ export class ProfileImage extends Component {
         };
         this.setSourceFromDocs = (docs) => {
             if(!this.mounted) return;
-            this.setState({src:docs[0].avatar});
+            var avatar = docs[0].avatar;
+            if(avatar.indexOf("resource:") === 0) {
+                var id = avatar.slice("resource:".length);
+                avatar = "http://localhost:5151/api/resource/"+id;
+            }
+            this.setState({src:avatar});
         };
 
         this.db = new RemoteDB("chat");
