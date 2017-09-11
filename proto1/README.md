@@ -93,3 +93,8 @@ Idea for Mark I prototype.
 * database pre-populated with some notes, contacts, events, alarms, etc.
 * add a due date for a todo list item, shows up in calendar too.
 * mp3s and notes have realtime incremental search. 
+
+
+avatar images from https://www.iconfinder.com/iconsets/user-avatars-1
+
+
