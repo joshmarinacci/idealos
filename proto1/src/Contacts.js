@@ -30,14 +30,24 @@
  */
 
 import React, {Component} from "react"
-import {HBox, VBox} from "appy-comps";
+import {HBox, VBox, PopupManager} from "appy-comps";
 import {Input, ListView, Scroll} from "./GUIUtils";
 import RemoteDB from "./RemoteDB"
 import {ProfileImage} from "./ProfileImage";
+import SelectMenu from "./SelectMenu";
 
+
+function cloneObject(obj) {
+    const oo = {};
+    Object.keys(obj).forEach((name)=>{
+        oo[name] = obj[name];
+    });
+    return oo;
+}
 let ContactTemplate = (props) => {
+    var src = resourceToURL(props.item.avatar);
     return <HBox>
-        <img src={props.item.avatar} width={32} height={32}/>
+        <img src={src} width={32} height={32}/>
         {props.item.first} {props.item.last}
     </HBox>
 };
@@ -62,6 +72,38 @@ let ContactView = (props) => {
     </VBox>
 };
 
+function resourceToURL(avatar) {
+    if(avatar.indexOf("resource:") === 0) {
+        var id = avatar.slice("resource:".length);
+        avatar = "http://localhost:5151/api/resource/"+id;
+    }
+    return avatar;
+}
+
+export class ContactEdit extends Component {
+    showAvatarPicker() {
+        const query = this.props.db.makeLiveQuery({type: 'image'});
+        this.popupMenu = <SelectMenu query={query}
+                                     template={(item) => {
+                                         const src = `http://localhost:5151/api/resource/${item.id}`;
+                                         return <img src={src} width={32} height={32}/>
+                                     }}
+                                     onSelect={(item) => {
+                                         this.props.onEdit(this.props.contact,'avatar','resource:'+item.id);
+                                         PopupManager.hide();
+                                         this.popupMenu = null;
+                                     }}
+        />;
+        PopupManager.show(this.popupMenu, this.refs.img);
+    }
+    render() {
+        const src = resourceToURL(this.props.contact.avatar);
+        return <VBox>
+            <img ref="img" width={64} height={64} onClick={this.showAvatarPicker.bind(this)} src={src}/>
+            <label>editing</label>
+        </VBox>
+    }
+}
 export default class Contacts extends Component {
     constructor(props) {
         super(props);
@@ -70,7 +112,8 @@ export default class Contacts extends Component {
         this.contacts = this.db.makeLiveQuery({type: 'contact'});
         this.state = {
             selectedContact: null,
-            searchQuery: ''
+            searchQuery: '',
+            editing: false
         };
         this.selectContact = (contact) => this.setState({selectedContact: contact});
         this.typeQuery = (e) => {
@@ -80,10 +123,28 @@ export default class Contacts extends Component {
                 type: 'contact',
                 first: { $regex: `^${txt}`, $options:'i' }
             });
+        };
+
+        this.editContact = () => {
+            if(this.state.editing) {
+                this.db.update(this.state.selectedContact);
+                this.setState({editing:false});
+            } else {
+                this.setState({editing: true})
+            }
+        };
+
+        this.contactEdited = (contact, field, value) => {
+            console.log("field",field,'goes to',value);
+            contact = cloneObject(contact);
+            contact[field] = value;
+            this.setState({selectedContact:contact});
         }
     }
 
     render() {
+        let view = this.state.editing?<ContactEdit contact={this.state.selectedContact} db={this.db} onEdit={this.contactEdited}/>:<ContactView contact={this.state.selectedContact}/>;
+        let text = this.state.editing?"Done":"Edit";
         return <HBox grow>
             <VBox>
                 <Input onChange={this.typeQuery} db={this.db} value={this.state.searchQuery}/>
@@ -94,9 +155,10 @@ export default class Contacts extends Component {
                               selected={this.state.selectedContact}/>
                 </Scroll>
             </VBox>
-            <HBox grow>
-                <ContactView contact={this.state.selectedContact}/>
-            </HBox>
+            <VBox grow>
+                <button onClick={this.editContact}>{text}</button>
+                {view}
+            </VBox>
         </HBox>
     }
 }
