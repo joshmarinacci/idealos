@@ -332,4 +332,33 @@ module.exports = [
     },
 
 
+    {
+        type:'image',
+        format:'png',
+        tags:['avatar'],
+        url:'resource:avatars/if_users-2_984102.png',
+        title:'if_users-2_984102'
+    },
+    {
+        type:'image',
+        format:'png',
+        tags:['avatar'],
+        url:'resource:avatars/if_users-12_984125.png',
+        title:'if_users-12_984125'
+    },
+    {
+        type:'image',
+        format:'png',
+        tags:['avatar'],
+        url:'resource:avatars/if_users-13_984120.png',
+        title:'if_users-13_984120'
+    },
+    {
+        type:'image',
+        format:'png',
+        tags:['avatar'],
+        url:'resource:avatars/if_users-16_984113-1.png',
+        title:'if_users-16_984113-1'
+    },
+
 ];
