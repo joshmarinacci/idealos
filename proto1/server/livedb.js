@@ -1,9 +1,38 @@
 const mingo = require('mingo');
 
+function evalScript(scr,doc,mode) {
+    if(!scr.active) return;
+    if(scr.language !== 'javascript') return;
+
+
+    let mq = new mingo.Query(scr.trigger);
+    const matched = mq.find([doc]).all();
+    if(matched.length <= 0) return;
+    console.log("found a script to trigger",scr);
+
+    console.log('evaluating script ',scr.code);
+    console.log('on document',doc);
+
+    var event = {
+        mode:mode,
+        document:doc
+    };
+
+    try {
+        var fun = eval(scr.code);
+        console.log("fun", fun);
+        fun(event);
+    } catch(e) {
+        console.log("error",e);
+    }
+
+}
+
 class LiveDB {
     constructor() {
         this._docs = [];
         this._live_queries = [];
+        this._scripts = [];
     }
 
     generateID() {
@@ -13,19 +42,25 @@ class LiveDB {
 
     importDocs(docs) {
         docs.forEach((doc)=>{
-            this._docs.push(doc);
             if(!doc.id) doc.id = this.generateID();
+            // console.log('importing',doc);
+            this._docs.push(doc);
+            if(doc.type === 'script') {
+                this._scripts.push(doc);
+            }
             this._live_queries.forEach((lq)=>{
                 if(lq.matches(doc)) {
                     lq.fireInsert([doc]);
                 }
-            })
+            });
+            this._scripts.forEach((scr)=> evalScript(scr,doc,'INSERT'));
         });
     }
 
     reset() {
         this._docs = [];
         this._live_queries = [];
+        this._scripts = [];
     }
 
     insert(doc) {
@@ -44,6 +79,9 @@ class LiveDB {
         this._live_queries.forEach((lq)=>{
             if(lq.matches(doc)) lq.fireInsert([doc]);
         });
+
+        this._scripts.forEach((scr)=> evalScript(scr,doc,'UPDATE'));
+
         return Promise.resolve(doc);
     }
 
@@ -53,6 +91,7 @@ class LiveDB {
         this._live_queries.forEach((lq)=>{
             if(lq.matches(doc)) lq.fireDelete([doc]);
         });
+        this._scripts.forEach((scr)=> evalScript(scr,doc,'DELETE'));
         return Promise.resolve(doc);
     }
     query(q) {

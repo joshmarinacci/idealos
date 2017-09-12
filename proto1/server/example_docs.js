@@ -365,4 +365,15 @@ module.exports = [
         id:'avatar_04'
     },
 
+
+    {
+        type:'script',
+        language:'javascript',
+        trigger: { type:'email' },
+        active:true,
+        code: `(function myfun(event) {
+            console.log("got a doc in mode",event.mode);
+            console.log("document is",event.document);
+        })`,
+    }
 ];
