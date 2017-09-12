@@ -62,9 +62,9 @@ export default class DebugPanel extends Component {
                 type:'email',
                 from:'bob@website.com',
                 to:"me@me.com",
-                subject:"Domain Registration",
+                subject:"play",
                 content: {
-                    text:"I'm glad to see we got it all sorted out.\nThanks for your help."
+                    text:"I'm glad to see we got it all sorted out.\nThanks for your help. Ready for music."
                 },
                 folders:['id_inbox']
             });

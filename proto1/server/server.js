@@ -48,6 +48,10 @@ function bounceBack(msg) {
     });
 }
 
+DB.sendMessage = (msg)=>{
+    bounceBack(msg);
+};
+
 const server = new WebSocketServer.Server({port: WEBSOCKET_PORT});
 server.on('connection', (conn) => {
     conns.push(conn);
@@ -67,6 +71,9 @@ server.on('connection', (conn) => {
         return bounceBack(msg);
     });
 });
+
+
+
 
 function doMissing(res) {
     res.set('Content-Type','text/html');

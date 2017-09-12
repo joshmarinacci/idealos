@@ -1,32 +1,5 @@
 const mingo = require('mingo');
 
-function evalScript(scr,doc,mode) {
-    if(!scr.active) return;
-    if(scr.language !== 'javascript') return;
-
-
-    let mq = new mingo.Query(scr.trigger);
-    const matched = mq.find([doc]).all();
-    if(matched.length <= 0) return;
-    console.log("found a script to trigger",scr);
-
-    console.log('evaluating script ',scr.code);
-    console.log('on document',doc);
-
-    var event = {
-        mode:mode,
-        document:doc
-    };
-
-    try {
-        var fun = eval(scr.code);
-        console.log("fun", fun);
-        fun(event);
-    } catch(e) {
-        console.log("error",e);
-    }
-
-}
 
 class LiveDB {
     constructor() {
@@ -53,7 +26,7 @@ class LiveDB {
                     lq.fireInsert([doc]);
                 }
             });
-            this._scripts.forEach((scr)=> evalScript(scr,doc,'INSERT'));
+            this._scripts.forEach((scr)=> this.evalScript(scr,doc,'INSERT'));
         });
     }
 
@@ -80,7 +53,7 @@ class LiveDB {
             if(lq.matches(doc)) lq.fireInsert([doc]);
         });
 
-        this._scripts.forEach((scr)=> evalScript(scr,doc,'UPDATE'));
+        this._scripts.forEach((scr)=> this.evalScript(scr,doc,'UPDATE'));
 
         return Promise.resolve(doc);
     }
@@ -91,7 +64,7 @@ class LiveDB {
         this._live_queries.forEach((lq)=>{
             if(lq.matches(doc)) lq.fireDelete([doc]);
         });
-        this._scripts.forEach((scr)=> evalScript(scr,doc,'DELETE'));
+        this._scripts.forEach((scr)=> this.evalScript(scr,doc,'DELETE'));
         return Promise.resolve(doc);
     }
     query(q) {
@@ -110,6 +83,33 @@ class LiveDB {
         lq.updateQuery(q);
     }
 
+    evalScript(scr,doc,mode) {
+        if(!scr.active) return;
+        if(scr.language !== 'javascript') return;
+
+
+        let mq = new mingo.Query(scr.trigger);
+        const matched = mq.find([doc]).all();
+        if(matched.length <= 0) return;
+        console.log("found a script to trigger",scr);
+
+        console.log('evaluating script ',scr.code);
+        console.log('on document',doc);
+
+        const event = {
+            mode: mode,
+            document: doc,
+            database: this
+        };
+
+        try {
+            //the actual eval
+            eval(scr.code)(event);
+        } catch(e) {
+            console.log("error",e);
+        }
+
+    }
 }
 
 class LiveQuery {

@@ -372,8 +372,25 @@ module.exports = [
         trigger: { type:'email' },
         active:true,
         code: `(function myfun(event) {
-            console.log("got a doc in mode",event.mode);
-            console.log("document is",event.document);
+            console.log("got an email");
         })`,
+    },
+
+    {
+        type:'script',
+        language:'javascript',
+        trigger: { type:'email'},
+        active:true,
+        code: `(function myfun(event) {
+            var email = event.document;
+            if(email.subject === 'play') {
+                console.log('we need to play a song');
+                event.database.sendMessage({
+                    type:'audio',
+                    target:'system',
+                    command:'toggle-play',
+                });
+            }
+        })`
     }
 ];
