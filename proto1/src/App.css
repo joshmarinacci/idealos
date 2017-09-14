@@ -35,8 +35,8 @@ button:hover {
 
 .fa.fa-arrows-alt {
     cursor: nwse-resize;
-    margin-right: -10px;
-    margin-bottom: -10px;
+    /*margin-right: -10px;*/
+    /*margin-bottom: -10px;*/
     background: #B0B0B0;
 }
 

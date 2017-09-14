@@ -12,9 +12,8 @@ instead of dragging tabs we can right click to a menu to the following:
 
 import React, {Component} from "react";
 import {HBox, Spacer, VBox} from "appy-comps";
-import {nextId, Scroll} from "./GUIUtils";
+import {nextId} from "./GUIUtils";
 import DragAction from "./DragAction";
-import {APP_REGISTRY, SPECIAL_DOCS} from "./Constants";
 import RemoteDB from "./RemoteDB";
 
 
@@ -87,9 +86,11 @@ class IDFrame extends Component {
             height: this.state.h,
             position: "absolute",
             border:'1px solid black',
-            backgroundColor: 'lightGray',
+            backgroundColor: 'white',
             padding:0,
             margin:0,
+            borderRadius: '0.5em',
+            backgroundClip: 'padding-box',
         };
 
 
@@ -98,10 +99,11 @@ class IDFrame extends Component {
                 userSelect: 'none',
                 cursor: 'move',
                 backgroundColor:'lightGreen',
-                padding: "0.25em 0.5em"
+                padding: "0.25em 0.5em",
+                borderRadius: '0.5em 0.5em 0 0',
             }}>
                 <Spacer/>
-                <button>menu</button>
+                <button className="fa fa-bars fa-fw" style={{padding:0}}/>
             </HBox>
             <HBox
                 style={{backgroundColor:'gray'}}
@@ -109,15 +111,20 @@ class IDFrame extends Component {
                 return <Tab key={app.id} app={app} onSelect={()=>this.selectTab(app)} onClose={()=>this.closeTab(app)} selected={true}/>
             })}</HBox>
             <VBox scroll grow style={{
-                backgroundColor:'lightGray'
+                borderRadius: '0.5em',
             }}>
                 <div>{this.props.window.apps[0].instance}</div>
             </VBox>
-            <HBox className="footer">
+            <HBox style={{position:'relative'}}>
                 <Spacer/>
-                <button className="fa fa-arrows-alt"
+                <button className="fa fa-expand fa-fw"
                         style={{
-                            cursor: 'nwse-resize'
+                            cursor: 'nwse-resize',
+                            padding:0,
+                            position:'absolute',
+                            right:0,
+                            bottom:0,
+                            borderRadius:'0 0 0.5em 0'
                         }}
                         onMouseDown={this.resizeDown}/>
             </HBox>
@@ -129,7 +136,7 @@ class Tab extends Component {
     render() {
         return <HBox>
             <button onClick={this.props.onSelect}>{this.props.app.title}</button>
-            <button onClick={this.props.onClose}>X</button>
+            <button onClick={this.props.onClose} className="fa fa-close"/>
         </HBox>
     }
 }
