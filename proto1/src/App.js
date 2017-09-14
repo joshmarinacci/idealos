@@ -1,6 +1,5 @@
 
 import React, {Component} from 'react';
-import FakeWindow from "./FakeWindow";
 import {VBox, PopupContainer} from "appy-comps";
 import {APP_REGISTRY, SPECIAL_DOCS} from "./Constants";
 
@@ -11,7 +10,8 @@ import NotificationViewer from "./NotificationViewer";
 
 import './App.css';
 import "font-awesome/css/font-awesome.css";
-
+import Workspace from "./Workspace";
+import {nextId} from "./GUIUtils";
 
 
 class App extends Component {
@@ -34,7 +34,6 @@ class App extends Component {
             if(msg.type==='command') {
                 if(msg.command === 'launch') return this.launch(msg);
                 if(msg.command === 'close') return this.close(msg);
-                if(msg.command === 'raise') return this.raise(msg);
                 if(msg.command === 'enter-fullscreen') return this.enterFullscreen();
                 if(msg.command === 'enter-overview') return this.enterOverview();
             }
@@ -79,23 +78,6 @@ class App extends Component {
             }
         });
 
-        this.moveAppWindow = (app,x,y) => {
-            app.x = x;
-            app.y = y;
-            this.setState({apps:this.state.apps.slice()});
-        };
-
-        this.resizeAppWindow = (app,w,h) => {
-            app.w = w;
-            app.h = h;
-            this.setState({apps:this.state.apps.slice()});
-        };
-    }
-
-    nextId() {
-        if (!this.id) this.id = 0;
-        this.id++;
-        return this.id;
     }
 
     launch(msg) {
@@ -106,36 +88,20 @@ class App extends Component {
         }
         const info = APP_REGISTRY[msg.app];
         const AppComponent = info.app;
-        const appid = this.nextId();
+        const appid = nextId();
         const appInstance = <AppComponent appid={appid}/>;
-        apps.push({title: info.title,
-            appid: appid,
-            app: appInstance,
-            x:200,
-            y:100,
-            w:300,
-            h:200
-        });
+        apps.push({title: info.title, id: appid,  instance: appInstance });
         this.setState({apps: apps});
         this.DB.insert({
             type: 'notification',
             read: false,
             title: 'launched ' + msg.app
         });
-
     }
 
     close(msg) {
-        this.setState({apps: this.state.apps.filter(a => a.appid !== msg.appid)});
-    }
-
-    raise(msg) {
-        const last = this.state.apps[this.state.apps.length-1];
-        if(last.appid === msg.appid) return; //don't raise the top window
-        const app = this.state.apps.find((a => a.appid === msg.appid));
-        const apps = this.state.apps.filter(a => a.appid !== msg.appid);
-        apps.push(app);
-        this.setState({apps:apps});
+        if(!msg.appid) return;
+        this.setState({apps: this.state.apps.filter(a => a.id !== msg.appid)});
     }
 
     enterFullscreen() {
@@ -161,14 +127,12 @@ class App extends Component {
         this.setState({apps:this.state.apps.slice()});
     }
 
+
     render() {
         if(!this.state.connected) return <VBox></VBox>;
         return (
             <VBox>
-                {this.state.apps.map((a, i) => <FakeWindow title={a.title} key={a.appid} app={a}
-                                                           appid={a.appid}
-                                                           onResize={this.resizeAppWindow}
-                                                           onMove={this.moveAppWindow}>{a.app}</FakeWindow>)}
+                <Workspace apps={this.state.apps}/>
                 <Launcher/>
                 <CommandBar/>
                 {this.renderNotificationViewer()}

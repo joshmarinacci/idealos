@@ -110,3 +110,10 @@ export let Input = ((props) => {
 
     return <input type="text" onCopy={copied} onPaste={pasted} onCut={cutted} {...rest}/>
 });
+
+
+let GLOBAL_ID = 0;
+export function nextId() {
+    GLOBAL_ID++;
+    return GLOBAL_ID;
+}
