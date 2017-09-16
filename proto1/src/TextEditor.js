@@ -1,6 +1,5 @@
 import React, {Component} from "react"
-import {CheckButton, ListView, PushButton} from "./GUIUtils";
-import {HBox, PopupManager, PopupMenu, VBox} from "appy-comps"
+import {VBox} from "appy-comps"
 import RemoteDB from "./RemoteDB"
 
 export default class TextEditor extends Component {
@@ -9,9 +8,15 @@ export default class TextEditor extends Component {
         this.db = new RemoteDB("texteditor");
         this.db.connect();
     }
+
     render() {
-        return <VBox grow>
-            text editor
+        return <VBox grow style={{}}>
+                <textarea style={{
+                    flex: 1,
+                    margin: 0,
+                    padding: 0,
+                    border: '1px solid black'
+                }} rows={20}></textarea>
         </VBox>
     }
 }
