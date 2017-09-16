@@ -111,9 +111,9 @@ class IDFrame extends Component {
                 return <Tab key={app.id} app={app} onSelect={()=>this.selectTab(app)} onClose={()=>this.closeTab(app)} selected={true}/>
             })}</HBox>
             <VBox scroll grow style={{
-                borderRadius: '0.5em',
+                borderRadius: '0 0 0.5em 0.5em',
             }}>
-                <div>{this.props.window.apps[0].instance}</div>
+                {this.props.window.apps[0].instance}
             </VBox>
             <HBox style={{position:'relative'}}>
                 <Spacer/>
