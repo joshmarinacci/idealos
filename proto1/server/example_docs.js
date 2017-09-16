@@ -236,6 +236,8 @@ module.exports = [
     {type: 'app', title: 'Chat', name: 'chat'},
     {type: 'app', title: 'Debug', name: 'debug'},
     {type: 'app', title: 'Clipboard Viewer', name:'clipboard'},
+    {type: 'app', title: 'Mandelbrot Viewer', name:'mandelbrot'},
+    {type: 'app', title: 'Text Editor', name:'texteditor'},
 
 
     // EMAILS

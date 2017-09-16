@@ -10,6 +10,8 @@ import Browser from "./Browser";
 import Email from "./Email";
 import ComposeEmail from "./ComposeEmail";
 import Chat from "./Chat";
+import TextEditor from "./TextEditor";
+import Mandel from "./Mandel";
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -59,6 +61,14 @@ export const APP_REGISTRY = {
     'chat':{
         title:'Chat',
         app: Chat
+    },
+    'texteditor':{
+        title:'Text Editor',
+        app: TextEditor
+    },
+    'mandelbrot':{
+        title:'Mandlebrot Viewer',
+        app: Mandel
     }
 
 };

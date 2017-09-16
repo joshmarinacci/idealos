@@ -33,7 +33,7 @@ export class ListView extends Component {
                 border: '0px solid gray',
                 minWidth: '100px',
                 minHeight: '100px',
-                backgroundColor: '#fff',
+                backgroundColor: 'transparent',
                 flex: 1
             }}
         >{this.state.data.map((item, i) => {
