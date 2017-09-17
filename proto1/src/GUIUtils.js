@@ -80,6 +80,11 @@ export let Input = ((props) => {
             command: 'copy',
             payload: text
         });
+        db.insert({
+            type: 'notification',
+            read: false,
+            title: 'copied'
+        });
     };
 
     let pasted = (e) => {
@@ -94,6 +99,11 @@ export let Input = ((props) => {
             command:'request-clip',
             requestid:lastid,
         })
+        db.insert({
+            type: 'notification',
+            read: false,
+            title: 'pasted'
+        });
     };
 
     let cutted = (e) => {
@@ -105,6 +115,11 @@ export let Input = ((props) => {
             target: 'system',
             command: 'cut',
             payload: text
+        });
+        db.insert({
+            type: 'notification',
+            read: false,
+            title: 'cut'
         });
     };
 

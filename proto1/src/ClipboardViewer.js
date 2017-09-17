@@ -11,7 +11,8 @@ const STYLES = {
     },
     TRANSPARENT_BUTTON : {
         borderWidth: 0,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        color:'gray'
     }
 }
 
