@@ -11,7 +11,7 @@ instead of dragging tabs we can right click to a menu to the following:
 */
 
 import React, {Component} from "react";
-import {HBox, Spacer, VBox} from "appy-comps";
+import {HBox, Spacer, VBox, PopupManager} from "appy-comps";
 import {nextId} from "./GUIUtils";
 import DragAction from "./DragAction";
 import RemoteDB from "./RemoteDB";
@@ -26,7 +26,12 @@ class IDFrame extends Component {
             y:200,
             w:300,
             h:200,
+            selected:null
         };
+
+        if(props.window.apps.length > 0) {
+            this.state.selected = props.window.apps[0];
+        }
 
         this.moveHandler = (action) => {
             this.setState({
@@ -52,9 +57,9 @@ class IDFrame extends Component {
         this.props.db.listenMessages((msg) => {
             if (msg.type !== 'command') return;
             if (msg.command !== 'resize') return;
-            if(this.props.window.apps[0].id === msg.appid) {
-                if(msg.width)  this.setState({w:msg.width});
-                if(msg.height)  this.setState({h:msg.height});
+            if(this.props.window.apps.length <= 0) return;
+            if(this.props.window.apps[0].id === msg.appid) {if(msg.width)  this.setState({w:msg.width});
+                if(msg.height) this.setState({h:msg.height});
             }
         });
 
@@ -65,8 +70,9 @@ class IDFrame extends Component {
     };
 
     selectTab(app) {
-        console.log("selecting the tab for the app", app);
+        this.setState({selected:app})
     }
+
     closeTab(app) {
         this.props.db.sendMessage({
             type: 'command',
@@ -74,8 +80,11 @@ class IDFrame extends Component {
             command: "close",
             appid: app.id
         });
-
     }
+
+    moveTab = (app) => {
+        this.props.workspace.moveAppTo(app,this.props.window);
+    };
 
 
     render() {
@@ -108,12 +117,16 @@ class IDFrame extends Component {
             <HBox
                 style={{backgroundColor:'gray'}}
             >{this.props.window.apps.map((app,i) => {
-                return <Tab key={app.id} app={app} onSelect={()=>this.selectTab(app)} onClose={()=>this.closeTab(app)} selected={true}/>
+                return <Tab key={app.id} app={app}
+                            onSelect={()=>this.selectTab(app)}
+                            onClose={()=>this.closeTab(app)}
+                            onMove={()=>this.moveTab(app)}
+                            selected={this.state.selected}/>
             })}</HBox>
             <VBox scroll grow style={{
                 borderRadius: '0 0 0.5em 0.5em',
             }}>
-                {this.props.window.apps[0].instance}
+                {this.renderAppContent(this.state.selected)}
             </VBox>
             <HBox style={{
                 position:'relative',
@@ -136,6 +149,10 @@ class IDFrame extends Component {
             </HBox>
         </VBox>
     }
+    renderAppContent(app) {
+        if(!app) return "";
+        return app.instance;
+    }
 }
 
 class Tab extends Component {
@@ -143,6 +160,7 @@ class Tab extends Component {
         return <HBox>
             <button onClick={this.props.onSelect}>{this.props.app.title}</button>
             <button onClick={this.props.onClose} className="fa fa-close"/>
+            <button onClick={this.props.onMove} className="fa fa-bars"/>
         </HBox>
     }
 }
@@ -158,6 +176,18 @@ export default class Workspace extends Component {
     }
     componentWillReceiveProps(newProps) {
         this.recalcWindows(newProps);
+    }
+
+    moveAppTo(app,win) {
+        var wins = this.state.wins.slice();
+        //find new random window
+        let newWin = wins.find((w) => w.id !== win);
+        //remove from old window
+        win.apps = win.apps.filter((a) => a.id !== app.id);
+        //filter out empty windows
+        wins = wins.filter((win) => win.apps.length > 0);
+        newWin.apps.push(app);
+        this.setState({wins:wins});
     }
 
     //move the selected window to the top
@@ -202,7 +232,7 @@ export default class Workspace extends Component {
     }
 
     render() {
-        return <div>{this.state.wins.map((w, i) => <IDFrame key={w.id} window={w} db={this.db} onRaise={this.raiseWindow}/>)}</div>
+        return <div>{this.state.wins.map((w, i) => <IDFrame key={w.id} window={w} db={this.db} onRaise={this.raiseWindow} workspace={this}/>)}</div>
     }
 
 }
