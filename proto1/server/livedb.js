@@ -5,7 +5,6 @@ class LiveDB {
     constructor() {
         this._docs = [];
         this._live_queries = [];
-        this._scripts = [];
     }
 
     generateID() {
@@ -18,22 +17,18 @@ class LiveDB {
             if(!doc.id) doc.id = this.generateID();
             // console.log('importing',doc);
             this._docs.push(doc);
-            if(doc.type === 'script') {
-                this._scripts.push(doc);
-            }
             this._live_queries.forEach((lq)=>{
                 if(lq.matches(doc)) {
                     lq.fireInsert([doc]);
                 }
             });
-            this._scripts.forEach((scr)=> this.evalScript(scr,doc,'INSERT'));
+            this.checkScripts(doc,'INSERT');
         });
     }
 
     reset() {
         this._docs = [];
         this._live_queries = [];
-        this._scripts = [];
     }
 
     insert(doc) {
@@ -53,7 +48,7 @@ class LiveDB {
             if(lq.matches(doc)) lq.fireInsert([doc]);
         });
 
-        this._scripts.forEach((scr)=> this.evalScript(scr,doc,'UPDATE'));
+        this.checkScripts(doc,'UPDATE');
 
         return Promise.resolve(doc);
     }
@@ -64,7 +59,7 @@ class LiveDB {
         this._live_queries.forEach((lq)=>{
             if(lq.matches(doc)) lq.fireDelete([doc]);
         });
-        this._scripts.forEach((scr)=> this.evalScript(scr,doc,'DELETE'));
+        this.checkScripts(doc,'DELETE');
         return Promise.resolve(doc);
     }
     query(q) {
@@ -83,6 +78,11 @@ class LiveDB {
         lq.updateQuery(q);
     }
 
+    checkScripts(doc,mode) {
+        this._docs
+            .filter((d)=> d.type === 'script')
+            .forEach((scr)=> this.evalScript(scr,doc,mode))
+    }
     evalScript(scr,doc,mode) {
         if(!scr.active) return;
         if(scr.language !== 'javascript') return;

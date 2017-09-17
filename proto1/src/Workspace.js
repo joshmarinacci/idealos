@@ -115,13 +115,19 @@ class IDFrame extends Component {
             }}>
                 {this.props.window.apps[0].instance}
             </VBox>
-            <HBox style={{position:'relative'}}>
+            <HBox style={{
+                position:'relative',
+                border:'1px solid lightGray',
+                borderWidth:'1px 0 0 0',
+                backgroundColor:'gray',
+                borderRadius:'0 0 0.5em 0.5em'
+            }}>
                 <Spacer/>
                 <button className="fa fa-expand fa-fw"
                         style={{
                             cursor: 'nwse-resize',
                             padding:0,
-                            position:'absolute',
+                            // position:'absolute',
                             right:0,
                             bottom:0,
                             borderRadius:'0 0 0.5em 0'

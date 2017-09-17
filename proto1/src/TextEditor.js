@@ -16,7 +16,7 @@ export default class TextEditor extends Component {
         super(props);
         this.state = {
             code: sampleCode,
-            language:'javascript'
+            language:'text'
         };
         this.db = new RemoteDB("texteditor");
         this.db.connect();

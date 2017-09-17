@@ -238,6 +238,7 @@ module.exports = [
     {type: 'app', title: 'Clipboard Viewer', name:'clipboard'},
     {type: 'app', title: 'Mandelbrot Viewer', name:'mandelbrot'},
     {type: 'app', title: 'Text Editor', name:'texteditor'},
+    {type: 'app', title: 'Script Editor', name:'scripteditor'},
 
 
     // EMAILS
