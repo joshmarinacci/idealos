@@ -1,11 +1,40 @@
 /*GENERAL*/
 
+:root {
+    --main-button-color: #333;
+    --main-button-background: linear-gradient(to bottom, #ddd, #ccc);
+    --button-radius: 0.25em;
+
+    --standard-border: #ddd;
+    --header-bg: #aaa;
+    --header-fg: #fff;
+    --hover-bg: #0be;
+
+    --selected-bg: #ff0000;
+    --selected-fg: white;
+    --textbox-radius: 0.25em;
+    --textbox-bg: #f0f0f0;
+    --textbox-bg-focus: white;
+    --toolbar-bg: #333333;
+    --toolbar-fg: #ddd;
+
+    --focus-fg: yellow;
+}
+
+
 input {
   padding: 5px;
   border: 1px solid #B0B0B0;
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+
+input[type="search"], input.search {
+    border: 1px solid gray;
+    border-radius: 1em;
+}
+
 
 label {
   color: #B0B0B0;
@@ -123,3 +152,92 @@ button:hover {
     border: 0px solid #007DC3;
     background-color: transparent;
 }
+
+
+
+
+
+.tool-bar {
+    background-color: var(--toolbar-bg);
+}
+.tool-bar button {
+    color: var(--toolbar-fg);
+    background: transparent;
+    border-width: 0;
+}
+.tool-bar button:hover {
+    background: var(--toolbar-fg);
+    color: var(--toolbar-bg);
+}
+.tool-bar button.selected {
+    background: var(--toolbar-fg);
+    color: black;
+}
+.tool-bar input {
+    background: var(--toolbar-bg);
+    color: var(--toolbar-fg);
+}
+.tool-bar input:focus {
+    background-color: gray;
+}
+
+
+
+.ListView {
+    border: 0px solid black;
+    list-style:none;
+    margin:0;
+    display: inline-flex;
+    flex-direction: column;
+    min-width: 10em;
+    background-color: white;
+    padding:0;
+}
+.ListView  li {
+    border: 0px solid black;
+    border-width: 0 0 1px 0;
+    padding: 0.25em;
+}
+
+.ListView  li.selected {
+    background-color: var(--selected-bg);
+    color: var(--selected-fg);
+}
+
+
+.grid-2 {
+    border-width: 0;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    height: 100%;
+    width: 100%;
+    grid-gap: 1px;
+    background-color: black;
+}
+
+
+.email-app-grid {
+    border-width: 0;
+    display: grid;
+    grid-template-columns: 200px 200px 1fr;
+    height: 100%;
+    grid-gap: 1px;
+    background-color: black;
+}
+.email-app-grid > * {
+    border: 0px solid blue;
+    overflow: scroll;
+}
+
+.email-app-grid  .mail-item {
+    border: 0px solid green;
+    font-size: 90%;
+    margin:0;
+    color: #666;
+}
+
+.email-app-grid .mail-item .name {
+    font-weight: bold;
+    color: #333;
+}
+

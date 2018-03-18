@@ -1,14 +1,26 @@
 import React, {Component} from "react"
 import {HBox, VBox, Spacer} from "appy-comps";
-import {Input, ListView, Scroll} from "./GUIUtils";
+import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB";
 
-let MailboxTemplate = ((props)=>{
+const MailboxTemplate = ((props)=>{
     return <div>{props.item.name}</div>
 });
-let EmailSummaryTemplate = ((props)=>{
-    return <div>{props.item.from} : {props.item.subject}</div>
+const EmailSummaryTemplate = ((props)=>{
+    return <VBox className="mail-item">
+        <HBox>
+            <span className="name">John Smith</span>
+            <Spacer/>
+            <span className="time">8:40 AM</span>
+        </HBox>
+        <span className="subject">Re: cool stuff</span>
+        <span className="summary">Yeah, you're right.
+                                I totally know what you ...</span>
+    </VBox>
+
+    // return <div>{props.item.from} : {props.item.subject}</div>
 });
+
 export default class Email extends Component {
     constructor(props) {
         super(props);
@@ -55,27 +67,26 @@ export default class Email extends Component {
     }
     render() {
         return <VBox grow>
-            <HBox>
-                <button onClick={this.archiveMessage}>archive</button>
-                <button onClick={this.composeMessage}>compose</button>
+            <Toolbar>
+                <button onClick={this.archiveMessage} className="fa fa-archive"/>
+                <button onClick={this.composeMessage} className="fa fa-pencil"/>
                 <Spacer/>
-                <Input db={this.db}/>
-            </HBox>
-            <HBox grow>
-                <Scroll>
-                    <ListView model={this.root} template={MailboxTemplate} selected={this.state.selectedFolder} onSelect={this.selectFolder}/>
-                </Scroll>
-                <Scroll>
+                <Input className='search' db={this.db}/>
+            </Toolbar>
+            <div className="email-app-grid">
+                    <ListView model={this.root}
+                              template={MailboxTemplate}
+                              selected={this.state.selectedFolder}
+                              onSelect={this.selectFolder}/>
                     <ListView model={this.inbox}
                               template={EmailSummaryTemplate}
                               onSelect={this.selectEmail}
                               selected={this.state.selectedEmail}
                     />
-                </Scroll>
-                <div style={{flex:1}}>
+                <div style={{backgroundColor:'white'}}>
                     {this.renderSelectedEmail(this.state.selectedEmail)}
                 </div>
-            </HBox>
+            </div>
         </VBox>
     }
 

@@ -24,7 +24,7 @@ a service in the backend echos back as that user saying: well, what do you think
 
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
-import {Input, ListView, Scroll} from "./GUIUtils";
+import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB"
 import {ProfileImage} from "./ProfileImage";
 
@@ -52,23 +52,24 @@ export default class Chat extends Component {
         }
     }
     render() {
-        return <HBox grow>
-            <VBox>
+        return <VBox grow>
+            <Toolbar>
                 <Input db={this.db}/>
-                <Scroll>
-                    <ListView model={this.contacts}
-                        template={ContactTemplate}
-                        onSelect={this.selectContact}
-                        selected={this.state.selectedContact}
+            </Toolbar>
+            <div className="grid-2">
+                <ListView model={this.contacts}
+                          template={ContactTemplate}
+                          onSelect={this.selectContact}
+                          selected={this.state.selectedContact}
+                />
+                <VBox grow style={{backgroundColor:'white'}}>
+                    <label>conversation</label>
+                    <ListView model={this.conversation}
+                              template={ConversationItemTemplate}
                     />
-                </Scroll>
-            </VBox>
-            <VBox grow>
-                <label>conversation</label>
-                <ListView model={this.conversation}
-                          template={ConversationItemTemplate}
-                      />
-            </VBox>
-        </HBox>
+                </VBox>
+            </div>
+
+        </VBox>
     }
 }

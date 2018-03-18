@@ -10,7 +10,7 @@
 
 import React, {Component} from 'react';
 import {HBox, VBox} from "appy-comps";
-import {Input} from "./GUIUtils";
+import {Input, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB"
 
 export default class Browser extends Component {
@@ -44,11 +44,11 @@ export default class Browser extends Component {
     }
     render() {
         return <VBox grow>
-            <HBox>
+            <Toolbar>
                 <button className="fa fa-arrow-left" onClick={this.navBack}/>
                 <button className="fa fa-arrow-right" onClick={this.navForward}/>
                 <Input db={this.db} value={this.state.url} style={{flex:1}}/>
-            </HBox>
+            </Toolbar>
             <HBox grow>
                 <iframe title="fake browser" ref="iframe" src={this.state.url} style={{flex:1}} onLoad={this.load}/>
             </HBox>

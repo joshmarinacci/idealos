@@ -31,7 +31,7 @@
 
 import React, {Component} from "react"
 import {HBox, VBox, PopupManager} from "appy-comps";
-import {Input, ListView, Scroll} from "./GUIUtils";
+import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB"
 import {ProfileImage} from "./ProfileImage";
 import SelectMenu from "./SelectMenu";
@@ -145,20 +145,20 @@ export default class Contacts extends Component {
     render() {
         let view = this.state.editing?<ContactEdit contact={this.state.selectedContact} db={this.db} onEdit={this.contactEdited}/>:<ContactView contact={this.state.selectedContact}/>;
         let text = this.state.editing?"Done":"Edit";
-        return <HBox grow>
-            <VBox>
+        return <VBox grow>
+            <Toolbar>
                 <Input onChange={this.typeQuery} db={this.db} value={this.state.searchQuery}/>
-                <Scroll>
-                    <ListView model={this.contacts}
-                              template={ContactTemplate}
-                              onSelect={this.selectContact}
-                              selected={this.state.selectedContact}/>
-                </Scroll>
-            </VBox>
-            <VBox grow>
-                <button onClick={this.editContact}>{text}</button>
-                {view}
-            </VBox>
-        </HBox>
+            </Toolbar>
+            <div className="grid-2">
+                <ListView model={this.contacts}
+                          template={ContactTemplate}
+                          onSelect={this.selectContact}
+                          selected={this.state.selectedContact}/>
+                <VBox grow style={{backgroundColor:'white'}}>
+                    <button onClick={this.editContact}>{text}</button>
+                    {view}
+                </VBox>
+            </div>
+        </VBox>
     }
 }

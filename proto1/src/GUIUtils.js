@@ -1,9 +1,14 @@
 import React, {Component} from "react"
+import {HBox} from 'appy-comps'
 
 export var CheckButton = ((props) => <input type="checkbox" checked={props.value} onChange={props.onChange}/>);
 export let PushButton = ((props) => <button onClick={props.onClick}>{props.children}</button>);
 export let Scroll = ((props) => <div style={{overflow: "scroll", flex: 1}} {...props}>{props.children}</div>);
 export let SimpleTemplate = ((props) => <div>{props.item.toString()}</div>);
+
+export const Toolbar = ((props) => {
+    return <HBox className="tool-bar">{props.children}</HBox>
+})
 
 export class ListView extends Component {
     constructor(props) {
@@ -27,29 +32,19 @@ export class ListView extends Component {
         if(!this.props.template) {
             Template = SimpleTemplate;
         }
-        return <div
-            className="ListView"
-            style={{
-                border: '0px solid gray',
-                minWidth: '100px',
-                minHeight: '100px',
-                backgroundColor: 'transparent',
-                flex: 1
-            }}
-        >{this.state.data.map((item, i) => {
-                var sel = (this.props.selected === item);
-                return <div
-                    className="ListItem"
-                    style={{backgroundColor: sel ? 'lightBlue' : '#fff'}}
-                    key={i}
-                    onClick={() => this.onSelect(item)}
-                ><Template item={item}
+        return <ul className="ListView">{this.state.data.map((item, i) => {
+                const sel = (this.props.selected === item)
+                let clss = "ListItem "
+                if(sel) clss += "selected"
+                return <li className={clss} key={i} onClick={() => this.onSelect(item)}>
+                    <Template item={item}
                            onSelect={()=>this.onSelect(item)}
                            selected={this.props.selected}
                            model={this.props.model}
-                /></div>
+                    />
+                </li>
             }
-        )}</div>
+        )}</ul>
     }
 }
 
@@ -123,7 +118,7 @@ export let Input = ((props) => {
         });
     };
 
-    return <input type="text" onCopy={copied} onPaste={pasted} onCut={cutted} {...rest}/>
+    return <input type="search" onCopy={copied} onPaste={pasted} onCut={cutted} {...rest}/>
 });
 
 

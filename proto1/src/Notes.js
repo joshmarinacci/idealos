@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import {HBox, VBox} from "appy-comps";
-import {Input, ListView, Scroll} from "./GUIUtils";
+import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB";
 
 let NoteTemplate = (props) => {
@@ -8,8 +8,8 @@ let NoteTemplate = (props) => {
 }
 
 let NoteView = (props)=>{
-    if(!props.note) return <VBox>no note selected</VBox>
-    return <VBox>{props.note.body}</VBox>
+    if(!props.note) return <VBox style={{backgroundColor:'white'}}>no note selected</VBox>
+    return <VBox style={{backgroundColor:'white'}}>{props.note.body}</VBox>
 };
 export default class Notes extends Component {
     constructor(props) {
@@ -28,21 +28,19 @@ export default class Notes extends Component {
     }
     render() {
         return <VBox>
-            <HBox>
+            <Toolbar>
                 <Input onChange={this.typeQuery}
                        value={this.state.query}
                        db={this.db}
                 />
-            </HBox>
-            <HBox>
-                <Scroll>
-                    <ListView model={this.notes}
-                              template={NoteTemplate}
-                              onSelect={this.selectNote}
-                              selected={this.state.selected}/>
-                </Scroll>
+            </Toolbar>
+            <div className="grid-2">
+                <ListView model={this.notes}
+                          template={NoteTemplate}
+                          onSelect={this.selectNote}
+                          selected={this.state.selected}/>
                 <NoteView note={this.state.selected}/>
-            </HBox>
+            </div>
         </VBox>
     }
 };
