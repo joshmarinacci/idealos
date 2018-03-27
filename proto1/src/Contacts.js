@@ -30,7 +30,7 @@
  */
 
 import React, {Component} from "react"
-import {HBox, VBox, PopupManager} from "appy-comps";
+import {HBox, VBox, PopupManager, Spacer} from 'appy-comps'
 import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB"
 import {ProfileImage} from "./ProfileImage";
@@ -148,6 +148,9 @@ export default class Contacts extends Component {
         return <VBox grow>
             <Toolbar>
                 <Input onChange={this.typeQuery} db={this.db} value={this.state.searchQuery}/>
+                <Spacer/>
+                <button className="fa fa-plus"/>
+                <button className="fa fa-trash"/>
             </Toolbar>
             <div className="grid-2">
                 <ListView model={this.contacts}

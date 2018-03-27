@@ -3,9 +3,9 @@ import {ListView, Scroll, Input} from "./GUIUtils";
 import {HBox, VBox, Spacer} from "appy-comps";
 import RemoteDB from "./RemoteDB"
 
-let ArtistTemplate = ((props) => <label>{props.item.name}</label>);
-let AlbumTemplate = ((props) => <label>{props.item.name}</label>);
-let SongTemplate = ((props) => <label>{props.item.name}</label>);
+let ArtistTemplate = ((props) => <div>{props.item.name}</div>);
+let AlbumTemplate = ((props) => <div>{props.item.name}</div>);
+let SongTemplate = ((props) => <div>{props.item.name}</div>);
 
 export default class MusicPlayer extends Component {
     constructor(props) {
@@ -82,47 +82,66 @@ export default class MusicPlayer extends Component {
 
     render() {
         return <VBox grow>
-            <HBox>
-                <button disabled className="fa fa-backward"/>
-                <button onClick={this.playPause} className={this.state.playing?"fa fa-pause":"fa fa-play"}/>
-                <button disabled className="fa fa-forward"/>
-                <label>{this.audio.duration}</label>
-                <VBox>
-                    <label>{this.state.selectedSong.name}</label>
-                    <label>{this.state.selectedArtist.name}</label>
-                    <label>{this.state.selectedAlbum.name}</label>
+
+            <HBox
+                style={{
+                    background: 'linear-gradient(to bottom, #dddddd, #aaaaaa)',
+                    alignItems: 'center',
+                }}>
+
+                <HBox id="play-controls">
+                    <button id="prev" className="fa fa-backward borderless"></button>
+                    <button onClick={this.playPause} className={this.state.playing?"fa fa-pause":"fa fa-play"}/>
+                    <button id="next" className="fa fa-forward borderless"></button>
+                </HBox>
+                <input type="range"/>
+                <span className="spacer"></span>
+
+                <VBox style={{
+                    fontSize: '90%',
+                    fontWeight:400,
+                    borderRadius:'1em',
+                    backgroundColor: '#0be',
+                    padding: '0.5em 2em',
+                    color: 'white',
+                    alignItems: 'center',
+                    margin: '0.25em'
+                }}>
+
+                    <span>{this.state.selectedSong.name}</span>
+                    <span>{this.state.selectedArtist.name} - {this.state.selectedAlbum.name}</span>
                 </VBox>
                 <Spacer/>
                 <div>
                     <Input onChange={this.typeQuery} db={this.db} value={this.state.queryText}/>
                 </div>
             </HBox>
-            <HBox grow>
-                <Scroll>
+            <HBox className="tool-bar">
+                <button>Library</button>
+                <button>Radio</button>
+                <button>Store</button>
+            </HBox>
+
+            <div className="email-app-grid">
                     <ListView
                         model={this.artists}
                         template={ArtistTemplate}
                         onSelect={this.selectArtist}
                         selected={this.state.selectedArtist}
                     />
-                </Scroll>
-                <Scroll>
                     <ListView
                         model={this.albums}
                         template={AlbumTemplate}
                         onSelect={this.selectAlbum}
                         selected={this.state.selectedAlbum}
                     />
-                </Scroll>
-                <Scroll>
                     <ListView
                         model={this.songs}
                         template={SongTemplate}
                         onSelect={this.selectSong}
                         selected={this.state.selectedSong}
                     />
-                </Scroll>
-            </HBox>
+            </div>
         </VBox>;
     }
 }

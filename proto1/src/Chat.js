@@ -23,7 +23,7 @@ a service in the backend echos back as that user saying: well, what do you think
  */
 
 import React, {Component} from "react"
-import {HBox, VBox} from "appy-comps";
+import {HBox, Spacer, VBox} from 'appy-comps'
 import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB"
 import {ProfileImage} from "./ProfileImage";
@@ -55,6 +55,8 @@ export default class Chat extends Component {
         return <VBox grow>
             <Toolbar>
                 <Input db={this.db}/>
+                <Spacer/>
+                <button className="fa fa-plus"/>
             </Toolbar>
             <div className="grid-2">
                 <ListView model={this.contacts}
