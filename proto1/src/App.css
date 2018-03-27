@@ -71,6 +71,7 @@ button:hover {
 
 /*END GENERAL*/
 
+/*
 .window {
     position: absolute;
     border: 1px solid #B0B0B0;
@@ -103,6 +104,7 @@ button:hover {
     color: #F2F2F2;
     padding: 0.5em;
 }
+*/
 
 
 .command-bar {
@@ -241,3 +243,80 @@ button:hover {
     color: #333;
 }
 
+
+
+
+.window {
+    border: 1px solid black;
+    display: inline-flex;
+    flex-direction: row;
+    min-width: 100px;
+    /*position: absolute;*/
+    /*top: 200px;*/
+    /*left: 20px;*/
+}
+.window .title-bar {
+    padding: 0;
+    background-color: gray;
+    min-width: 16px;
+}
+.window .title-bar:hover {
+    background-color: var(--selected-bg)
+}
+
+.window .tab-bar {
+    border-width:0;
+    display: flex;
+    flex-direction: row;
+    background-color: gray;
+}
+.window .tab-bar .tab {
+    padding: 0.25em 0.5em;
+    border: 1px solid black;
+    border-width: 0px 1px 0px 0px;
+    background-color: lightGray;
+    margin:0;
+}
+.window .tab-bar .tab.selected {
+    background-color: white;
+}
+.window .tab-bar .tab:last-child {
+    border-width: 0px;
+}
+.tab > button {
+    border-width: 0;
+    padding: 0.25em;
+    margin: 0;
+    background: transparent;
+    color: transparent;
+}
+.tab > button:hover {
+    background-color: black;
+    color: white;
+}
+.window .window-content {
+    border: 0px solid green;
+    height: 100%;
+    width: 100%;
+}
+.window .tab-content {
+    border: 1px solid black;
+    border-width: 1px 0px;
+    background-color: white;
+    width: 100%;
+    height: calc(100% - 54px);
+    overflow: scroll;
+}
+
+.window .window-footer {
+    display: flex;
+    flex-direction: row;
+    color: black;
+    background: linear-gradient(to bottom, #ddd, #bbb);
+}
+.window .window-footer button {
+    padding:0;
+    margin:0;
+    background-color: transparent;
+    border-width:0;
+}

@@ -94,60 +94,28 @@ class IDFrame extends Component {
             width: this.state.w,
             height: this.state.h,
             position: "absolute",
-            border:'1px solid black',
-            backgroundColor: 'white',
-            padding:0,
-            margin:0,
-            borderRadius: '0.5em',
             backgroundClip: 'padding-box',
         };
 
 
-        return <VBox style={style} onClickCapture={this.raiseWindow}>
-            <HBox onMouseDown={this.mouseDown} style={{
-                userSelect: 'none',
-                cursor: 'move',
-                backgroundColor:'lightGreen',
-                padding: "0.25em 0.5em",
-                borderRadius: '0.5em 0.5em 0 0',
-            }}>
-                <Spacer/>
-                <button className="fa fa-bars fa-fw" style={{padding:0}}/>
-            </HBox>
-            <HBox
-                style={{backgroundColor:'gray'}}
-            >{this.props.window.apps.map((app,i) => {
-                return <Tab key={app.id} app={app}
-                            onSelect={()=>this.selectTab(app)}
-                            onClose={()=>this.closeTab(app)}
-                            onMove={()=>this.moveTab(app)}
-                            selected={this.state.selected}/>
-            })}</HBox>
-            <VBox scroll grow style={{
-                borderRadius: '0 0 0.5em 0.5em',
-            }}>
-                {this.renderAppContent(this.state.selected)}
-            </VBox>
-            <HBox style={{
-                position:'relative',
-                border:'1px solid lightGray',
-                borderWidth:'1px 0 0 0',
-                backgroundColor:'gray',
-                borderRadius:'0 0 0.5em 0.5em'
-            }}>
-                <Spacer/>
-                <button className="fa fa-expand fa-fw"
-                        style={{
-                            cursor: 'nwse-resize',
-                            padding:0,
-                            // position:'absolute',
-                            right:0,
-                            bottom:0,
-                            borderRadius:'0 0 0.5em 0'
-                        }}
-                        onMouseDown={this.resizeDown}/>
-            </HBox>
-        </VBox>
+        return <div className="window" style={style} onClickCapture={this.raiseWindow}>
+            <div className="title-bar" onMouseDown={this.mouseDown} style={{  userSelect: 'none',  cursor: 'move', }}></div>
+
+            <div className="window-content">
+                <div className="tab-bar">{this.props.window.apps.map((app,i) => {
+                    return <Tab key={app.id} app={app}
+                                onSelect={()=>this.selectTab(app)}
+                                onClose={()=>this.closeTab(app)}
+                                onMove={()=>this.moveTab(app)}
+                                selected={this.state.selected}/>
+                })}</div>
+                <div className="tab-content">{this.renderAppContent(this.state.selected)}</div>
+                <div className="window-footer">
+                    <Spacer/>
+                    <button className="fa fa-expand fa-fw" onMouseDown={this.resizeDown}/>
+                </div>
+            </div>
+        </div>
     }
     renderAppContent(app) {
         if(!app) return "";
@@ -157,11 +125,10 @@ class IDFrame extends Component {
 
 class Tab extends Component {
     render() {
-        return <HBox>
-            <button onClick={this.props.onSelect}>{this.props.app.title}</button>
+        return <div className="tab">
+            <span onClick={this.props.onSelect}>{this.props.app.title}</span>
             <button onClick={this.props.onClose} className="fa fa-close"/>
-            <button onClick={this.props.onMove} className="fa fa-bars"/>
-        </HBox>
+        </div>
     }
 }
 
