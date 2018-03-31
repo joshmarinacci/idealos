@@ -153,6 +153,7 @@ module.exports = [
                 zip: "66666"
             }
         ],
+        timezone:-8,
         avatar: "resource:avatar_01",
     },
     {
@@ -160,6 +161,7 @@ module.exports = [
         type: 'contact',
         first: 'Bill',
         last: "Roberts",
+        timezone:-9,
         avatar: "https://api.adorable.io/avatars/128/bill.png",
     },
     {
@@ -168,6 +170,7 @@ module.exports = [
         first: 'Rob',
         last: "Williams",
         pinned:true,
+        timezone:5,
         avatar: "https://api.adorable.io/avatars/128/rob.png",
     },
     {
@@ -176,6 +179,7 @@ module.exports = [
         first: 'Steve',
         last: "Martin",
         pinned:true,
+        timezone:0,
         avatar: "https://api.adorable.io/avatars/128/steve.png",
     },
     {
@@ -183,6 +187,7 @@ module.exports = [
         type: 'contact',
         first: 'Jen',
         last: 'Marinacci',
+        timezone:-5,
         avatar: "https://api.adorable.io/avatars/128/jen.png"
     },
 

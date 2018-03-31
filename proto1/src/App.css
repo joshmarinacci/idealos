@@ -339,7 +339,7 @@ button:hover {
     background-color: transparent;
 }
 .people-bar .ListView {
-    min-width: 1em;
+    min-width: 130px;
     background-color: transparent;
 }
 .people-bar .ListItem {

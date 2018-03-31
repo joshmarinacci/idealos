@@ -3,9 +3,11 @@ import {HBox, VBox, Spacer, PopupManager, PopupMenu} from 'appy-comps'
 import {Input, ListView, Scroll, Toolbar} from './GUIUtils'
 import RemoteDB from "./RemoteDB";
 import SelectMenu from './SelectMenu'
+import moment from 'moment'
 
 const PersonTemplate = (props) => {
     var src = resourceToURL(props.item.avatar);
+    const time = moment().utcOffset(props.item.timezone)
 
     return <VBox className="online">
         <img className="avatar"
@@ -13,8 +15,10 @@ const PersonTemplate = (props) => {
         <HBox>
             <span>{props.item.first}</span>
             <span className="spacer"></span>
-            <i className="fa fa-circle"
-            ></i>
+            <i className="fa fa-circle"></i>
+        </HBox>
+        <HBox>
+            <span>{time.format('h:m A')}</span>
         </HBox>
     </VBox>
 
