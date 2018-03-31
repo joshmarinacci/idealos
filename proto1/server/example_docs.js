@@ -167,6 +167,7 @@ module.exports = [
         type: 'contact',
         first: 'Rob',
         last: "Williams",
+        pinned:true,
         avatar: "https://api.adorable.io/avatars/128/rob.png",
     },
     {
@@ -174,6 +175,7 @@ module.exports = [
         type: 'contact',
         first: 'Steve',
         last: "Martin",
+        pinned:true,
         avatar: "https://api.adorable.io/avatars/128/steve.png",
     },
     {

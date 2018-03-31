@@ -320,3 +320,47 @@ button:hover {
     background-color: transparent;
     border-width:0;
 }
+
+
+
+.people-bar {
+    position: absolute;
+    top: 100px;
+    left: 10px;
+    width: 80px;
+    /*height: 500px;*/
+    /*border: 5px solid #ddd;*/
+    /*border-radius: 20px;*/
+    background-color: #eee;
+}
+.people-bar .vbox {
+    position: relative;
+    padding: 2.0em 0.25em;
+    background-color: transparent;
+}
+.people-bar .ListView {
+    min-width: 1em;
+    background-color: transparent;
+}
+.people-bar .ListItem {
+    border: 0px solid red;
+}
+.people-bar i {
+    color: #888;
+}
+.people-bar .online i {
+    color: green;
+}
+
+.people-bar .avatar {
+    border: 5px solid black;
+    border-radius: 1em;
+    padding:0.25em;
+    margin:0;
+}
+
+
+.launcher {
+    border: 1px solid red;
+    padding: 1em;
+}

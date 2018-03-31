@@ -96,11 +96,24 @@ export class ContactEdit extends Component {
         />;
         PopupManager.show(this.popupMenu, this.refs.img);
     }
+    editedPinned = (e) => {
+        this.props.onEdit(this.props.contact,'pinned',e.target.checked)
+    }
     render() {
+        const c = this.props.contact
         const src = resourceToURL(this.props.contact.avatar);
         return <VBox>
-            <img ref="img" width={64} height={64} onClick={this.showAvatarPicker.bind(this)} src={src}/>
             <label>editing</label>
+            <img ref="img" width={64} height={64} onClick={this.showAvatarPicker.bind(this)} src={src}/>
+            <HBox>
+                <label>name</label>
+                <input type="text" value={c.first}/>
+                <input type="text" value={c.last}/>
+            </HBox>
+            <HBox>
+                <label>pinned</label>
+                <input type="checkbox" value={c.pinned} onChange={this.editedPinned}/>
+            </HBox>
         </VBox>
     }
 }

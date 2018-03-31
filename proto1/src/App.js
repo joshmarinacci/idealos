@@ -12,6 +12,7 @@ import './App.css';
 import "font-awesome/css/font-awesome.css";
 import Workspace from "./Workspace";
 import {nextId} from "./GUIUtils";
+import PeopleViewer from './PeopleViewer'
 
 
 class App extends Component {
@@ -136,6 +137,7 @@ class App extends Component {
                 <Launcher/>
                 <CommandBar/>
                 {this.renderNotificationViewer()}
+                <PeopleViewer/>
                 <PopupContainer/>
             </VBox>
         );

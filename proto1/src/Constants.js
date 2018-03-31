@@ -13,6 +13,8 @@ import Chat from "./Chat";
 import TextEditor from "./TextEditor";
 import Mandel from "./Mandel";
 import ScriptEditor from "./ScriptEditor";
+import FileViewer from './FileViewer'
+import PeopleViewer from './PeopleViewer'
 
 export const APP_REGISTRY = {
     'alarms': {
@@ -74,6 +76,14 @@ export const APP_REGISTRY = {
     'scripteditor': {
         title:'Script Editor',
         app: ScriptEditor
+    },
+    'files': {
+        title:'File Finder',
+        app: FileViewer
+    },
+    'people': {
+        title:'People Bar',
+        app: PeopleViewer
     }
 
 };
