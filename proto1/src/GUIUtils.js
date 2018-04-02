@@ -32,7 +32,9 @@ export class ListView extends Component {
         if(!this.props.template) {
             Template = SimpleTemplate;
         }
-        return <ul className="ListView">{this.state.data.map((item, i) => {
+        let clss = "ListView "
+        if(this.props.className) clss += this.props.className
+        return <ul className={clss}>{this.state.data.map((item, i) => {
                 const sel = (this.props.selected === item)
                 let clss = "ListItem "
                 if(sel) clss += "selected"

@@ -206,6 +206,15 @@ button:hover {
     color: var(--selected-fg);
 }
 
+.ListView.listview-grid {
+    border: 0px solid red;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.ListView.listview-grid li {
+    border-width: 0;
+}
+
 
 .grid-2 {
     border-width: 0;
@@ -363,4 +372,20 @@ button:hover {
 .launcher {
     border: 1px solid red;
     padding: 1em;
+}
+
+
+
+.listview-grid .file {
+    border: 0px solid red;
+    padding: 0.5em;
+    font-size: 100%;
+    text-align: center;
+    min-width: 6em;
+}
+
+.listview-grid .file .file-icon {
+    border: 0px solid red;
+    padding: 0.1em;
+    font-size: 300%
 }
