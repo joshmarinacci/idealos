@@ -124,6 +124,7 @@ const chooseIcon = (type) => {
     if(type === 'clip') return 'fa-paste'
     if(type === 'script') return 'fa-code'
     if(type === 'todo') return 'fa-list-ul'
+    if(type === 'folder') return 'fa-folder-o'
     return 'fa-file-o'
 }
 

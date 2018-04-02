@@ -29,10 +29,10 @@ export default class Launcher extends Component {
             <button onClick={() => this.startApp('calendar')} className="fa fa-calendar"></button>
             <button onClick={() => this.startApp('musicplayer')} className="fa fa-music"></button>
             <button onClick={() => this.startApp('todos')} className="fa fa-list"></button>
-            <button onClick={() => this.startApp('notes')} className="fa fa-sticky-note"></button>
+            <button onClick={() => this.startApp('notes')} className="fa fa-file-text"></button>
             <button onClick={() => this.startApp('browser')} className="fa fa-firefox"></button>
             <button onClick={() => this.startApp("alarms")} className="fa fa-clock-o"></button>
-            <button onClick={() => this.startApp("files")} className="fa fa-file"></button>
+            <button onClick={() => this.startApp("files")} className="fa fa-folder"></button>
         </VBox>
     }
 }
