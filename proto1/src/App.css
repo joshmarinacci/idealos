@@ -258,7 +258,7 @@ button:hover {
 .window {
     border: 1px solid black;
     display: inline-flex;
-    flex-direction: row;
+    flex-direction: column;
     min-width: 100px;
     /*position: absolute;*/
     /*top: 200px;*/
@@ -266,8 +266,9 @@ button:hover {
 }
 .window .title-bar {
     padding: 0;
-    background-color: gray;
+    background-color: black;
     min-width: 16px;
+    min-height: 16px;
 }
 .window .title-bar:hover {
     background-color: var(--selected-bg)
