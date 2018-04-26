@@ -10,6 +10,17 @@ export default class FileViewer extends Component {
         this.db = new RemoteDB("files");
         this.db.connect();
         this.files = this.db.makeLiveQuery({})
+        this.files.openFile = (file) => {
+            if(file.type === 'note') {
+                this.db.sendMessage({
+                    type:'command',
+                    target: 'system',
+                    command: "open",
+                    withApp: 'texteditor',
+                    withFile:file.id
+                });
+            }
+        }
 
         this.state = {
             view: 'grid',
@@ -132,7 +143,7 @@ function openFile(file) {
     console.log("opening the file",file)
 }
 const FileIconTemplate = (props) => {
-    return <VBox className="file" onDoubleClick={()=>openFile(props.item)}>
+    return <VBox className="file" onDoubleClick={()=>props.model.openFile(props.item)}>
         <i className={` file-icon fa ${chooseIcon(props.item.type)}`}/>
         {props.item.type}
     </VBox>

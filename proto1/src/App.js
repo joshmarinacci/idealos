@@ -35,6 +35,7 @@ class App extends Component {
             if(msg.type==='command') {
                 if(msg.command === 'launch') return this.launch(msg);
                 if(msg.command === 'close') return this.close(msg);
+                if(msg.command === 'open') return this.open(msg)
                 if(msg.command === 'enter-fullscreen') return this.enterFullscreen();
                 if(msg.command === 'enter-overview') return this.enterOverview();
             }
@@ -98,11 +99,25 @@ class App extends Component {
             read: false,
             title: 'launched ' + msg.app
         });
+        return appid
     }
 
     close(msg) {
         if(!msg.appid) return;
         this.setState({apps: this.state.apps.filter(a => a.id !== msg.appid)});
+    }
+
+    open(msg) {
+        const appid = this.launch({
+            app:msg.withApp
+        })
+        setTimeout(()=>{
+            this.DB.sendMessage({
+                type:'open',
+                command:'oppen',
+                withFile:msg.withFile
+            })
+        },100)
     }
 
     enterFullscreen() {

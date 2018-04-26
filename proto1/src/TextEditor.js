@@ -19,6 +19,13 @@ export default class TextEditor extends Component {
             language:'text'
         };
         this.db = new RemoteDB("texteditor");
+        this.db.listenMessages((msg)=>{
+            if(msg.type === 'open') {
+                this.db.query({id:msg.withFile}).then((doc)=>{
+                    this.setState({code:doc[0].body})
+                })
+            }
+        });
         this.db.connect();
 
     }
@@ -32,22 +39,11 @@ export default class TextEditor extends Component {
             lineNumbers:true,
             mode:this.state.language
         };
-        return <VBox grow style={{}}>
-            <CodeMirror value={this.state.code} options={options}
-                        style={{flex:1,
-                            border: '1px solid black'
-                        }}
-            />
-        </VBox>
+        return <textarea style={{
+            flex: 1,
+                margin: 0,
+                padding: '0.5em',
+                border: '0px solid black'
+        }} rows={20} value={this.state.code}></textarea>
     }
 }
-
-/*
-                <textarea style={{
-                    flex: 1,
-                    margin: 0,
-                    padding: '0.5em',
-                    border: '0px solid black'
-                }} rows={20}></textarea>
-
- */
