@@ -108,7 +108,10 @@ const Album = {
 }
 
 const DB = {
-    OBJS:[]
+    OBJS:[],
+    clear_all() {
+        this.OBJS = []
+    }
 }
 
 function create(type, opts) {
@@ -136,7 +139,9 @@ function create(type, opts) {
 
 function create_dummy(type, opts) {
     opts = opts || {}
-    let obj = {}
+    let obj = {
+        type: type,
+    }
     Object.keys(type).forEach(key => {
         if(key === 'meta') return
         let def = type[key]
@@ -167,7 +172,7 @@ function create_dummy(type, opts) {
 const check = {
     equals: (a,b, msg) => {
         // console.log("is equal",a,b,a===b)
-        if(a !== b) throw new Error(`${msg?msg:""}: not equals ${a} ${b} `)
+        if(a !== b) throw new Error(`${msg?msg:""}:  ${a} != ${b} `)
     },
     not_null: (a) => {
         // console.log("not null",a,a!==null)
@@ -201,27 +206,47 @@ function ui_test() {
 
 
 class LiveQueryResults {
+    constructor(data) {
+        this.data = data
+    }
     length() {
-        return 0
+        return this.data.length
     }
 }
 
 class LiveQuery {
     constructor(opts) {
-
+        this.opts = opts
     }
     current() {
         let res = DB.OBJS.filter(obj => {
-            let pro  = Object.getPrototypeOf(obj)
-            console.log("obj is",pro)
+            if(this.opts.type) {
+                if(obj.type.name !== this.opts.type.name) return false
+            }
+            let atts = Object.keys(this.opts.attrs);
+            for(let i=0; i<atts.length; i++) {
+                let key = atts[i]
+                let attr_filter = this.opts.attrs[key]
+                // console.log("must filter",key,":",obj[key],":",attr_filter.value)
+                //if it has a filter, then it must pass the filter
+                if(attr_filter.type === 'eq' ) {
+                    // console.log(`comparing ${obj[key]} ${attr_filter.type} ${attr_filter.value}`)
+                    if (obj[key] !== attr_filter.value) return false
+                }
+            }
+            return true
         })
         return new LiveQueryResults(res)
+    }
+    sync() {
+        console.log("SYNC")
     }
 }
 
 class LiveQueryBuilder {
     constructor() {
         this.type = null
+        this.attrs = {}
     }
     all(type) {
         this.type = type
@@ -229,6 +254,13 @@ class LiveQueryBuilder {
     }
     make() {
         return new LiveQuery(this)
+    }
+    attr_eq(attr_name,value) {
+        this.attrs[attr_name] = {
+            type:'eq',
+            value:value
+        }
+        return this
     }
 }
 
@@ -245,6 +277,7 @@ get the notification that it has been updated
  */
 
 function query_test() {
+    DB.clear_all()
     let album1 = create_dummy(Album)
     let album2 = create_dummy(Album)
     let album3 = create_dummy(Album)
@@ -255,16 +288,16 @@ function query_test() {
     all_albums_query.sync()
     check.equals(all_albums_query.current().length(),4)
 
-    let yellowsub_query = create_live_query(Album).attr_eq("title","Yellow Submarine")
+    let yellowsub_query = create_live_query(Album).attr_eq("title","Yellow Submarine").make()
     yellowsub_query.sync()
     all_albums_query.sync()
-    check.equals(all_albums_query.current().length(),4)
-    check.equals(yellowsub_query.current().length(),0)
+    check.equals(all_albums_query.current().length(),4, 'total album count')
+    check.equals(yellowsub_query.current().length(),0,'yellow sub should be 0')
 
-    create(Album, {title: 'Yellow Submarine'})
+    create_dummy(Album, {title: 'Yellow Submarine'})
     yellowsub_query.sync()
     all_albums_query.sync()
-    check.equals(all_albums_query.current().length(),5)
+    check.equals(all_albums_query.current().length(),5, 'total album count')
     check.equals(yellowsub_query.current().length(),1)
 }
 
