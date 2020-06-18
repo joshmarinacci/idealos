@@ -165,9 +165,9 @@ function create_dummy(type, opts) {
 }
 
 const check = {
-    equals: (a,b) => {
+    equals: (a,b, msg) => {
         // console.log("is equal",a,b,a===b)
-        if(a !== b) throw new Error(`not equals ${a} ${b}`)
+        if(a !== b) throw new Error(`${msg?msg:""}: not equals ${a} ${b} `)
     },
     not_null: (a) => {
         // console.log("not null",a,a!==null)
@@ -249,7 +249,7 @@ function query_test() {
     let album2 = create_dummy(Album)
     let album3 = create_dummy(Album)
     let all_albums_query = create_live_query().all(Album).make()
-    check.equals(all_albums_query.current().length(),3)
+    check.equals(all_albums_query.current().length(),3,'all album check')
     all_albums_query.sync()
     let album4 = create_dummy(Album)
     all_albums_query.sync()
@@ -277,7 +277,7 @@ function run_tests() {
         })
     } catch (e) {
         // console.log(e)
-        console.log("error!",e.message)
+        console.log("ERROR ",e.message)
     }
 }
 
