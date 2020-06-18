@@ -87,22 +87,29 @@ const Album = {
         name: 'Album',
     },
     title: {
+        type: String,
         required: true,
         dummy: () => words.pick(4).join(" ")
     },
     track_count: {
+        type: Integer,
         required: false,
         dummy: () => rand_int_range(10,20),
     },
     disc_count: {
+        type: Integer,
         required: false,
         dummy: () => rand_int_range(1,2),
     },
     artist: {
+        type: Artist,
         required: false,
     }
 }
 
+const DB = {
+    OBJS:[]
+}
 
 function create(type, opts) {
     if(!type.meta) throw new Error("cannot make type without meta")
@@ -153,6 +160,7 @@ function create_dummy(type, opts) {
     obj.get = function(name) {
         return this[name]
     }
+    DB.OBJS.push(obj)
     return obj
 }
 
@@ -168,21 +176,119 @@ const check = {
     dump:(a) => console.log(a),
 }
 
-let song1 = create(Track,{track_number:3})
-check.dump(song1)
-check.equals(song1.get('track_number'),3)
-let song2 = create_dummy(Track)
-check.not_null(song2)
-check.dump(song2)
-check.not_null(song2.get('year'))
+function simple_test() {
+    let song1 = create(Track,{track_number:3})
+    check.dump(song1)
+    check.equals(song1.get('track_number'),3)
+    let song2 = create_dummy(Track)
+    check.not_null(song2)
+    check.dump(song2)
+    check.not_null(song2.get('year'))
 
-let beatles = create(Artist, {title:'The Beatles'})
-check.dump(beatles)
+    let beatles = create(Artist, {title:'The Beatles'})
+    check.dump(beatles)
 
-let song3 = create_dummy(Track, { artist: beatles})
-check.dump(song3)
+    let song3 = create_dummy(Track, { artist: beatles})
+    check.dump(song3)
+}
 
-// let ui1 = create_testing_ui(song1)
-// check.equals(ui1.type,inputs.IntegerBox)
-// check.equals(ui1.label,'Track No')
+
+function ui_test() {
+    // let ui1 = create_testing_ui(song1)
+    // check.equals(ui1.type,inputs.IntegerBox)
+    // check.equals(ui1.label,'Track No')
+}
+
+
+class LiveQueryResults {
+    length() {
+        return 0
+    }
+}
+
+class LiveQuery {
+    constructor(opts) {
+
+    }
+    current() {
+        let res = DB.OBJS.filter(obj => {
+            let pro  = Object.getPrototypeOf(obj)
+            console.log("obj is",pro)
+        })
+        return new LiveQueryResults(res)
+    }
+}
+
+class LiveQueryBuilder {
+    constructor() {
+        this.type = null
+    }
+    all(type) {
+        this.type = type
+        return this
+    }
+    make() {
+        return new LiveQuery(this)
+    }
+}
+
+function create_live_query(type) {
+    return new LiveQueryBuilder()
+}
+
+
+/*
+make a three albums
+make a live query on all albums
+add a fourth album
+get the notification that it has been updated
+ */
+
+function query_test() {
+    let album1 = create_dummy(Album)
+    let album2 = create_dummy(Album)
+    let album3 = create_dummy(Album)
+    let all_albums_query = create_live_query().all(Album).make()
+    check.equals(all_albums_query.current().length(),3)
+    all_albums_query.sync()
+    let album4 = create_dummy(Album)
+    all_albums_query.sync()
+    check.equals(all_albums_query.current().length(),4)
+
+    let yellowsub_query = create_live_query(Album).attr_eq("title","Yellow Submarine")
+    yellowsub_query.sync()
+    all_albums_query.sync()
+    check.equals(all_albums_query.current().length(),4)
+    check.equals(yellowsub_query.current().length(),0)
+
+    create(Album, {title: 'Yellow Submarine'})
+    yellowsub_query.sync()
+    all_albums_query.sync()
+    check.equals(all_albums_query.current().length(),5)
+    check.equals(yellowsub_query.current().length(),1)
+}
+
+function run_tests() {
+    let args = Array.prototype.slice.call(arguments);
+    try {
+        args.forEach(f => {
+            console.log(f)
+            f()
+        })
+    } catch (e) {
+        // console.log(e)
+        console.log("error!",e.message)
+    }
+}
+
+run_tests(
+    simple_test,
+    query_test,
+    )
+
+
+
+// try to make a track with number 1000, which is out of range. should error out.
+// make a track with a missing year. access it via optional. verify that it is null.
+
 
