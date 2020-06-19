@@ -219,6 +219,14 @@ class LiveQueryResults {
     length() {
         return this.data.length
     }
+    toArray() {
+        return this.data
+    }
+}
+
+function isArray(value) {
+    if(value instanceof Array) return true
+    return false
 }
 
 class LiveQuery {
@@ -235,15 +243,8 @@ class LiveQuery {
                 let key = atts[i]
                 let attr_filter = this.opts.attrs[key]
                 // console.log("must filter",key,":",obj[key],":",attr_filter.value)
-                //if it has a filter, then it must pass the filter
-                if(attr_filter.type === 'eq' ) {
-                    // console.log(`comparing ${obj[key]} ${attr_filter.type} ${attr_filter.value}`)
-                    if (obj[key] !== attr_filter.value) return false
-                }
-                if(attr_filter.type === 'in-array') {
-                    console.log(`checking if ${obj[key]} is in ${attr_filter.value}`)
-                    if(attr_filter.value.indexOf(obj[key])<0) return false
-                }
+                if(this.fails_attr_eq(obj,key,attr_filter)) return false
+                if(this.fails_attr_in_array(obj,key,attr_filter)) return false
             }
             return true
         })
@@ -251,6 +252,27 @@ class LiveQuery {
     }
     sync() {
         // console.log("SYNC")
+    }
+
+    fails_attr_eq(obj,key,attr_filter) {
+        if(attr_filter.type !== 'eq') return false
+        // console.log(`comparing ${obj[key]} ${attr_filter.type} ${attr_filter.value}`)
+        if (obj[key] !== attr_filter.value) return true
+        return false
+    }
+
+    fails_attr_in_array(obj, key, attr_filter) {
+        if(attr_filter.type !== 'in-array') return false
+        console.log(`checking if ${obj[key]} is in ${attr_filter.value}`)
+        if(isArray(attr_filter.value)) {
+            if(attr_filter.value.indexOf(obj[key])<0) return true
+            return false
+        }
+        if( attr_filter.value instanceof LiveQuery) {
+            if(attr_filter.value.current().toArray().indexOf(obj[key])<0) return true
+            return false
+        }
+        throw new Error(`unknown attribute filter type ${attr_filter.type}`)
     }
 }
 
@@ -356,18 +378,24 @@ function query_test() {
         .attr_in_array('album',[album1,album2]).make()
         .current().length(),3)
 
-    /*
+    // all tracks for all albums.
+    let all_albums = create_live_query().all(Album).make()
+    let all_album_tracks = create_live_query().all(Track)
+        .attr_in_array('album',all_albums).make()
+    check.equals(all_album_tracks.current().length(),3)
+
     // make a Selection which contains an array of Albums
-    let selected_albums = create_dummy(Selection, {albums:[album2, album3]})
+    // let selected_albums = create_dummy(Selection, {albums:[album2, album3]})
 
     // make a query of albums in the selection
-    let selected_albums_query = create_live_query().all(Album).in_array(selected_albums).make()
-    check.equals(selected_albums_query.current().length(),2)
+    // let selected_albums_query = create_live_query().all(Track)
+    //     .attr_in_array('album',selected_albums).make()
+    // check.equals(selected_albums_query.current().length(),2)
 
     // make a query of tracks in albums in selection
-    let selected_tracks_query = create_live_query().all(Track).attr_eq('album',selected_albums_query).make()
-    check.equals(selected_tracks_query.current().length(),2)
-    */
+    // let selected_tracks_query = create_live_query().all(Track)
+    //     .attr_eq('album',selected_albums_query).make()
+    // check.equals(selected_tracks_query.current().length(),2)
 }
 
 function run_tests() {
