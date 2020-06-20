@@ -1,38 +1,90 @@
-.App {
-  text-align: center;
+html, body {
+  padding:0;
+  margin:0;
+}
+#main-grid {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+
+  background: gray;
+
+  grid-template-columns: [main] 2fr [center] 1fr [dashboard]1fr [end];
+  grid-template-rows: [menubar] 2em [main] 1fr [center] 1fr [end];
+
+
+  --bg1: #ffffff;
+  --border-color: black;
+  --bg2: #f0f0f0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.menubar {
+  grid-column: main/end;
+  border: 0px solid var(--border-color);
+  background-color: var(--bg1);
+  display: flex;
+  flex-direction: row;
+  /*justify-content: center;*/
+  align-items: center;
+}
+.menu {
+  border: 1px solid var(--border-color);
+  border-left-width: 0;
+  padding: 0.5em 1em;
+  box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.dashboard {
+  grid-column: dashboard;
+  grid-row: main/end;
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: var(--bg2);
 }
 
-.App-link {
-  color: #61dafb;
+
+.todos {
+  display: grid;
+  grid-template-columns: 2em 1fr;
+  border: 1px solid var(--border-color);
+  width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.window {
+  min-width: 300px;
+  min-height: 300px;
+  border: 1px solid red;
+  top: 2em;
+  background-color: var(--bg2);
+}
+.window.primary {
+  border: 3px solid green;
+  grid-row: main/end;
+}
+.window.secondary {
+  border: 3px solid red;
+}
+.window.tertiary {
+  border: 3px solid blue;
+}
+
+
+.window .titlebar {
+  border: 1px solid red;
+  background-color: #cccccc;
+}
+
+
+
+.videobubble {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 3px solid red;
+  top: 600px;
+  left: 300px;
+  border-radius: 100px;
 }
