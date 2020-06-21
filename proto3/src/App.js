@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import '../node_modules/font-awesome/css/font-awesome.css'
 
 /*
 
@@ -65,7 +66,7 @@ const Todos = ({}) => {
 const Window = ({className, children}) => {
     return <div className={'window ' + className}>
         <div className={'titlebar'}>
-            <button>x</button>
+            <button className={"fa fa-arrow-left"}/>
             Window Title
         </div>
         {children}
