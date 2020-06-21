@@ -65,7 +65,7 @@ const Window = ({className, children}) => {
     return <div className={'window ' + className}>
         <div className={'titlebar'}>
             <button className={"fa fa-window-close"}/>
-            Window Title
+            <label>Window Title</label>
         </div>
         {children}
     </div>

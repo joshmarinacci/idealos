@@ -93,6 +93,15 @@ html, body {
   background-color: #cccccc;
 }
 
+.window .titlebar button {
+  padding: 0.25em;
+  border: 1px solid black;
+  margin: 0;
+}
+.window .titlebar label {
+  padding: 0.25em 0.5em;
+}
+
 .videobubble {
   position: absolute;
   padding: 0em;
