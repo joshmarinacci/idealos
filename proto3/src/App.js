@@ -53,7 +53,6 @@ const Clock = ({}) => {
 const Weather = ({}) => {
     return <div>Eugene 85º</div>
 }
-
 const Todos = ({}) => {
     return <div className={'todos'}>
         <input type="checkbox"/>
@@ -62,22 +61,30 @@ const Todos = ({}) => {
         <input type="checkbox"/> <label>Answer all my emails</label>
     </div>
 }
-
 const Window = ({className, children}) => {
     return <div className={'window ' + className}>
         <div className={'titlebar'}>
-            <button className={"fa fa-arrow-left"}/>
+            <button className={"fa fa-window-close"}/>
             Window Title
         </div>
         {children}
     </div>
 }
-
-
 const Videobubble = ({children}) => {
     return <div className={'videobubble'}>
-        video bubble
+        <img src={'https://placekitten.com/100/100'}/>
     </div>
+}
+const Musicplayer = ({}) => {
+    return <div className={'musicplayer'}>
+        <div>2:39</div>
+        <div className={'title'}>She Came In Through the Bathroom Window</div>
+        <div className={'album-artist'}>Abbey Road - The Beatles</div>
+    </div>
+}
+
+const Spacer = ({}) => {
+    return <div className={'spacer'}>&nbsp;</div>
 }
 
 function App() {
@@ -88,9 +95,14 @@ function App() {
               <Menu><label>Edit</label></Menu>
               <Menu><label>View</label></Menu>
               <Menu><label>Window</label></Menu>
+              <Spacer/>
+              <Menu><label className={"fa fa-wifi"}/></Menu>
+              <Menu><label className={"fa fa-volume-up"}/></Menu>
+              <Menu><label className={"fa fa-battery"}/></Menu>
           </Menubar>
           <Dashboard>
               <Clock/>
+              <Musicplayer/>
               <Weather/>
               {/*<Agenda/>*/}
               <Todos/>

@@ -9,7 +9,7 @@ html, body {
 
   background: gray;
 
-  grid-template-columns: [main] 2fr [center] 1fr [dashboard]1fr [end];
+  grid-template-columns: [main] 2fr [center] 1fr [dashboard]15rem [end];
   grid-template-rows: [menubar] 2em [main] 1fr [center] 1fr [end];
 
 
@@ -33,17 +33,34 @@ html, body {
   padding: 0.5em 1em;
   box-sizing: border-box;
 }
+.spacer {
+  border: 1px solid var(--border-color);
+  border-left-width: 0;
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  flex:1.0;
+}
 
 .dashboard {
-  grid-column: dashboard;
+  grid-column: dashboard/end;
   grid-row: main/end;
   border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   background-color: var(--bg2);
 }
 
+.dashboard > * {
+  padding: 0.5em 0.5em;
+  box-sizing: border-box;
+}
+
+.musicplayer .title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 
 .todos {
   display: grid;
@@ -51,7 +68,6 @@ html, body {
   border: 1px solid var(--border-color);
   width: 100%;
 }
-
 
 .window {
   min-width: 300px;
@@ -77,14 +93,19 @@ html, body {
   background-color: #cccccc;
 }
 
-
-
 .videobubble {
   position: absolute;
+  padding: 0em;
   width: 100px;
   height: 100px;
-  border: 3px solid red;
+  border: 5px solid red;
   top: 600px;
   left: 300px;
   border-radius: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  overflow:hidden;
 }
+
