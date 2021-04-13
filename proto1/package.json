@@ -12,6 +12,7 @@
     "cors": "^2.8.4",
     "express": "^4.15.3",
     "font-awesome": "^4.7.0",
+    "mongodb": "^2.2",
     "mingo": "^1.3.3",
     "moment": "^2.22.0",
     "react": "^15.5.4",
